@@ -1,0 +1,33 @@
+import { createContext, useState, useContext, useEffect } from 'react';
+
+export const AuthContext = createContext(); 
+
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null); // เก็บ { name, role, token }
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // เช็คข้อมูลจาก LocalStorage ตอนเปิดเว็บ
+    const savedUser = JSON.parse(localStorage.getItem('user'));
+    if (savedUser) setUser(savedUser);
+    setLoading(false);
+  }, []);
+
+  const login = (userData) => {
+    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
+  };
+
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, login, logout, loading }}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => useContext(AuthContext);
