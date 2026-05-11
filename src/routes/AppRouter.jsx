@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 
 // Layouts
 import UserLayout from "../layouts/UserLayout";
-import AdminLayout from "../layouts/AdminLayout";
+import AdminLayout from "../layouts/AdminLayout/AdminLayout";
 import AuthLayout from "../layouts/AuthLayout";
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -56,18 +56,23 @@ const router = createBrowserRouter([
       },
     ],
   },
+  
 
-  {
-     // --- 2. กลุ่มหน้าแอดมิน (Admin/GM Side) ---
+ {
   path: "/admin",
-  element: <ProtectedRoute isAllowed={true} redirectPath="/" />, // ปล่อยให้คืนค่า <Outlet /> โล่งๆ
+  //element: <ProtectedRouteWrapper allowedRole="gm" redirectPath="/" />, 
   children: [
     {
-      // ใช้ Layout ครอบกลุ่มหน้าทั้งหมดด้านในอีกทีหนึ่ง
       element: <AdminLayout />, 
       children: [
-        { index: true, element: <TempPage name="Admin Dashboard" /> },
-        // { path: "add-product", element: <TempPage name="Add Product" /> },
+        /* ✅ 1. แก้ตรงนี้: ให้กระโดดไปที่ "dashboard" */
+        { index: true, element: <Navigate to="dashboard" replace /> }, 
+        
+        /* ✅ 2. แก้ตรงนี้: เปลี่ยน path จาก "analytics" เป็น "dashboard" */
+        { path: "dashboard", element: <TempPage name="Admin Analytics" /> },
+
+        { path: "products", element: <TempPage name="Manage Products" /> },
+        // ... (หน้าที่เหลือคงเดิม)
       ]
     }
   ],
@@ -106,11 +111,11 @@ const router = createBrowserRouter([
     ]
   },
 
-  {
+  /*{
     // --- 4. Catch All (404) ---
     path: "*",
     element: <Navigate to="/" replace />,
-  },
+  },*/
 ]);
 
 export default router;
