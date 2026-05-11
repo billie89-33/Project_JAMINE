@@ -10,6 +10,7 @@ const RegisterPage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+
   // 2. ฟังก์ชันจัดการเมื่อกดยืนยันการสมัครสมาชิก
   const handleRegisterSubmit = (e) => {
     e.preventDefault();
@@ -40,7 +41,7 @@ const RegisterPage = () => {
 
         <NavLink
           to="/"
-          className="absolute top-4 left-5 flex items-center gap-1.5 text-[11px] font-bold text-whihe hover:text-purple-600 transition-colors group"
+          className="absolute top-4 left-5 flex items-center gap-1.5 text-[11px] font-bold text-white hover:text-purple-600 transition-colors group"
         >
           {/* ไอคอนลูกศรย้อนกลับสไตล์โปร่งสบายตา */}
           <svg

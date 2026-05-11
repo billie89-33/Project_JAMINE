@@ -3,8 +3,8 @@ import logoImg from "../assets/LOGO pink new.png";
 
 const AuthLayout = () => {
   return (
-    <div className="min-h-screen bg-[#9898ee] flex items-center justify-center p-0 md:p-6 select-none">
-      <div className="w-full max-w-5xl min-h-screen md:min-h-[600px] bg-[#130933] md:rounded-3xl shadow-2xl shadow-purple-950/40 overflow-hidden grid grid-cols-1 lg:grid-cols-2">
+    <div className="min-h-screen bg-[#9898ee] flex items-center justify-center m p-0 md:p-1 select-none">
+      <div className="w-full max-w-5xl min-h-screen md:min-h-[750px] bg-[#130933] md:rounded-3xl shadow-2xl shadow-purple-950/40 overflow-hidden grid grid-cols-1 lg:grid-cols-2 ">
         <div className="hidden lg:flex flex-col items-center justify-center p-12 bg-gradient-to-br from-[#1b0b46] to-[#130933] text-white text-center relative border-r border-purple-950/30">
           <div className="max-w-xs space-y-6">
 
