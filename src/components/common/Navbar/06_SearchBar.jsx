@@ -111,6 +111,9 @@ const SearchBar = ({ isMobileSearchOpen, setIsMobileSearchOpen }) => {
         )}
       </div>
 
+
+
+
       {/* 📱 2. ส่วนจอมือถือ (Mobile Full-Width Overlay) */}
       {isMobileSearchOpen && (
         /* ✨ แก้บั๊ก: บังคับใช้ h-full วิ่งเต็มขนาด Navbar และยกระดับ z-index สูงสุด (z-[110]) เพื่อล็อกไม่ให้ปุ่มโปรไฟล์ด้านหลังโผล่มาทับเลเยอร์ */

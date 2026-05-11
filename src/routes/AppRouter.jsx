@@ -5,6 +5,7 @@ import { Outlet } from "react-router-dom";
 // Layouts
 import UserLayout from "../layouts/UserLayout";
 import AdminLayout from "../layouts/AdminLayout";
+import AuthLayout from "../layouts/AuthLayout";
 import ProtectedRoute from "./ProtectedRoute";
 
 // โครงสร้างหน้าเว็บจำลองเดิมของคุณ
@@ -86,7 +87,7 @@ const router = createBrowserRouter([
 
   {
     // --- 3. หน้ากลุ่ม Auth (ใช้ Layout จำลองร่วมกัน) ✨ ---
-    element: <TempAuthLayout />,
+    element: <AuthLayout />,
     children: [
       {
         path: "/login",
