@@ -8,25 +8,12 @@ import AdminLayout from "../layouts/AdminLayout";
 import AuthLayout from "../layouts/AuthLayout";
 import ProtectedRoute from "./ProtectedRoute";
 
+import RegisterPage from "../pages/auth/RegisterPage";
+
 // โครงสร้างหน้าเว็บจำลองเดิมของคุณ
 const TempPage = ({ name }) => <div className="p-10 font-bold text-xl text-purple-900">{name} Page (จำลอง)</div>;
 
-// ✨ เพิ่ม Layout จำลองสำหรับหน้า Auth (มีโครงกล่องตรงกลางและปุ่มสลับหน้า)
-const TempAuthLayout = () => {
-  return (
-    <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-6">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border border-slate-200">
-        <div className="text-center mb-6">
-          <h1 className="text-2xl font-black text-slate-800">MY STORE</h1>
-          <p className="text-sm text-slate-500 mt-1">กรุณาเข้าสู่ระบบหรือสมัครสมาชิกเพื่อใช้งาน</p>
-        </div>
-        
-        {/* หน้า Login / Register ย่อยจะมาแสดงผลตรง Outlet นี้ */}
-        <Outlet /> 
-      </div>
-    </div>
-  );
-};
+
 
 // 🔒 1. คอมโพเนนต์พิเศษสำหรับคัดกรองและปกป้องสิทธิ์แต่ละหน้าเว็บ
 const ProtectedRouteWrapper = ({ allowedRole = null, redirectPath = "/login" }) => {
@@ -107,7 +94,7 @@ const router = createBrowserRouter([
         element: (
           <div className="space-y-4">
             <div className="p-4 bg-green-50 border border-green-200 rounded text-center text-green-700 font-bold">
-              📝 ฟอร์ม Register (จำลอง)
+              <RegisterPage />
             </div>
             <p className="text-sm text-center text-slate-600">
               มีบัญชีอยู่แล้ว? <a href="/login" className="text-blue-600 underline font-medium">เข้าสู่ระบบ</a>
