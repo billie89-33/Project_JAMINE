@@ -92,7 +92,7 @@ const LoginPage = () => {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-2 text-slate-400 hover:text-slate-600 transition-colors text-xs"
+              className="absolute right-3 top-2 text-slate-400 hover:text-slate-600 transition-colors text-xs [&::-ms-reveal]:hidden"
             >
               {showPassword ? "🙈" : "👁️"}
             </button>

@@ -9,7 +9,8 @@ const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // 2. ฟังก์ชันจัดการเมื่อกดยืนยันการสมัครสมาชิก
   const handleRegisterSubmit = (e) => {
@@ -38,7 +39,6 @@ const RegisterPage = () => {
     <div className="space-y-6 text-white animate-in fade-in duration-200">
       {/* ส่วนหัวข้อข้อความต้อนรับด้านบน */}
       <div className="text-center space-y-1">
-
         <NavLink
           to="/"
           className="absolute top-4 left-5 flex items-center gap-1.5 text-[11px] font-bold text-white hover:text-purple-600 transition-colors group"
@@ -60,7 +60,6 @@ const RegisterPage = () => {
           </svg>
           Back to Home
         </NavLink>
-
 
         <h3 className="text-lg font-black tracking-wide text-purple-900">
           Create Account
@@ -114,14 +113,24 @@ const RegisterPage = () => {
           <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
             Password
           </label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-            className="w-full bg-slate-50 border border-slate-100 px-3 py-2 text-xs rounded-xl focus:outline-none focus:border-purple-600 transition-colors"
-            required
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"} // ✨ สลับชนิดแท็กตาม State
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              className="w-full bg-slate-50 border border-slate-100 px-3 py-2 text-xs rounded-xl focus:outline-none focus:border-purple-600 transition-colors pr-10"
+              required
+            />
+            {/* ปุ่มดวงตาสำหรับช่อง Password */}
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-2 text-slate-400 hover:text-slate-600 transition-colors text-xs [&::-ms-reveal]:hidden"
+            >
+              {showPassword ? "🙈" : "👁️"}
+            </button>
+          </div>
         </div>
 
         {/* ช่อง ยืนยันรหัสผ่าน */}
@@ -129,14 +138,24 @@ const RegisterPage = () => {
           <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
             Confirm Password
           </label>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="••••••••"
-            className="w-full bg-slate-50 border border-slate-100 px-3 py-2 text-xs rounded-xl focus:outline-none focus:border-purple-600 transition-colors"
-            required
-          />
+          <div className="relative">
+            <input
+              type={showConfirmPassword ? "text" : "password"} // ✨ สลับชนิดแท็กตาม State ตัวที่สอง
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="••••••••"
+              className="w-full bg-slate-50 border border-slate-100 px-3 py-2 text-xs rounded-xl focus:outline-none focus:border-purple-600 transition-colors pr-10 [&::-ms-reveal]:hidden"
+              required
+            />
+            {/* ปุ่มดวงตาสำหรับช่อง Confirm Password */}
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-3 top-2 text-slate-400 hover:text-slate-600 transition-colors text-xs"
+            >
+              {showConfirmPassword ? "🙈" : "👁️"}
+            </button>
+          </div>
         </div>
 
         {/* ปุ่มกดส่งฟอร์ม */}

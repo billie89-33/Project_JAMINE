@@ -8,8 +8,8 @@ import AdminLayout from "../layouts/AdminLayout";
 import AuthLayout from "../layouts/AuthLayout";
 import ProtectedRoute from "./ProtectedRoute";
 
-import RegisterPage from "../pages/auth/RegisterPage";
-import LoginPage from "../pages/auth/LoginPage";
+import RegisterPage from "../pages/auth/02_RegisterPage";
+import LoginPage from "../pages/auth/01_LoginPage";
 
 // โครงสร้างหน้าเว็บจำลองเดิมของคุณ
 const TempPage = ({ name }) => <div className="p-10 font-bold text-xl text-purple-900">{name} Page (จำลอง)</div>;
@@ -84,7 +84,7 @@ const router = createBrowserRouter([
             <div className="p-4 bg-blue-50 border border-blue-200 rounded text-center text-blue-700 font-bold">
               <LoginPage />
             </div>
-            <p className="text-sm text-center text-slate-600">
+            <p className="text-sm text-center text-white">
               ยังไม่มีบัญชี? <a href="/register" className="text-blue-600 underline font-medium">สมัครสมาชิก</a>
             </p>
           </div>
@@ -97,7 +97,7 @@ const router = createBrowserRouter([
             <div className="p-4 bg-green-50 border border-green-200 rounded text-center text-green-700 font-bold">
               <RegisterPage />
             </div>
-            <p className="text-sm text-center text-slate-600">
+            <p className="text-sm text-center text-white">
               มีบัญชีอยู่แล้ว? <a href="/login" className="text-blue-600 underline font-medium">เข้าสู่ระบบ</a>
             </p>
           </div>
