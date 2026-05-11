@@ -5,7 +5,7 @@ import router from './routes/AppRouter';
 const App = () => {
   return (
     <AuthProvider>
-      {/* ใช้แท็กเดี่ยวปิดในตัวตัวเดียวจบ ไม่ต้องมี <AppRouter /> อยู่ข้างใน */}
+      
       <RouterProvider router={router} />
     </AuthProvider>
   );
