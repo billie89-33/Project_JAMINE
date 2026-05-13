@@ -1,3 +1,4 @@
+```text
 src/
 ├── api/                # จัดการการเชื่อมต่อ Backend (Axios Config)
 ├── components/         # ส่วนประกอบที่ใช้ซ้ำ (Buttons, Modals, Navbar)
@@ -15,3 +16,4 @@ src/
 │   └── ProtectedRoute.jsx # ยามเฝ้าประตูเช็ค Role
 ├── App.jsx             # รวม Provider (Auth, Theme)
 └── main.jsx            # จุดเริ่มต้นโปรเจกต์ (Render router)
+```
