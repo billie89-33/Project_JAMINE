@@ -7,27 +7,30 @@ const HeroBanner = () => {
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // 1. ดึงข้อมูล Banner จาก API ของฝั่ง Admin
   useEffect(() => {
     const fetchBanners = async () => {
       try {
         setLoading(true);
-        // เปลี่ยน URL เอนพอยต์ตามจริงของโปรเจกต์คุณได้เลยครับ
+        // เรียก Endpoint จริงจาก Backend API ของแอดมิน
         const response = await axios.get('/api/admin/banners'); 
         
-        if (response.data && response.data.length > 0) {
+        if (response.data && Array.isArray(response.data) && response.data.length > 0) {
           setBanners(response.data);
         } else {
-          // ถ้าไม่มีข้อมูลในเบส ให้ใช้รูปเริ่มต้น (Fallback Data)
+          // หากไม่มีข้อมูลในฐานข้อมูล ให้ใช้รูป Mockup เริ่มต้น 3 รูปตามดีไซน์
           setBanners([
-            { id: 'default', imageUrl: 'placehold.co' }
+            { id: 'mock1', imageUrl: 'unsplash.com' },
+            { id: 'mock2', imageUrl: 'unsplash.com' },
+            { id: 'mock3', imageUrl: 'unsplash.com' }
           ]);
         }
       } catch (error) {
         console.error('Failed to fetch banners:', error);
-        // เผื่อ API พัง ให้แสดงรูป Default ป้องกันหน้าจอขาว
+        // หาก API ขัดข้อง ให้ใช้รูป Fallback สำรอง 3 รูปเพื่อป้องกันระบบพัง
         setBanners([
-          { id: 'fallback', imageUrl: 'placehold.co' }
+          { id: 'fallback1', imageUrl: 'unsplash.com' },
+          { id: 'fallback2', imageUrl: 'unsplash.com' },
+          { id: 'fallback3', imageUrl: 'unsplash.com' }
         ]);
       } finally {
         setLoading(false);
@@ -37,67 +40,102 @@ const HeroBanner = () => {
     fetchBanners();
   }, []);
 
-  // ฟังก์ชันเลื่อนสไลด์แบนเนอร์
+  const safeBanners = Array.isArray(banners) ? banners : [];
+
   const prevSlide = () => {
-    setCurrentIndex((prev) => (prev === 0 ? banners.length - 1 : prev - 1));
+    if (safeBanners.length === 0) return;
+    setCurrentIndex((prev) => (prev === 0 ? safeBanners.length - 1 : prev - 1));
   };
 
   const nextSlide = () => {
-    setCurrentIndex((prev) => (prev === banners.length - 1 ? 0 : prev + 1));
+    if (safeBanners.length === 0) return;
+    setCurrentIndex((prev) => (prev === safeBanners.length - 1 ? 0 : prev + 1));
   };
 
-  // 2. ระหว่างรอข้อมูลแสดงผล Loading Skeleton UI ให้สวยงาม
   if (loading) {
     return (
-      <div className="w-full h-[350px] bg-gray-200 animate-pulse rounded-lg flex items-center justify-center text-gray-400 font-medium">
+      <div className="w-full h-[400px] bg-gray-200 animate-pulse rounded-lg flex items-center justify-center text-gray-400 font-medium">
         กำลังโหลดแบนเนอร์กิจกรรม...
       </div>
     );
   }
 
-  // 3. เมื่อดึงข้อมูลเสร็จแล้ว ทำการเรนเดอร์ภาพสไลเดอร์ที่มาจากแอดมิน
   return (
-    <div className="relative w-full h-[350px] rounded-lg overflow-hidden group shadow-sm bg-gray-100">
-      {/* ภาพแบนเนอร์ปัจจุบัน */}
-      <img
-        src={banners[currentIndex]?.imageUrl}
-        alt={`Banner ${currentIndex + 1}`}
-        className="w-full h-full object-cover transition-opacity duration-500"
-      />
+    <div className="flex flex-col gap-4 w-full bg-white p-6 rounded-lg border border-gray-100 shadow-sm">
+      
+      {/* 1. ส่วนกรอบภาพสไลเดอร์หลักขนาดใหญ่ */}
+      <div className="relative w-full h-[320px] rounded-lg overflow-hidden group bg-gray-50 flex items-center justify-center">
+        {safeBanners.length > 0 && (
+          <img
+            src={safeBanners[currentIndex]?.imageUrl}
+            alt={`Banner ${currentIndex + 1}`}
+            className="w-full h-full object-contain transition-all duration-500"
+            onError={(e) => { e.target.src = 'placehold.co'; }}
+          />
+        )}
 
-      {/* แสดงปุ่มควบคุมเฉพาะกรณีมีแบนเนอร์มากกว่า 1 รูป */}
-      {banners.length > 1 && (
-        <>
-          {/* ปุ่มลูกศรซ้าย */}
-          <button
-            onClick={prevSlide}
-            className="absolute top-1/2 left-4 -translate-y-1/2 p-2 bg-white/80 hover:bg-white text-gray-800 rounded-full shadow transition-all opacity-0 group-hover:opacity-100"
-          >
-            <ChevronLeft size={20} />
-          </button>
+        {safeBanners.length > 1 && (
+          <>
+            {/* ปุ่มลูกศรซ้าย */}
+            <button
+              onClick={prevSlide}
+              className="absolute top-1/2 left-4 -translate-y-1/2 p-2 bg-white rounded-full shadow border border-gray-100 text-gray-700 hover:bg-gray-50 transition-all opacity-0 group-hover:opacity-100"
+            >
+              <ChevronLeft size={18} />
+            </button>
 
-          {/* ปุ่มลูกศรขวา */}
-          <button
-            onClick={nextSlide}
-            className="absolute top-1/2 right-4 -translate-y-1/2 p-2 bg-white/80 hover:bg-white text-gray-800 rounded-full shadow transition-all opacity-0 group-hover:opacity-100"
-          >
-            <ChevronRight size={20} />
-          </button>
+            {/* ปุ่มลูกศรขวา */}
+            <button
+              onClick={nextSlide}
+              className="absolute top-1/2 right-4 -translate-y-1/2 p-2 bg-white rounded-full shadow border border-gray-100 text-gray-700 hover:bg-gray-50 transition-all opacity-0 group-hover:opacity-100"
+            >
+              <ChevronRight size={18} />
+            </button>
+          </>
+        )}
+      </div>
 
-          {/* จุดวงกลมบอกตำแหน่งสไลด์ (Dots Indicators) */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-            {banners.map((_, idx) => (
+      {/* 2. ส่วนแสดงภาพพรีวิวขนาดเล็ก 3 รูปด้านล่างสำหรับคลิกเปลี่ยนสไลด์ (Thumbnail Navigation) */}
+      {safeBanners.length > 0 && (
+        <div className="flex flex-col items-center gap-3">
+          <div className="flex justify-center gap-3">
+            {safeBanners.slice(0, 3).map((banner, idx) => (
               <button
-                key={idx}
+                key={banner.id || idx}
                 onClick={() => setCurrentIndex(idx)}
-                className={`w-2.5 h-2.5 rounded-full transition-all ${
-                  currentIndex === idx ? 'bg-black w-5' : 'bg-gray-400'
+                className={`w-16 h-12 rounded border-2 overflow-hidden bg-gray-50 p-1 transition-all ${
+                  currentIndex === idx 
+                    ? 'border-black scale-105 shadow-sm' 
+                    : 'border-gray-200 hover:border-gray-400'
                 }`}
-              />
+              >
+                <img 
+                  src={banner.imageUrl} 
+                  alt={`Thumbnail ${idx + 1}`} 
+                  className="w-full h-full object-contain"
+                  onError={(e) => { e.target.src = 'placehold.co'; }}
+                />
+              </button>
             ))}
           </div>
-        </>
+
+          {/* จุดวงกลมขนาดเล็กบอกตำแหน่งกรณีมีภาพมากกว่า 3 รูป */}
+          {safeBanners.length > 3 && (
+            <div className="flex gap-1.5">
+              {safeBanners.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentIndex(idx)}
+                  className={`w-1.5 h-1.5 rounded-full transition-all ${
+                    currentIndex === idx ? 'bg-black w-3' : 'bg-gray-300'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       )}
+
     </div>
   );
 };
