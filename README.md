@@ -10,7 +10,7 @@ src/
 │   ├── common/         # Login, Register, Home
 │   ├── user/           # Cart, Checkout, Profile
 │   └── admin/          # Dashboard, AddProduct, ManageOrders
-├── routes/             # !!! ศูนย์บัญชาการ (ไฟล์ที่คุณส่งรูปมา) !!!
+├── routes/             # ศูนย์บัญชาการ
 │   ├── index.jsx       # รวมเส้นทางทั้งหมด (createBrowserRouter)
 │   └── ProtectedRoute.jsx # ยามเฝ้าประตูเช็ค Role
 ├── App.jsx             # รวม Provider (Auth, Theme)
