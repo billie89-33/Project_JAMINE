@@ -5,7 +5,7 @@ const CartDrawer = ({ isOpen, onClose }) => {
 
   // จำลองข้อมูลสินค้า (อนาคตดึงมาจาก CartContext เช่นเดียวกัน)
   const cartItems = [
-    { id: 1, name: "Gaming Keyboard RGB", price: 1290, qty: 1, img: "🎹" },
+    { id: 1, name: "Gaming Keyboard RGB", price: 1290, qty: 1, img: "🎹" }, 
     { id: 2, name: "Wireless Gaming Mouse", price: 590, qty: 2, img: "🖱️" }
   ];
 

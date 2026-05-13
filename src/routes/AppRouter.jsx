@@ -11,6 +11,8 @@ import ProtectedRoute from "./ProtectedRoute";
 import RegisterPage from "../pages/auth/02_RegisterPage";
 import LoginPage from "../pages/auth/01_LoginPage";
 
+import HomePage from "../pages/user/HomePage";
+
 // โครงสร้างหน้าเว็บจำลองเดิมของคุณ
 const TempPage = ({ name }) => <div className="p-10 font-bold text-xl text-purple-900">{name} Page (จำลอง)</div>;
 
@@ -44,7 +46,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <UserLayout />,
     children: [
-      { index: true, element: <TempPage name="Home" /> },
+      { index: true, element: <HomePage /> },
       
       // หน้าที่ต้อง Login ก่อนถึงจะเห็น (Nested Protected)
       {
@@ -65,10 +67,10 @@ const router = createBrowserRouter([
     {
       element: <AdminLayout />, 
       children: [
-        /* ✅ 1. แก้ตรงนี้: ให้กระโดดไปที่ "dashboard" */
+        
         { index: true, element: <Navigate to="dashboard" replace /> }, 
         
-        /* ✅ 2. แก้ตรงนี้: เปลี่ยน path จาก "analytics" เป็น "dashboard" */
+        
         { path: "dashboard", element: <TempPage name="Admin Analytics" /> },
 
         { path: "products", element: <TempPage name="Manage Products" /> },
