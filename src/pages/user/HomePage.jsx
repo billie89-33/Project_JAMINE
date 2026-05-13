@@ -1,6 +1,8 @@
 import HeroBanner from '../../components/Home/01_HeroBanner';
 import CategorySlider from '../../components/Home/02_CategorySlider';
 import PromotionBanner from '../../components/Home/03_PromotionBanner';
+import ProductGrid from '../../components/Home/04_ProductGrid';
+import SidebarNews from '../../components/Home/04._SidebarNews';
 
 //import NewArrivals from '../../components/common/Home/03_NewArrivals';
 //import MainGridSection from '../../components/common/Home/05_MainGridSection';
@@ -25,6 +27,16 @@ const HomePage = () => {
         <PromotionBanner />
       </div>
 
+      
+       {/* ส่วนโครงสร้างกริดจัดวางสินค้าและข่าวสาร */}
+      <div className="max-w-7xl mx-auto px-4 mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <ProductGrid />
+        </div>
+        <div className="lg:col-span-1">
+          <SidebarNews />
+        </div>
+      </div>
       
        
     </div>
