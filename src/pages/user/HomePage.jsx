@@ -2,11 +2,14 @@ import HeroBanner from '../../components/Home/01_HeroBanner';
 import CategorySlider from '../../components/Home/02_CategorySlider';
 import PromotionBanner from '../../components/Home/03_PromotionBanner';
 
+//import NewArrivals from '../../components/common/Home/03_NewArrivals';
+//import MainGridSection from '../../components/common/Home/05_MainGridSection';
+//import RelatedArticles from '../../components/common/Home/06_RelatedArticles';
 
 const HomePage = () => {
   return (
     <div className="w-full min-h-screen bg-gray-50 pb-12">
-      {/* 1. ส่วนแบนเนอร์สไลเดอร์รูปใหญ่ (มีระบบรอโหลด API) */}
+    
       <div className="max-w-7xl mx-auto px-4 pt-6">
         <HeroBanner />
       </div>
@@ -22,7 +25,8 @@ const HomePage = () => {
         <PromotionBanner />
       </div>
 
-     
+      
+       
     </div>
   );
 };
