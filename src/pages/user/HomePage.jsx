@@ -1,12 +1,9 @@
-import HeroBanner from '../../components/Home/01_HeroBanner';
-import CategorySlider from '../../components/Home/02_CategorySlider';
-import PromotionBanner from '../../components/Home/03_PromotionBanner';
-import ProductGrid from '../../components/Home/04_ProductGrid';
-import SidebarNews from '../../components/Home/04._SidebarNews';
+import HeroBanner from '../../components/features/Home/01_HeroBanner';
+import CategorySlider from '../../components/features/Home/02_CategorySlider';
+import PromotionBanner from '../../components/features/Home/03_PromotionBanner';
+import ProductGrid from '../../components/features/Home/04_ProductGrid';
+import SidebarNews from '../../components/features/Home/04._SidebarNews';
 
-//import NewArrivals from '../../components/common/Home/03_NewArrivals';
-//import MainGridSection from '../../components/common/Home/05_MainGridSection';
-//import RelatedArticles from '../../components/common/Home/06_RelatedArticles';
 
 const HomePage = () => {
   return (

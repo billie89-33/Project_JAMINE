@@ -12,6 +12,7 @@ import RegisterPage from "../pages/auth/02_RegisterPage";
 import LoginPage from "../pages/auth/01_LoginPage";
 
 import HomePage from "../pages/user/HomePage";
+import CategoryPage from "../pages/user/CategoryPage";
 
 // โครงสร้างหน้าเว็บจำลองเดิมของคุณ
 const TempPage = ({ name }) => <div className="p-10 font-bold text-xl text-purple-900">{name} Page (จำลอง)</div>;
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
     element: <UserLayout />,
     children: [
       { index: true, element: <HomePage /> },
+      
+      // เครื่องหมาย :type คือตัวแปร Dynamic Param ที่จะแปลงค่าตามที่กด เช่น notebook, keyboard
+      { path: "category/:type", element: <CategoryPage /> },
+
       
       // หน้าที่ต้อง Login ก่อนถึงจะเห็น (Nested Protected)
       {
