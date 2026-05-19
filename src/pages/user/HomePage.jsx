@@ -1,8 +1,8 @@
-import HeroBanner from '../../components/features/Home/01_HeroBanner';
-import CategorySlider from '../../components/features/Home/02_CategorySlider';
-import PromotionBanner from '../../components/features/Home/03_PromotionBanner';
-import ProductGrid from '../../components/features/Home/04_ProductGrid';
-import SidebarNews from '../../components/features/Home/04._SidebarNews';
+import HeroBanner from '../../components/features/Home/HeroBanner';
+import CategorySlider from '../../components/common/CategorySlider/CategorySlider';
+import PromotionBanner from '../../components/features/Home/PromotionBanner';
+import ProductGrid from '../../components/features/Home/ProductGrid';
+import SidebarNews from '../../components/features/Home/SidebarNews';
 
 
 const HomePage = () => {

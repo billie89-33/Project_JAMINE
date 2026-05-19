@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom';
 
 // ดึง Component แบนเนอร์และหมวดหมู่วงกลมตัวเดิมจากโฟลเดอร์ฟีเจอร์หน้า Home มาใช้ซ้ำ (Re-use)
-import HeroBanner from '../../components/features/Home/01_HeroBanner';
-import CategorySlider from '../../components/features/Home/02_CategorySlider';
+import HeroBanner from '../../components/features/Home/HeroBanner';
+import CategorySlider from '../../components/common/CategorySlider/CategorySlider';
 
 // ดึง Component ระบบสลับหน้าสเปกและแถบเปลี่ยนหน้าจากโฟลเดอร์หน้า Category ของตัวเอง
 import ProductSwitchCase from '../../components/features/category/ProductSwitchCase';
