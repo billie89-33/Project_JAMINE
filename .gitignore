@@ -1,24 +1,29 @@
-# Logs
-logs
+# 1. โฟลเดอร์ติดตั้งไลบรารีฝั่งหน้าบ้าน
+node_modules/
+
+# 2. ไฟล์บันทึกข้อมูลสภาพแวดล้อมฝั่ง Frontend (เช่น คีย์ API หลังบ้าน)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# 3. โฟลเดอร์ผลลัพธ์ที่ได้จากการ Build ระบบเพื่อเตรียมขึ้นระบบจริง
+dist/
+build/
+.out/
+
+# 4. ไฟล์ Log แสดงข้อผิดพลาดเวลาสั่งรันหรือบิวด์ระบบ
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# 5. ไฟล์ขยะของระบบปฏิบัติการ (Windows/Mac)
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+Thumbs.db
+Desktop.ini
+
+# 6. คอนฟิกส่วนตัวของโปรแกรม VS Code
+.vscode/

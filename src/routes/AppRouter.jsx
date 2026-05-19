@@ -13,6 +13,7 @@ import LoginPage from "../pages/auth/01_LoginPage";
 
 import HomePage from "../pages/user/HomePage";
 import CategoryPage from "../pages/user/CategoryPage";
+import ProductDetailPage from "../pages/user/ProductDetailPage";
 
 // โครงสร้างหน้าเว็บจำลองเดิมของคุณ
 const TempPage = ({ name }) => <div className="p-10 font-bold text-xl text-purple-900">{name} Page (จำลอง)</div>;
@@ -32,7 +33,7 @@ const ProtectedRouteWrapper = ({ allowedRole = null, redirectPath = "/login" }) 
   }
 
   return <ProtectedRoute isAllowed={isAllowed} redirectPath={redirectPath} />;
-};
+}; 
 
 // 🔒 คอมโพเนนต์พิเศษป้องกันไม่ให้ผู้ใช้ที่ล็อกอินแล้วเข้าหน้า Login / Register ซ้ำซ้อน
 const GuestRouteWrapper = () => {
@@ -51,6 +52,7 @@ const router = createBrowserRouter([
       
       // เครื่องหมาย :type คือตัวแปร Dynamic Param ที่จะแปลงค่าตามที่กด เช่น notebook, keyboard
       { path: "category/:type", element: <CategoryPage /> },
+      { path: "product/:productId", element: <ProductDetailPage /> },
 
       
       // หน้าที่ต้อง Login ก่อนถึงจะเห็น (Nested Protected)

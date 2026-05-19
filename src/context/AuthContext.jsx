@@ -3,9 +3,12 @@ import { createContext, useState, useContext, useEffect } from 'react';
 export const AuthContext = createContext(); 
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // เก็บ { name, role, token }
-  const [loading, setLoading] = useState(true);
+ // const [user, setUser] = useState(null); // เก็บ { name, role, token }
+// ✨ ปรับกลับเป็น null เพื่อให้ระบบเริ่มทำงานจากสถานะยังไม่ได้ Login
+const [user, setUser] = useState(null);
 
+
+ const [loading, setLoading] = useState(true);
   useEffect(() => {
     // เช็คข้อมูลจาก LocalStorage ตอนเปิดเว็บ
     const savedUser = JSON.parse(localStorage.getItem('user'));
