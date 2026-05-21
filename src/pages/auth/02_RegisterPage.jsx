@@ -1,38 +1,47 @@
 import { useState } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
+import { registerApi } from "../../components/features/auth/api/auth.api";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
 
-  // 1. สร้าง State สำหรับเก็บข้อมูลลงทะเบียน
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  // 2. ฟังก์ชันจัดการเมื่อกดยืนยันการสมัครสมาชิก
-  const handleRegisterSubmit = (e) => {
+  const handleRegisterSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
 
     if (!username || !email || !password || !confirmPassword) {
-      alert("กรุณากรอกข้อมูลให้ครบทุกช่อง");
+      setError("กรุณากรอกข้อมูลให้ครบทุกช่อง");
+      setLoading(false);
       return;
     }
 
     if (password !== confirmPassword) {
-      alert("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน");
+      setError("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน");
+      setLoading(false);
       return;
     }
 
-    // 🚀 [แนวทางอนาคต]: ใส่คำสั่งส่งข้อมูลไปเซิร์ฟเวอร์เพื่อสมัครสมาชิกจริงที่จุดนี้
-    // ตัวอย่าง: axios.post('/api/auth/register', { username, email, password })
-
-    alert("สมัครสมาชิกจำลองสำเร็จ!");
-
-    // เมื่อสมัครเสร็จ พาผู้ใช้ไปหน้าล็อกอินโดยอัตโนมัติ
-    navigate("/login");
+    try {
+      const res = await registerApi(username, email, password);
+      if (res.success) {
+        alert("สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ");
+        navigate("/login");
+      }
+    } catch (err) {
+      setError(err.message || "สมัครสมาชิกไม่สำเร็จ");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -64,7 +73,7 @@ const RegisterPage = () => {
         <h3 className="text-lg font-black tracking-wide text-purple-900">
           Create Account
         </h3>
-        <p className="text-xs text-purple-200/60 text-purple-700">
+        <p className="text-xs text-purple-700">
           ร่วมเป็นสมาชิกเพื่อสัมผัสประสบการณ์ช้อปปิ้งที่ดีที่สุด
         </p>
       </div>
@@ -74,6 +83,12 @@ const RegisterPage = () => {
         onSubmit={handleRegisterSubmit}
         className="bg-white rounded-3xl p-6 shadow-2xl text-slate-800 space-y-3.5"
       >
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-xs">
+            {error}
+          </div>
+        )}
+
         <h4 className="text-sm font-black text-slate-900 border-b border-slate-100 pb-2">
           Sign Up
         </h4>
@@ -161,9 +176,10 @@ const RegisterPage = () => {
         {/* ปุ่มกดส่งฟอร์ม */}
         <button
           type="submit"
-          className="w-full bg-[#130933] hover:bg-purple-900 text-white text-xs font-bold py-2.5 rounded-xl transition-colors shadow-md mt-3"
+          disabled={loading}
+          className="w-full bg-[#130933] hover:bg-purple-900 disabled:bg-slate-400 text-white text-xs font-bold py-2.5 rounded-xl transition-colors shadow-md mt-3"
         >
-          Sign Up
+          {loading ? "กำลังสมัครสมาชิก..." : "Sign Up"}
         </button>
 
         {/* ลิงก์สลับหน้าเด้งกลับไปที่หน้า Login */}

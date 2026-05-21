@@ -52,7 +52,7 @@ const ProductDetailPage = () => {
           ← ย้อนกลับหน้ารวมสินค้า
         </button>
 
-        {/* ข้อมูลจะเปลี่ยนตามตัวสินค้าที่ถูกกดส่งมาแบบ Dynamic 100% */}
+        
         <ProductMainInfo product={product} />
         <ProductTabs product={product} /> 
 

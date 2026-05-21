@@ -1,37 +1,40 @@
 import { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigate, NavLink } from 'react-router-dom';
+import { loginApi } from '../../components/features/auth/api/auth.api';
 
 const LoginPage = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   
-  // 1. สร้าง State สำหรับรับค่าฟอร์มและคุมการเปิด/ปิดตาดูรหัสผ่าน
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  // 2. ฟังก์ชันจัดการระบบล็อกอิน (ดักเช็คและเตรียมส่งให้ API อนาคต)
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setLoading(true);
 
     if (!email.trim() || !password.trim()) {
-      alert('กรุณากรอกอีเมลและรหัสผ่าน');
+      setError('กรุณากรอกอีเมลและรหัสผ่าน');
+      setLoading(false);
       return;
     }
 
-    // 🚀 [แนวทางอนาคต]: เปลี่ยนจุดนี้เป็นการยิง API ไปยังเซิร์ฟเวอร์หลังบ้าน
-    // ตัวอย่าง: axios.post('/api/auth/login', { email, password }).then(res => login(res.data))
-    
-    // จำลองการเข้าสู่ระบบเสร็จสิ้น (ลองเปลี่ยนบทบาทสิทธิ์เป็น 'gm' เพื่อทดสอบเมนูหลังบ้านได้ครับ)
-    login({
-      email: email,
-      role: 'user', 
-      token: 'mock-jwt-token-abcd-1234'
-    });
-
-    // พากลับไปหน้าแรกสุด (Home) ทันทีหลังล็อกอินผ่าน
-    navigate('/');
+    try {
+      const res = await loginApi(email, password);
+      if (res.success) {
+        login(res.data);
+        navigate('/');
+      }
+    } catch (err) {
+      setError(err.message || 'เข้าสู่ระบบไม่สำเร็จ');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -59,7 +62,11 @@ const LoginPage = () => {
         onSubmit={handleLoginSubmit} 
         className="bg-white rounded-3xl p-6 shadow-2xl text-slate-800 space-y-3.5 relative pt-12"
       >
-        
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-xs">
+            {error}
+          </div>
+        )}
 
         <h4 className="text-sm font-black text-slate-900 border-b border-slate-100 pb-2">Sign In</h4>
         
@@ -102,9 +109,10 @@ const LoginPage = () => {
         {/* ปุ่มกดส่งข้อมูลยืนยันตัวตน */}
         <button
           type="submit"
-          className="w-full bg-[#130933] hover:bg-purple-900 text-white text-xs font-bold py-2.5 rounded-xl transition-colors shadow-md mt-3"
+          disabled={loading}
+          className="w-full bg-[#130933] hover:bg-purple-900 disabled:bg-slate-400 text-white text-xs font-bold py-2.5 rounded-xl transition-colors shadow-md mt-3"
         >
-          Sign In
+          {loading ? 'กำลังเข้าสู่ระบบ...' : 'Sign In'}
         </button>
 
         {/* ลิงก์สลับหน้าเด้งเปลี่ยนไปที่หน้า Register */}

@@ -65,7 +65,7 @@ const ProfileDropdown = () => {
                <span className="mr-2.5 text-sm">🛡️</span> Security & Privacy
             </a>
             
-            {user?.role === 'gm' && (
+            {user?.role === 'admin' && (
               <NavLink to="/admin" className="flex items-center px-3.5 py-1.5 text-xs font-bold hover:bg-purple-50 text-purple-600 transition-colors border-t border-slate-100/60 mt-1">
                  <span className="mr-2.5 text-sm">⚙️</span> Admin Panel
               </NavLink>
