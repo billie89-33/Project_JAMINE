@@ -45,7 +45,7 @@ const ProductDetailPage = () => {
   }
 
   return (
-    <div className="w-full min-h-screen bg-gray-50/50 py-8 text-sm">
+    <div className="w-full min-h-screen bg-gradient-to-br from-purple-50 via-purple-100 to-slate-50 py-8 text-sm">
       <div className="max-w-6xl mx-auto px-4 flex flex-col gap-6">
         
         <button onClick={() => navigate(-1)} className="text-xs text-purple-600 font-extrabold flex items-center gap-1 w-fit hover:underline">

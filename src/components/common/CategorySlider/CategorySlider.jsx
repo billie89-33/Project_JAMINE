@@ -30,11 +30,16 @@ const CategorySlider = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100 relative group/slider">
+    <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-gray-100 relative group/slider">
       {/* ส่วนหัวข้อแสดงผล */}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-gray-900">Shop by Category</h2>
-        <button className="text-xs font-semibold text-gray-500 hover:text-black transition-colors">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-5">
+        <div>
+          <h2 className="text-lg sm:text-xl font-bold text-gray-900">Shop by Category</h2>
+          <p className="text-sm text-gray-500 mt-1 max-w-xl">
+            Discover trending collections with a smooth horizontal carousel that fits every screen.
+          </p>
+        </div>
+        <button className="self-start sm:self-auto text-sm font-semibold text-gray-500 hover:text-black transition-colors">
           View All
         </button>
       </div>
@@ -42,39 +47,36 @@ const CategorySlider = () => {
       {/* ปุ่มลูกศรซ้าย */}
       <button
         onClick={() => handleScroll('left')}
-        className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-1.5 bg-white rounded-full border border-gray-200 text-gray-600 shadow-sm hover:bg-gray-50 transition-all opacity-0 group-hover/slider:opacity-100"
+        className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-2 bg-white rounded-full border border-gray-200 text-gray-600 shadow-sm hover:bg-gray-50 transition-all opacity-0 group-hover/slider:opacity-100"
       >
-        <ChevronLeft size={16} />
+        <ChevronLeft size={18} />
       </button>
 
       {/* แถบรายการหมวดหมู่สินค้า */}
       <div
         ref={scrollRef}
-        className="flex gap-6 overflow-x-auto scrollbar-none py-2 px-1 scroll-smooth"
+        className="flex gap-4 sm:gap-5 overflow-x-auto scrollbar-none py-3 px-1 scroll-smooth"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {categories.map((cat) => (
           <div
             key={cat.id}
-            // 🌟 4. ผูกคำสั่ง onClick: เมื่อลูกค้ากดเลือกวงกลมระบบจะดีดหน้าจอพุ่งไปยัง URL ของหมวดหมู่นั้นทันที
-            // ตัวอย่าง: ถ้ากด Notebook ลิงก์เบราว์เซอร์จะเด้งกลายเป็น /category/notebook
             onClick={() => navigate(`/category/${cat.type}`)}
-            className="flex flex-col items-center gap-3 cursor-pointer flex-shrink-0 w-28 group"
+            className="flex flex-col items-center gap-3 cursor-pointer flex-shrink-0 w-24 sm:w-28 group"
           >
             {/* วงกลมล้อมรอบรูปภาพ */}
-            <div className="w-20 h-20 bg-gray-50 rounded-full border border-gray-100 overflow-hidden flex items-center justify-center p-2 transition-transform duration-300 group-hover:scale-105 group-hover:shadow-sm">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-50 rounded-full border border-gray-100 overflow-hidden flex items-center justify-center p-2 transition-transform duration-300 group-hover:scale-105 group-hover:shadow-sm">
               <img
                 src={cat.image}
                 alt={cat.name}
-                className="w-full h-full object-cover rounded-full mix-blend-multiply"
+                className="w-full h-full object-cover rounded-full"
                 onError={(e) => {
-                  // คลุมเซฟตี้ภาพสำรองกรณีลิงก์รูปหลักดึงไม่ขึ้น
-                  e.target.src = 'https://placehold.co'; 
+                  e.target.src = 'https://placehold.co/128';
                 }}
               />
             </div>
             {/* ชื่อหมวดหมู่สินค้า */}
-            <span className="text-xs text-gray-700 font-medium text-center line-clamp-1 group-hover:text-purple-600 transition-colors">
+            <span className="text-sm sm:text-base text-gray-700 font-medium text-center line-clamp-1 group-hover:text-purple-600 transition-colors">
               {cat.name}
             </span>
           </div>
@@ -84,9 +86,9 @@ const CategorySlider = () => {
       {/* ปุ่มลูกศรขวา */}
       <button
         onClick={() => handleScroll('right')}
-        className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-1.5 bg-white rounded-full border border-gray-200 text-gray-600 shadow-sm hover:bg-gray-50 transition-all opacity-0 group-hover/slider:opacity-100"
+        className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-2 bg-white rounded-full border border-gray-200 text-gray-600 shadow-sm hover:bg-gray-50 transition-all opacity-0 group-hover/slider:opacity-100"
       >
-        <ChevronRight size={16} />
+        <ChevronRight size={18} />
       </button>
     </div>
   );

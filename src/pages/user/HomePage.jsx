@@ -7,8 +7,7 @@ import SidebarNews from '../../components/features/Home/SidebarNews';
 
 const HomePage = () => {
   return (
-    <div className="w-full min-h-screen bg-gray-50 pb-12">
-    
+    <div className="w-full min-h-screen bg-gradient-to-br from-purple-50 via-purple-100 to-slate-50 pb-10">
       <div className="max-w-7xl mx-auto px-4 pt-6">
         <HeroBanner />
       </div>
