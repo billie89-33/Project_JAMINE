@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../../hooks/useAuth';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 
 const ProfileDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,12 +43,12 @@ const ProfileDropdown = () => {
             <div className="px-3.5 py-3 bg-slate-50 border-b border-slate-100 text-center">
               <p className="text-xs text-slate-500 mb-2">ยินดีต้อนรับสู่ร้านค้า</p>
               <div className="flex gap-2 justify-center">
-                <a href="/login" className="px-3 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded text-xs font-bold transition-colors">
+                <Link to="/login" className="px-3 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded text-xs font-bold transition-colors">
                   เข้าสู่ระบบ
-                </a>
-                <a href="/register" className="px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded text-xs font-bold transition-colors">
+                </Link>
+                <Link to="/register" className="px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded text-xs font-bold transition-colors">
                   สมัครสมาชิก
-                </a>
+                </Link>
               </div>
             </div>
           )}

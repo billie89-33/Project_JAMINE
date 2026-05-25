@@ -1,5 +1,5 @@
-import  { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom'; // 📥 Import useLocation เพิ่มเข้ามา
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
 import ProductMainInfo from '../../components/features/productDetail/ProductMainInfo';
 import ProductTabs from '../../components/features/productDetail/ProductTabs';
@@ -7,9 +7,7 @@ import ProductTabs from '../../components/features/productDetail/ProductTabs';
 const ProductDetailPage = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
-  
-  // 🌟 เครื่องมือสำหรับดักจับข้อมูลที่ส่งต่อมาจากหน้า Category
-  const location = useLocation(); 
+  const location = useLocation();
   
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -25,8 +23,15 @@ const ProductDetailPage = () => {
     } else {
       // 💡 เคสกรณีที่ผู้ใช้พิมพ์ URL เข้ามาตรงๆ (ไม่ได้กดมาจากหน้า Category) 
       // ในอนาคตเราจะเอาไว้ใส่ฟังก์ชันยิง API ดึงข้อมูลจากหลังบ้านจริงตรงนี้ครับ
-      
       console.log("ไม่มีข้อมูลส่งมาใน State ต้องยิง API ขอข้อมูลของ ID:", productId);
+      
+      // ตัวอย่าง Mock ข้อมูลเบื้องต้นถ้าไม่มีข้อมูลส่งมา
+      setProduct({
+        id: productId,
+        name: `Product ${productId}`,
+        price: "0 บาท",
+        description: "รายละเอียดสินค้าเบื้องต้น"
+      });
       setLoading(false);
     }
   }, [productId, location.state]);
@@ -52,7 +57,6 @@ const ProductDetailPage = () => {
           ← ย้อนกลับหน้ารวมสินค้า
         </button>
 
-        
         <ProductMainInfo product={product} />
         <ProductTabs product={product} /> 
 

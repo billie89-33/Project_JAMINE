@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import CartDrawer from './04.1_CartDrawer';
+import CartDrawer from './CartDrawer';
 
 const CartButton = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);

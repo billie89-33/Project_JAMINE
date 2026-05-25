@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import Navbar from '../components/common/Navbar/01_Navbar';
+import Navbar from '../components/common/Navbar/Navbar';
 import Footer from '../components/common/Footer/Footer';
 
 

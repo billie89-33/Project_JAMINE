@@ -25,11 +25,11 @@ const HomePage = () => {
 
       
        {/* ส่วนโครงสร้างกริดจัดวางสินค้าและข่าวสาร */}
-      <div className="max-w-7xl mx-auto px-4 mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="max-w-7xl mx-auto px-4 mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         <div className="lg:col-span-2">
           <ProductGrid />
         </div>
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 sticky top-24">
           <SidebarNews />
         </div>
       </div>

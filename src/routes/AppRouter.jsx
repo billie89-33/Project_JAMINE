@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter, Navigate, Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
@@ -9,15 +9,19 @@ import AuthLayout from "../layouts/AuthLayout";
 import ProtectedRoute from "./ProtectedRoute";
 
 // Pages
-import RegisterPage from "../pages/auth/02_RegisterPage";
-import LoginPage from "../pages/auth/01_LoginPage";
+import RegisterPage from "../pages/auth/RegisterPage";
+import LoginPage from "../pages/auth/LoginPage";
 import HomePage from "../pages/user/HomePage";
 import CategoryPage from "../pages/user/CategoryPage";
 import ProductDetailPage from "../pages/user/ProductDetailPage";
 
+import CartPage from "../pages/user/CartPage";
+
 // โครงสร้างหน้าเว็บจำลอง
 const TempPage = ({ name }) => (
-  <div className="p-10 font-bold text-xl text-purple-900">{name} Page (จำลอง)</div>
+  <div className="p-10 font-bold text-xl text-purple-900">
+    {name} Page (จำลอง)
+  </div>
 );
 
 // 🔒 Wrapper สำหรับ Admin Routes - guard ให้เฉพาะ admin role
@@ -51,6 +55,15 @@ const router = createBrowserRouter([
   },
 
   {
+    element: <ProtectedRoute />,
+    children: [
+      { path: "cart", element: <CartPage /> },
+      //{ path: "checkout", element: <CheckoutPage /> },
+      
+    ],
+  },
+
+  {
     // --- 2. กลุ่มหน้าแอดมิน (Admin Side) - มีการ guard role ---
     path: "/admin",
     element: <AdminRouteGuard />,
@@ -74,9 +87,12 @@ const router = createBrowserRouter([
             </div>
             <p className="text-sm text-center text-gray-600">
               ยังไม่มีบัญชี?{" "}
-              <a href="/register" className="text-blue-600 underline font-medium">
+              <Link
+                to="/register"
+                className="text-blue-600 underline font-medium"
+              >
                 สมัครสมาชิก
-              </a>
+              </Link>
             </p>
           </div>
         ),
@@ -90,9 +106,9 @@ const router = createBrowserRouter([
             </div>
             <p className="text-sm text-center text-gray-600">
               มีบัญชีอยู่แล้ว?{" "}
-              <a href="/login" className="text-blue-600 underline font-medium">
+              <Link to="/login" className="text-blue-600 underline font-medium">
                 เข้าสู่ระบบ
-              </a>
+              </Link>
             </p>
           </div>
         ),

@@ -1,9 +1,9 @@
 import { useState } from "react"; // ✨ 1. เติมบรรทัดนี้เพื่อแก้ไขบั๊ก useState is not defined
-import BrandLogo from "./02_BrandLogo";
-import NavMenu from "./03_NavMenu";
-import CartButton from "./04_CartButton";
-import ProfileDropdown from "./05_ProfileDropdown";
-import SearchBar from "./06_SearchBar";
+import BrandLogo from "./BrandLogo";
+import NavMenu from "./NavMenu";
+import CartButton from "./CartButton";
+import ProfileDropdown from "./ProfileDropdown";
+import SearchBar from "./SearchBar";
 
 const Navbar = () => {
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);

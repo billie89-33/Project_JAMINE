@@ -6,7 +6,7 @@ const SidebarNews = () => {
   const miniNews = Array.from({ length: 3 }, (_, i) => i + 1);
 
   return (
-    <div className="bg-white p-5 rounded-xl border border-purple-100 shadow-sm max-h-[560px] overflow-y-auto custom-scrollbar flex flex-col gap-5 w-full">
+    <div className=" p-5 rounded-xl   flex flex-col gap-5 w-full">
       
       {/* กลุ่มปุ่ม Social Media */}
       <div className="grid grid-cols-2 gap-2">
