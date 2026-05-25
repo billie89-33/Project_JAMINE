@@ -13,8 +13,6 @@ const ProtectedRoute = ({ isAllowed, redirectPath = '/login', children }) => {
 
  if (!isAuthenticated) {
     toast.error("กรุณาเข้าสู่ระบบก่อนเข้าถึงหน้านี้", { id: "auth-guard" });
-    return <Navigate to={redirectPath} state={{ from: location.pathname }} replace />;
-  }
 
     // 🔄 4. วาร์ปส่งตัวไปหน้าล็อกอิน พร้อมแนบกระดานชนวนบอกทาง (state) ไปด้วยว่าเขากดมาจากหน้าไหน
     return (
