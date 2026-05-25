@@ -1,8 +1,4 @@
-import NotebookSpecs from "./specs/NotebookSpecs";
-import KeyboardSpecs from "./specs/KeyboardSpecs";
-import ComputerSpecs from "./specs/ComputerSpecs";
-import MonitorSpecs from "./specs/MonitorSpecs";
-import MouseSpecs from "./specs/MouseSpecs";
+import { NotebookSpecs, KeyboardSpecs, ComputerSpecs, MonitorSpecs, MouseSpecs } from "./specs";
 
 // คอมโพเนนต์จำลองกรณีหมวดหมู่นั้นยังไม่มีสเปกเฉพาะ (เช่น Computer, Monitor, Mouse)
 const DefaultProductList = ({ categoryName }) => (

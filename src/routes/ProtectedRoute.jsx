@@ -1,9 +1,10 @@
 import { Navigate, Outlet, useLocation  } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../components/features/auth';
+import { useEffect } from 'react';
 
 // 💡 เพิ่มการรับค่า props ชื่อ children เข้ามาใช้งาน
-const ProtectedRoute = ({ isAllowed, redirectPath = '/login', children }) => {
+const ProtectedRoute = ({ redirectPath = '/login', children }) => {
  const { user } = useAuth();
  const location = useLocation();
 
@@ -11,10 +12,14 @@ const ProtectedRoute = ({ isAllowed, redirectPath = '/login', children }) => {
   // ⚠️ คำแนะนำ: ถ้าตอนนี้คุณกำลังแต่ง UI หน้าตะกร้าสินค้าอยู่ ให้พิมพ์แก้บรรทัดล่างนี้เป็น const isAuthenticated = true; ไปก่อนได้เลยครับชั่วคราว
   const isAuthenticated = !!user;
 
- if (!isAuthenticated) {
-    toast.error("กรุณาเข้าสู่ระบบก่อนเข้าถึงหน้านี้", { id: "auth-guard" });
+  useEffect(() => {
+    if (!isAuthenticated) {
+      toast.error("กรุณาเข้าสู่ระบบก่อนเข้าถึงหน้านี้", { id: "auth-guard" });
+    }
+  }, [isAuthenticated]); // ทำงานใหม่ทุกครั้งที่สถานะล็อกอินเปลี่ยนไป
 
-    // 🔄 4. วาร์ปส่งตัวไปหน้าล็อกอิน พร้อมแนบกระดานชนวนบอกทาง (state) ไปด้วยว่าเขากดมาจากหน้าไหน
+  // ❌ 3. ดักสิทธิ์เปลี่ยนหน้าตามปกติ
+  if (!isAuthenticated) {
     return (
       <Navigate 
         to={redirectPath} 

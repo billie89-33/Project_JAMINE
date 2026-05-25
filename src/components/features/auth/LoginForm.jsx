@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
-import { useAuth } from '../../../hooks/useAuth';
+import { useAuth } from './AuthContext';
 import { loginApi } from './api/auth.api';
 
 const LoginForm = () => {

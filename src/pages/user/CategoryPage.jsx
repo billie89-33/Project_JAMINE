@@ -1,12 +1,10 @@
 import { useParams } from 'react-router-dom';
 
-// ดึง Component แบนเนอร์และหมวดหมู่วงกลมตัวเดิมจากโฟลเดอร์ฟีเจอร์หน้า Home มาใช้ซ้ำ (Re-use)
-import HeroBanner from '../../components/features/Home/HeroBanner';
-import CategorySlider from '../../components/common/CategorySlider/CategorySlider';
+import { HeroBanner } from '../../components/features/Home';
+import { CategorySlider } from '../../components/common';
 
 // ดึง Component ระบบสลับหน้าสเปกและแถบเปลี่ยนหน้าจากโฟลเดอร์หน้า Category ของตัวเอง
-import ProductSwitchCase from '../../components/features/category/ProductSwitchCase';
-import Pagination from '../../components/features/category/Pagination';
+import { ProductSwitchCase, Pagination } from '../../components/features/category';
 
 const CategoryPage = () => {
   // แกะค่าตัวแปรจาก URL เช่น /category/notebook จะได้ค่า type = "notebook"

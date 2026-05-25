@@ -1,4 +1,4 @@
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../components/features/auth';
 import { useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 

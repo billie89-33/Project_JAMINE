@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
-import ProductMainInfo from '../../components/features/productDetail/ProductMainInfo';
-import ProductTabs from '../../components/features/productDetail/ProductTabs';
+import { ProductMainInfo, ProductTabs } from '../../components/features/productDetail';
 
 const ProductDetailPage = () => {
   const { productId } = useParams();

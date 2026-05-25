@@ -1,4 +1,4 @@
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './components/features/auth';
 import { RouterProvider } from 'react-router-dom';
 import router from './routes/AppRouter'; 
 import { Toaster } from 'react-hot-toast';

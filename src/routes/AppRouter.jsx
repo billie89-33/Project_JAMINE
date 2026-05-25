@@ -1,19 +1,14 @@
 import { createBrowserRouter, Navigate, Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
 
 // Layouts
-import UserLayout from "../layouts/UserLayout";
-import AdminLayout from "../layouts/AdminLayout/AdminLayout";
-import AuthLayout from "../layouts/AuthLayout";
+import { UserLayout, AdminLayout, AuthLayout } from "../layouts";
 import ProtectedRoute from "./ProtectedRoute";
 
 // Pages
-import RegisterPage from "../pages/auth/RegisterPage";
-import LoginPage from "../pages/auth/LoginPage";
-import HomePage from "../pages/user/HomePage";
-import CategoryPage from "../pages/user/CategoryPage";
-import ProductDetailPage from "../pages/user/ProductDetailPage";
+import { RegisterPage, LoginPage } from "../pages/auth";
+import { HomePage, CategoryPage, ProductDetailPage } from "../pages/user";
+import { useAuth } from "../components/features/auth";
 
 import CartPage from "../pages/user/CartPage";
 
