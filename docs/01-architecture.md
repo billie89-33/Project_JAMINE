@@ -22,9 +22,12 @@
 #### 📦 `modules/checkout/` (Security & API Focused)
 - **หน้าที่**: จัดการกระบวนการสั่งซื้อที่มีความปลอดภัยสูง (Address / Payment / Order Submission)
 - `components/`: UI เฉพาะ เช่น `AddressSelector.jsx`, `PaymentMethodSelector.jsx`
-- `hooks/useCheckout.js`: **หัวใจสำคัญ** ทำหน้าที่ดักจับ API, คำนวณค่าขนส่ง/ส่วนลดจริงจาก Server และส่งต่อให้ UI
-- `services/checkoutApi.js`: ตัวยิง API เฉพาะของระบบสั่งซื้อ (เช่น `POST /orders`)
+- `hooks/` & `services/`: จัดการ Logic และ API เฉพาะของโมดูล
 - `index.js`: **ประตูหลัก (Barrel File)** ทำหน้าที่ Re-export ทุกตัวรวมถึง Shared Components ออกไปให้หน้า Page ใช้งาน
+
+#### 📦 `modules/payment/` (Gateway & Integration)
+- **หน้าที่**: จัดการระบบชำระเงินและตรวจสอบยอดโอน (PromptPay / QR Code)
+- **Pattern สำคัญ**: มีการ Re-export คอมโพเนนต์จากโมดูลเพื่อนบ้าน (เช่น `CheckoutItemsList`) ผ่าน `index.js` เพื่อให้หน้า Page เรียกใช้ได้จากที่เดียว (Centralized Import)
 
 ...
 
