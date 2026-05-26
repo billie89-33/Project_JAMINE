@@ -17,6 +17,8 @@
    - *ใช้อ่านเมื่อ:* ต้องทำระบบ Login, จัดการเรื่องการแจ้งเตือน (Toast), หรือ Loading State
 6. **การตรวจสอบระบบ & Debugging:** [docs/06-frontend-debugging.md](./docs/06-frontend-debugging.md)
    - *ใช้อ่านเมื่อ:* เจอหน้าเว็บขาว, API ยิงไม่ไป, เช็ค HttpOnly Cookies หรือใช้ React DevTools
+7. **การจัดการ Event & Logic:** [docs/07-event-handling.md](./docs/07-event-handling.md)
+   - *ใช้อ่านเมื่อ:* ต้องเขียนฟังก์ชัน `handle...`, แยก Logic ออกจาก UI หรือสร้าง Custom Hook ใหม่
 
 ---
 *หมายเหตุ: ไฟล์นี้ถูกออกแบบมาให้เป็น Portable Brain เมื่อคุณย้ายโฟลเดอร์โปรเจกต์ไปเครื่องอื่น Gemini จะยังคงจำกฎเหล่านี้ได้ผ่านไฟล์นี้*

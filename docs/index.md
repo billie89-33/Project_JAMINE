@@ -9,6 +9,7 @@
 4. [**State & Context Management**](./04-state-management.md) - การจัดการสเตตัสและวิธีแก้ Context Hell
 5. [**UX, Security & Safety**](./05-ux-security.md) - ระบบความปลอดภัยและแนวทางเพื่อ User Experience ที่ดี
 6. [**Frontend Debugging Guide**](./06-frontend-debugging.md) - เทคนิคหาบั๊กและตรวจสอบ API/Cookies
+7. [**Event Handling & Separation of Concerns**](./07-event-handling.md) - การแยก Business Logic ออกจาก UI อย่างมืออาชีพ
 
 ---
 *จัดทำโดย Gemini CLI Agent - 2026-05-26*
