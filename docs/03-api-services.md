@@ -22,4 +22,4 @@ export const getItems = async () => {
 ## ✅ แนวทางปฏิบัติ
 - ห้ามใช้ `axios` หรือ `fetch` ตรงๆ ใน Component
 - ทุก API Call ต้องผ่าน Service Layer เสมอ
-- จัดการ Error ใน Service หรือใช้ Interceptor ส่วนกลาง
+- **CRUD Operations**: ในโมดูลที่มีการจัดการข้อมูล (เช่น Address Management) ต้องเตรียมฟังก์ชัน API รองรับทั้งการดึงข้อมูล (Get), เพิ่ม (Add), และลบ (Delete) ไว้ใน Service ทันที

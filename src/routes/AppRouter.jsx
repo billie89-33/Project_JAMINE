@@ -6,7 +6,7 @@ import ProtectedRoute from "./ProtectedRoute";
 
 // Pages
 import { RegisterPage, LoginPage } from "@/pages/auth";
-import { HomePage, CategoryPage, ProductDetailPage } from "@/pages/user";
+import { HomePage, CategoryPage, ProductDetailPage, CheckoutPage } from "@/pages/user";
 import { useAuth } from "@/shared/contexts/AuthContext";
 
 import CartPage from "@/pages/user/CartPage";
@@ -52,8 +52,7 @@ const router = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       { path: "cart", element: <CartPage /> },
-      //{ path: "checkout", element: <CheckoutPage /> },
-      
+      { path: "checkout", element: <CheckoutPage /> },
     ],
   },
 
@@ -95,7 +94,7 @@ const router = createBrowserRouter([
         path: "/register",
         element: (
           <div className="space-y-4">
-            <div className="p-4 bg-green-50 border border-green-200 rounded">
+            <div className="p-4 bg-green-50 border border-blue-200 rounded">
               <RegisterPage />
             </div>
             <p className="text-sm text-center text-gray-600">

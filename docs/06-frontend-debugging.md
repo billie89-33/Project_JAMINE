@@ -89,8 +89,7 @@ const handleSubmit = async (e) => {
 ## 🚨 5. รายการบั๊กยอดฮิตฝั่ง Frontend และวิธีจัดการ (Troubleshooting Cheat Sheet)
 
 
-| อาการของปัญหา | สาเหตุที่เป็นไปได้ | แนวทางการแก้ไขที่ตรงจุด |
-| :--- | :--- | :--- |
+| **Error: pathspec... did not match** | พยายามจัดการไฟล์ผ่าน Git หรือ Command Line แต่ระบุ Path ผิด หรือ Case-sensitive (ตัวพิมพ์เล็ก-ใหญ่) ไม่ตรงกัน | ตรวจสอบตำแหน่งไฟล์ด้วย `ls` หรือ `dir` และตรวจสอบว่าไฟล์ถูก Commit หรือยัง (ถ้าเป็นไฟล์ใหม่ต้อง `git add` ก่อน) |
 | **หน้าเว็บขาวโพลน (White Screen of Death)** | 1. เกิด Runtime Error รุนแรงภายในโค้ดจนแอปพลิเคชันพังทลาย<br>2. การ Import พังหลังจากย้าย Folder (Module Not Found) | 1. ติดตั้ง `Error Boundary` (ตามคู่มือ Best Practice) ครอบไว้ชั้นบนสุด<br>2. ตรวจสอบ `vite.config.js` ว่ามี `@` alias หรือยัง และเปลี่ยนการ Import เป็น `@/` |
 | **Error: useAuth must be used within...** | เรียกใช้ `useAuth` จาก Path ที่ผิด หรือลืมครอบ `AppProvider` ที่ `main.jsx` | ตรวจสอบให้มั่นใจว่า Import `useAuth` มาจาก `@/shared/contexts/AuthContext` เท่านั้น |
 | **ค้างอยู่ที่หน้าโหลดตลอดเวลา (Infinite Loading)** | ลืมใส่บล็อก `finally` เพื่อปิดสเตตัส loading หรือยิง API แล้ว error หลุดรอดไปโดยไม่มี catch ดักไว้ | ตรวจสอบว่าใน `try-catch` ฝั่งยิง API มีการสั่ง `setLoading(false)` ภายในบล็อก `finally` เสมอ |

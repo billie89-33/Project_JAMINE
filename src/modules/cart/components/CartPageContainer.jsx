@@ -1,24 +1,38 @@
 
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CartItem from './CartItem';
-import CartSummary from './CartSummary';
-import { useState } from 'react';
+import { OrderSummaryCard } from '@/shared/components';
 
 export default function CartPageContainer() {
-  const [products, setProducts] = useState([
-    { id: 1, name: 'Premium Minimalist Product', description: 'Size: M, Color: Black', price: 300, quantity: 1 },
-    { id: 2, name: 'Ergonomic Modern Item', description: 'Size: L, Color: White', price: 300, quantity: 1 },
-  ]);
+  const navigate = useNavigate();
+  const [products, setProducts] = useState([]);
+
+  // โหลดข้อมูลจาก localStorage เมื่อ Component Mount
+  useEffect(() => {
+    const savedCart = JSON.parse(localStorage.getItem('cart')) || [];
+    setProducts(savedCart);
+  }, []);
+
+  // ฟังก์ชันช่วยบันทึกลง localStorage
+  const syncCart = (updatedCart) => {
+    setProducts(updatedCart);
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+  };
 
   const increaseQty = (id) => {
-    setProducts(products.map(p => p.id === id ? { ...p, quantity: p.quantity + 1 } : p));
+    const updated = products.map(p => p.id === id ? { ...p, quantity: p.quantity + 1 } : p);
+    syncCart(updated);
   };
 
   const decreaseQty = (id) => {
-    setProducts(products.map(p => p.id === id && p.quantity > 1 ? { ...p, quantity: p.quantity - 1 } : p));
+    const updated = products.map(p => p.id === id && p.quantity > 1 ? { ...p, quantity: p.quantity - 1 } : p);
+    syncCart(updated);
   };
 
   const removeProduct = (id) => {
-    setProducts(products.filter(p => p.id !== id));
+    const updated = products.filter(p => p.id !== id);
+    syncCart(updated);
   };
 
   const subtotal = products.reduce((sum, p) => sum + (p.price * p.quantity), 0);
@@ -66,12 +80,18 @@ export default function CartPageContainer() {
               Your cart is empty
             </div>
           )}
-
-          
         </div>
 
-        {/* สรุปราคาฝั่งขวา */}
-        <CartSummary subtotal={subtotal} />
+        {/* สรุปราคาฝั่งขวา - เปลี่ยนไปใช้ OrderSummaryCard ตัวกลาง */}
+        <div className="w-full lg:w-96 sticky top-6">
+          <OrderSummaryCard 
+            subtotal={subtotal}
+            total={subtotal}
+            buttonText="Proceed to Checkout"
+            onAction={() => navigate('/checkout')}
+            isDisabled={products.length === 0}
+          />
+        </div>
       </div>
     </div>
   );

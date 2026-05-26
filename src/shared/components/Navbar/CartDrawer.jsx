@@ -1,15 +1,20 @@
 import { NavLink } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 const CartDrawer = ({ isOpen, onClose }) => {
+  const [cartItems, setCartItems] = useState([]);
+
+  // โหลดข้อมูลจาก localStorage ทุกครั้งที่เปิด Drawer
+  useEffect(() => {
+    if (isOpen) {
+      const savedCart = JSON.parse(localStorage.getItem('cart')) || [];
+      setCartItems(savedCart);
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
-  // จำลองข้อมูลสินค้า (อนาคตดึงมาจาก CartContext เช่นเดียวกัน)
-  const cartItems = [
-    { id: 1, name: "Gaming Keyboard RGB", price: 1290, qty: 1, img: "🎹" }, 
-    { id: 2, name: "Wireless Gaming Mouse", price: 590, qty: 2, img: "🖱️" }
-  ];
-
-  const total = cartItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   return (
     <div className="fixed inset-0 z-[999] overflow-hidden">
@@ -38,18 +43,26 @@ const CartDrawer = ({ isOpen, onClose }) => {
 
           {/* รายการสินค้าภายในตะกร้า */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {cartItems.map((item) => (
-              <div key={item.id} className="flex gap-3 p-3 bg-slate-50 border border-slate-100 rounded-xl relative">
-                <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center border border-slate-200 text-xl shadow-sm">
-                  {item.img}
+            {cartItems.length > 0 ? (
+              cartItems.map((item) => (
+                <div key={item.id} className="flex gap-3 p-3 bg-slate-50 border border-slate-100 rounded-xl relative">
+                  <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center border border-slate-200 text-xl shadow-sm overflow-hidden p-1">
+                    {item.image ? (
+                      <img src={item.image} alt={item.name} className="w-full h-full object-contain" />
+                    ) : (
+                      "📦"
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-xs font-bold text-slate-800 truncate">{item.name}</h4>
+                    <p className="text-[10px] text-slate-400 mt-0.5">จำนวน: {item.quantity} ชิ้น</p>
+                    <p className="text-xs font-black text-purple-700 mt-1">{item.price?.toLocaleString()} บาท</p>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="text-xs font-bold text-slate-800 truncate">{item.name}</h4>
-                  <p className="text-[10px] text-slate-400 mt-0.5">จำนวน: {item.qty} ชิ้น</p>
-                  <p className="text-xs font-black text-purple-700 mt-1">{item.price.toLocaleString()} บาท</p>
-                </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <div className="text-center py-20 text-gray-400 text-xs">ไม่มีสินค้าในตะกร้า</div>
+            )}
           </div>
 
           {/* ส่วนสรุปราคาและปุ่มดำเนินการต่อ */}

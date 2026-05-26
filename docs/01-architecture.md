@@ -6,19 +6,27 @@
 แบ่งแยกขาดจากกันระหว่าง **shared** (แกนกลาง) และ **modules** (กล่องฟีเจอร์)
 
 ### 1. `src/shared/` (The Kernel)
-- `components/`: UI พื้นฐาน (Button, Input, Modal)
+- `components/`: UI พื้นฐาน (Button, Input) และ **Shared Business Components** (เช่น OrderSummaryCard) ที่ต้องใช้งานร่วมกันในหลายโมดูล
 - `api/`: Core API Client (ตัวแม่ คุม baseURL, Interceptors)
 - `contexts/`: Global State ที่มีผลทั้งแอป (Auth, Theme)
 - `providers/`: ตัวมัดรวม Provider (AppProvider.jsx)
 - `hooks/` & `utils/`: ฟังก์ชันช่วยและ Custom Hooks ส่วนกลาง
 
 ### 2. `src/modules/` (Feature Modules)
-แต่ละฟีเจอร์ (เช่น auth, cart, products, product-detail) จะต้องเป็นอิสระและมีโครงสร้างภายในดังนี้:
-- `components/`: UI เฉพาะของฟีเจอร์นั้น
-- `hooks/`: Business Logic เฉพาะฟีเจอร์
-- `services/`: API Service เฉพาะฟีเจอร์ (ตัวลูก)
-- `contexts/`: State เฉพาะฟีเจอร์ (ถ้ามี)
-- `index.js`: **ประตูเข้า-ออกหลัก (Barrel File)**
+แต่ละฟีเจอร์ต้องเป็นอิสระและมีโครงสร้างภายในที่ชัดเจน ตัวอย่างมาตรฐานที่เราใช้:
+
+#### 📦 `modules/cart/` (Client-side Focused)
+- **หน้าที่**: จัดการรายการสินค้าในตะกร้าเบื้องต้น (Client-side / LocalStorage / จัดการจำนวน)
+- `hooks/useCart.js`: หัวใจสำคัญที่ทำหน้าที่ "แปลงข้อมูลตะกร้า" (Local) ส่งให้ Summary แสดงผล
+
+#### 📦 `modules/checkout/` (Security & API Focused)
+- **หน้าที่**: จัดการกระบวนการสั่งซื้อที่มีความปลอดภัยสูง (Address / Payment / Order Submission)
+- `components/`: UI เฉพาะ เช่น `AddressSelector.jsx`, `PaymentMethodSelector.jsx`
+- `hooks/useCheckout.js`: **หัวใจสำคัญ** ทำหน้าที่ดักจับ API, คำนวณค่าขนส่ง/ส่วนลดจริงจาก Server และส่งต่อให้ UI
+- `services/checkoutApi.js`: ตัวยิง API เฉพาะของระบบสั่งซื้อ (เช่น `POST /orders`)
+- `index.js`: **ประตูหลัก (Barrel File)** ทำหน้าที่ Re-export ทุกตัวรวมถึง Shared Components ออกไปให้หน้า Page ใช้งาน
+
+...
 
 ### 3. `src/layouts/` & `src/pages/`
 - **Layouts**: โครงร่างหน้า (MainLayout, AdminLayout)

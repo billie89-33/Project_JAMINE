@@ -1,6 +1,6 @@
 export default function CartItem({ product, onIncrease, onDecrease, onRemove }) {
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-100 py-6">
+    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 py-8 last:border-0">
       {/* ข้อมูลสินค้า */}
       <div className="flex gap-4 flex-1">
         <div className="w-24 h-24 bg-gray-100 rounded-xl overflow-hidden flex-shrink-0 border border-gray-50 flex items-center justify-center text-gray-400">

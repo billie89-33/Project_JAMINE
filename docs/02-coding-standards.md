@@ -7,9 +7,11 @@
 2. **Abstract Naming Rule**: ตั้งชื่อตามหน้าที่ (Role-based) ไม่ใช่เทคนิค เช่น `ProductGrid.jsx` แทน `ProductSwitchCase.jsx`
 3. **Dependency Direction Rule**: `modules` -> `shared` (อนุญาต) | `modules` <-> `modules` (ห้ามเจาะลึก ต้องผ่าน index.js เท่านั้น)
 4. **Absolute Import Rule (`@/`)**: ห้ามใช้ `../../` ข้ามไปยังโฟลเดอร์หลักอื่น ให้ใช้ `@/` เพื่อความชัดเจนและป้องกันบั๊กเวลาทำการ Refactor
+5. **The Shared Logic Rule**: หาก UI หรือ Logic มีการใช้งานซ้ำมากกว่า 1 โมดูล (เช่น Cart vs Checkout) ให้ย้ายไปไว้ที่ `src/shared/` ทันที ห้าม Copy โค้ดเด็ดขาด
 
 ## 🛠️ Patterns & Naming ที่ต้องใช้
 - **Feature-Specific Separation**: เมื่อฟีเจอร์มีความซับซ้อน (เช่น Product List vs Product Detail) ให้แยกเป็นคนละโมดูลทันที เพื่อลดการปนกันของ Logic
+- **Visual Consistency (Dividers & Spacing)**: การแบ่งสัดส่วนสินค้า (List Items) ควรใช้เส้นแบ่งที่ชัดเจน (เช่น `border-slate-200`) และเว้นระยะห่างที่พอดี (`py-6` ถึง `py-8`) เพื่อ UX ที่ดี
 - **PascalCase for Components**: ตั้งชื่อไฟล์และ Component ด้วยตัวพิมพ์ใหญ่เสมอ เช่น `ProductCard.jsx`
 - **Container/Presentational**: แยก Logic (สมอง) ออกจาก UI เสมอ
 - **Barrel Export**: ใช้ในทุกโฟลเดอร์หลักเพื่อให้ Path สะอาด

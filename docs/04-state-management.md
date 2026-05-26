@@ -29,5 +29,6 @@ export const AppProvider = ({ children }) => (
 
 ## ✅ แนวทางปฏิบัติ
 - ใช้ `useContext` ผ่าน Custom Hook เสมอ (เช่น `useAuth`)
+- **Data Transformation Pattern**: ในโมดูลที่ต้องส่งข้อมูลให้ Shared UI (เช่น Summary Card) ให้ใช้ Hook (เช่น `useCart`, `useCheckout`) ทำหน้าที่เป็น Adapter แปลงข้อมูลจาก Local/API ให้ตรงตาม Interface ที่ UI ต้องการก่อนส่งต่อเสมอ
 - ห้ามประกาศ State ซ้ำซ้อนที่สามารถคำนวณจาก State อื่นได้ (Derived State)
 - ตรวจสอบ `loading` state ก่อนแสดงผลข้อมูลเสมอ

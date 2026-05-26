@@ -8,10 +8,6 @@ import {
   useCheckout 
 } from '@/modules/checkout';
 
-/**
- * 🛒 CheckoutPage
- * หน้าสรุปคำสั่งซื้อและเลือกวิธีการชำระเงิน
- */
 const CheckoutPage = () => {
   const navigate = useNavigate();
   
