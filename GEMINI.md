@@ -9,8 +9,8 @@
    - *ใช้อ่านเมื่อ:* ต้องสร้างโฟลเดอร์ใหม่, ย้ายไฟล์, หรือวางโครงสร้าง Module
 2. **กฎการเขียนโค้ด & การตั้งชื่อ:** [docs/02-coding-standards.md](./docs/02-coding-standards.md)
    - *ใช้อ่านเมื่อ:* ต้องเขียน Component ใหม่, ตรวจสอบความสะอาดของโค้ด (Lint)
-3. **การจัดการ API (ลูก-แม่):** [docs/03-api-services.md](./docs/03-api-services.md)
-   - *ใช้อ่านเมื่อ:* ต้องเชื่อมต่อ Backend, สร้าง Axios instance, หรือจัดการ Error API
+3. **การจัดการ API (Master Guide):** [docs/03-api-services.md](./docs/03-api-services.md)
+   - *ใช้อ่านเมื่อ:* ต้องเชื่อมต่อ Backend, จัดการ HttpOnly Cookies, หรือตั้งค่า Interceptors
 4. **การจัดการ State & Context:** [docs/04-state-management.md](./docs/04-state-management.md)
    - *ใช้อ่านเมื่อ:* ต้องแชร์ข้อมูลข้ามหน้า, สร้าง Provider, หรือจัดการ Global State
 5. **ความปลอดภัย & UX:** [docs/05-ux-security.md](./docs/05-ux-security.md)
