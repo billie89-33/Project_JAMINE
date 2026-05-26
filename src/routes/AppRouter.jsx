@@ -1,16 +1,15 @@
 import { createBrowserRouter, Navigate, Link } from "react-router-dom";
-import { Outlet } from "react-router-dom";
 
 // Layouts
-import { UserLayout, AdminLayout, AuthLayout } from "../layouts";
+import { UserLayout, AdminLayout, AuthLayout } from "@/layouts";
 import ProtectedRoute from "./ProtectedRoute";
 
 // Pages
-import { RegisterPage, LoginPage } from "../pages/auth";
-import { HomePage, CategoryPage, ProductDetailPage } from "../pages/user";
-import { useAuth } from "../components/features/auth";
+import { RegisterPage, LoginPage } from "@/pages/auth";
+import { HomePage, CategoryPage, ProductDetailPage } from "@/pages/user";
+import { useAuth } from "@/shared/contexts/AuthContext";
 
-import CartPage from "../pages/user/CartPage";
+import CartPage from "@/pages/user/CartPage";
 
 // โครงสร้างหน้าเว็บจำลอง
 const TempPage = ({ name }) => (

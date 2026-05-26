@@ -1,0 +1,3 @@
+export * from './Navbar';
+export { default as Footer } from './Footer/Footer';
+export { default as CategorySlider } from './CategorySlider/CategorySlider';

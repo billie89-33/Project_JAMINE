@@ -1,4 +1,4 @@
-import CartPageContainer from '../../components/features/cart/CartPageContainer';
+import { CartPageContainer } from '@/modules/cart';
 
 export default function CartPage() {
   return (

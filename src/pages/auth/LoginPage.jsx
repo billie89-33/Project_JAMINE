@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { LoginForm } from '../../components/features/auth';
+import { LoginForm } from '@/modules/auth';
 
 const LoginPage = () => {
   return (

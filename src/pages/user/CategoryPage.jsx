@@ -1,10 +1,10 @@
 import { useParams } from 'react-router-dom';
 
-import { HeroBanner } from '../../components/features/Home';
-import { CategorySlider } from '../../components/common';
+import { HeroBanner } from '@/modules/home';
+import { CategorySlider } from '@/shared/components';
 
 // ดึง Component ระบบสลับหน้าสเปกและแถบเปลี่ยนหน้าจากโฟลเดอร์หน้า Category ของตัวเอง
-import { ProductSwitchCase, Pagination } from '../../components/features/category';
+import { ProductSwitchCase, Pagination } from '@/modules/products';
 
 const CategoryPage = () => {
   // แกะค่าตัวแปรจาก URL เช่น /category/notebook จะได้ค่า type = "notebook"

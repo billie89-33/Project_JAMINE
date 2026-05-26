@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useAuth } from '../../features/auth';
+import { useAuth } from '@/shared/contexts/AuthContext';
 import { NavLink, Link } from 'react-router-dom';
 
 const ProfileDropdown = () => {

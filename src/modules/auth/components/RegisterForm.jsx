@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
-import { registerApi } from "./api/auth.api";
+import { registerApi } from "../services/authApi";
 import { toast } from "react-hot-toast";
 
 const RegisterForm = () => {
@@ -33,13 +33,13 @@ const RegisterForm = () => {
     }
 
     try {
-      const res = await registerApi(username, email, password);
+      const res = await registerApi({ username, email, password });
       if (res.success) {
         toast.success("สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ");
         navigate("/login");
       }
     } catch (err) {
-      setError(err.message || "สมัครสมาชิกไม่สำเร็จ");
+      setError(err.response?.data?.message || err.message || "สมัครสมาชิกไม่สำเร็จ");
     } finally {
       setLoading(false);
     }
@@ -60,7 +60,6 @@ const RegisterForm = () => {
         Sign Up
       </h4>
 
-      {/* ช่อง ชื่อผู้ใช้งาน */}
       <div className="space-y-1">
         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
           Username
@@ -75,7 +74,6 @@ const RegisterForm = () => {
         />
       </div>
 
-      {/* ช่อง อีเมล */}
       <div className="space-y-1">
         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
           Your Email
@@ -90,7 +88,6 @@ const RegisterForm = () => {
         />
       </div>
 
-      {/* ช่อง รหัสผ่าน */}
       <div className="space-y-1">
         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
           Password
@@ -114,7 +111,6 @@ const RegisterForm = () => {
         </div>
       </div>
 
-      {/* ช่อง ยืนยันรหัสผ่าน */}
       <div className="space-y-1">
         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
           Confirm Password
@@ -138,7 +134,6 @@ const RegisterForm = () => {
         </div>
       </div>
 
-      {/* ปุ่มกดส่งฟอร์ม */}
       <button
         type="submit"
         disabled={loading}
@@ -147,7 +142,6 @@ const RegisterForm = () => {
         {loading ? "กำลังสมัครสมาชิก..." : "Sign Up"}
       </button>
 
-      {/* ลิงก์สลับหน้าเด้งกลับไปที่หน้า Login */}
       <p className="text-[10px] text-center text-slate-400 pt-2 border-t border-slate-50">
         Already have an account?{" "}
         <NavLink

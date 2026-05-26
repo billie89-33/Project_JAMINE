@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
-import { useAuth } from './AuthContext';
-import { loginApi } from './api/auth.api';
+import { useAuth } from '@/shared/contexts/AuthContext';
+import { loginApi } from '../services/authApi';
 
 const LoginForm = () => {
   const { login } = useAuth();
@@ -31,13 +31,12 @@ const LoginForm = () => {
         navigate('/', { replace: true });
       }
     } catch (err) {
-      setError(err.message || 'เข้าสู่ระบบไม่สำเร็จ');
+      setError(err.response?.data?.message || err.message || 'เข้าสู่ระบบไม่สำเร็จ');
     } finally {
       setLoading(false);
     }
   };
 
-  
   return (
     <form 
       onSubmit={handleLoginSubmit} 
@@ -51,7 +50,6 @@ const LoginForm = () => {
 
       <h4 className="text-sm font-black text-slate-900 border-b border-slate-100 pb-2">Sign In</h4>
       
-      {/* ช่องข้อมูลที่ 1: อีเมล */}
       <div className="space-y-1">
         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Your Email</label>
         <input
@@ -64,7 +62,6 @@ const LoginForm = () => {
         />
       </div>
 
-      {/* ช่องข้อมูลที่ 2: รหัสผ่าน (พร้อมปุ่มเปิด/ปิดตาซ่อนพาสเวิร์ด) */}
       <div className="space-y-1">
         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Password</label>
         <div className="relative">
@@ -76,7 +73,6 @@ const LoginForm = () => {
             className="w-full bg-slate-50 border border-slate-100 px-3 py-2 text-xs rounded-xl focus:outline-none focus:border-purple-600 transition-colors pr-10"
             required
           />
-          {/* ปุ่มรูปดวงตาสำหรับกดสลับดูรหัสผ่าน */}
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
@@ -87,7 +83,6 @@ const LoginForm = () => {
         </div>
       </div>
 
-      {/* ปุ่มกดส่งข้อมูลยืนยันตัวตน */}
       <button
         type="submit"
         disabled={loading}
@@ -96,7 +91,6 @@ const LoginForm = () => {
         {loading ? 'กำลังเข้าสู่ระบบ...' : 'Sign In'}
       </button>
 
-      {/* ลิงก์สลับหน้าเด้งเปลี่ยนไปที่หน้า Register */}
       <p className="text-[10px] text-center text-slate-400 pt-2 border-t border-slate-50">
         Don't have an account?{' '}
         <NavLink to="/register" className="text-purple-600 font-bold hover:underline">

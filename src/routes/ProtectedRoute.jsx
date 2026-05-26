@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useLocation  } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { useAuth } from '../components/features/auth';
+import { useAuth } from '@/shared/contexts/AuthContext';
 import { useEffect } from 'react';
 
 // 💡 เพิ่มการรับค่า props ชื่อ children เข้ามาใช้งาน

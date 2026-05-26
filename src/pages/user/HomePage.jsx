@@ -1,5 +1,5 @@
-import { HeroBanner, PromotionBanner, ProductGrid, SidebarNews } from '../../components/features/Home';
-import { CategorySlider } from '../../components/common';
+import { HeroBanner, PromotionBanner, ProductGrid, SidebarNews } from '@/modules/home';
+import { CategorySlider } from '@/shared/components';
 
 
 const HomePage = () => {
