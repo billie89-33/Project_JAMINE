@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { generatePayload } from 'promptpay-qr-generator'; 
+import generatePayload from 'promptpay-qr';
 import QRCode from 'react-qr-code'; 
 
 const PromptPayQRBox = ({ totalAmount = 2000 }) => {
