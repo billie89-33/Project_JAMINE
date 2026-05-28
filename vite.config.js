@@ -14,4 +14,16 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    rollupOptions: {
+      // ⚠️ Allow building with older CommonJS libraries like promptpay-qr
+      external: [],
+    },
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    }
+  },
+  optimizeDeps: {
+    include: ['promptpay-qr']
+  }
 })
