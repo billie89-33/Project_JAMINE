@@ -30,7 +30,7 @@ const SidebarSubMenu = ({ item, activeLink, normalLink }) => {
               key={index}
               to={subItem.path}
               className={({ isActive }) => 
-                `block p-2 text-xs font-medium rounded-md transition-all duration-200 ${
+                `block p-2 text-sm font-medium rounded-md transition-all duration-200 ${
                   isActive 
                     ? 'bg-blue-600 text-white shadow-sm font-bold' 
                     : 'text-slate-400 hover:text-white hover:bg-slate-800/40'

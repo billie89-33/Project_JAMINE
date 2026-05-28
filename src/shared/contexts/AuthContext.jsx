@@ -15,15 +15,14 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const checkAuthStatus = async () => {
             try {
-                // พยายามดึงข้อมูลจาก Server (ถ้าใช้ HttpOnly Cookie)
+                // 🛡️ Single Source of Truth: ดึงข้อมูลจาก Server เสมอ
                 const res = await getMeApi();
                 if (res.success) {
                     setUser(res.data);
                 }
             } catch (error) {
-                // ถ้าดึงจาก Server ไม่ได้ ลองเช็ค LocalStorage (Fallback)
-                const savedUser = JSON.parse(localStorage.getItem('user'));
-                if (savedUser) setUser(savedUser);
+                console.warn('User not authenticated (Initial check)');
+                setUser(null);
             } finally {
                 setLoading(false);
             }
@@ -33,8 +32,8 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = (userData) => {
+        // ✅ เก็บแค่ใน State (ความปลอดภัยสูง)
         setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData));
     };
 
     const logout = async () => {
@@ -43,8 +42,10 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             console.error('Logout error:', error);
         } finally {
+            // 🧹 ล้าง State ทุกกรณี
             setUser(null);
-            localStorage.removeItem('user');
+            localStorage.clear();
+            sessionStorage.clear();
         }
     };
 

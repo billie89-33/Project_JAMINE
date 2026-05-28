@@ -6,7 +6,8 @@ import ProtectedRoute from "./ProtectedRoute";
 
 // Pages
 import { RegisterPage, LoginPage } from "@/pages/auth";
-import { HomePage, CategoryPage, ProductDetailPage, CheckoutPage } from "@/pages/user";
+import { HomePage, CategoryPage, ProductDetailPage, CheckoutPage, PaymentPage } from "@/pages/user";
+import * as AdminPages from "@/pages/admin";
 import { useAuth } from "@/shared/contexts/AuthContext";
 
 import CartPage from "@/pages/user/CartPage";
@@ -63,8 +64,14 @@ const router = createBrowserRouter([
     element: <AdminRouteGuard />,
     children: [
       { index: true, element: <Navigate to="dashboard" replace /> },
-      { path: "dashboard", element: <TempPage name="Admin Analytics" /> },
-      { path: "products", element: <TempPage name="Manage Products" /> },
+      { path: "dashboard", element: <AdminPages.DashboardPage /> },
+      { path: "products", element: <AdminPages.ProductsPage /> },
+      { path: "product-details", element: <AdminPages.ProductDetailPage /> },
+      { path: "add-product", element: <AdminPages.AddProductPage /> },
+      { path: "order", element: <AdminPages.OrdersPage /> },
+      { path: "order-details", element: <AdminPages.OrderDetailPage /> },
+      { path: "advertising", element: <AdminPages.AdvertisingPage /> },
+      { path: "shipping", element: <AdminPages.ShippingPage /> },
     ],
   },
 

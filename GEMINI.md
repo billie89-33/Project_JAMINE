@@ -19,6 +19,8 @@
    - *ใช้อ่านเมื่อ:* เจอหน้าเว็บขาว, API ยิงไม่ไป, เช็ค HttpOnly Cookies หรือใช้ React DevTools
 7. **การจัดการ Event & Logic:** [docs/07-event-handling.md](./docs/07-event-handling.md)
    - *ใช้อ่านเมื่อ:* ต้องเขียนฟังก์ชัน `handle...`, แยก Logic ออกจาก UI หรือสร้าง Custom Hook ใหม่
+8. **การ Deployment & Cloud:** [docs/08-deployment-production.md](./docs/08-deployment-production.md)
+   - *ใช้อ่านเมื่อ:* ต้องนำระบบขึ้น Production (Render/Vercel), ตั้งค่า Environment Variables หรือจัดการ CORS
 
 ---
 *หมายเหตุ: ไฟล์นี้ถูกออกแบบมาให้เป็น Portable Brain เมื่อคุณย้ายโฟลเดอร์โปรเจกต์ไปเครื่องอื่น Gemini จะยังคงจำกฎเหล่านี้ได้ผ่านไฟล์นี้*

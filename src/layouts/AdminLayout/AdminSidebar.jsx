@@ -18,7 +18,7 @@ const AdminSidebar = () => {
     icon: <LayoutDashboard size={20} />,
     subNav: [
       
-      { title: 'Analytics', path: 'analytics' } 
+      { title: 'Analytics', path: 'dashboard' } 
     ]
   },
   {
