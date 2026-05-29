@@ -80,9 +80,14 @@ export const useCheckout = () => {
       const res = await createOrderApi(orderPayload);
 
       if (res.success) {
-        toast.success("สร้างคำสั่งซื้อสำเร็จ!");
-        localStorage.removeItem('cart');
-        navigate('/'); 
+        toast.success("สร้างคำสั่งซื้อสำเร็จ! กำลังไปที่หน้าชำระเงิน...");
+        // ไม่ต้องลบ cart ทันที ให้รอจ่ายเงินสำเร็จก่อน
+        navigate('/payment-gateway', { 
+          state: { 
+            totalAmount: priceDetails.total,
+            orderId: res.data?.id || 'temp_id'
+          } 
+        }); 
       }
     } catch (error) {
       toast.error("ไม่สามารถสร้างคำสั่งซื้อได้");

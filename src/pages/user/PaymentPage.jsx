@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { Navbar } from '@/shared/components'; 
 import { 
@@ -15,16 +15,29 @@ import {
  */
 const PaymentPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isVerifying, setIsVerifying] = useState(false);
 
-  // 🧪 รายชื่อสินค้าจำลอง (ในอนาคตดึงจาก LocalStorage หรือ State ที่ส่งมาจาก Checkout)
-  const [cartItems] = useState(JSON.parse(localStorage.getItem('cart')) || [
-    { id: 'p1', name: 'Product name', price: 300, quantity: 1, image: 'https://via.placeholder.com/150' },
-    { id: 'p2', name: 'Product name', price: 300, quantity: 1, image: 'https://via.placeholder.com/150' }
-  ]);
+  // 📝 รับข้อมูลจากหน้า Checkout (ผ่าน state)
+  const { totalAmount, orderId } = location.state || { totalAmount: 0, orderId: null };
+
+  // 🧪 รายชื่อสินค้าจำลอง (ดึงจาก LocalStorage)
+  const [cartItems] = useState(JSON.parse(localStorage.getItem('cart')) || []);
 
   const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-  const payableAmount = subtotal; // ปรับให้ตรงกับราคาสินค้าจริงในตะกร้า
+  const payableAmount = totalAmount || subtotal; 
+
+  // ป้องกันการเข้าหน้านี้โดยไม่มีข้อมูล
+  if (payableAmount === 0 && cartItems.length === 0) {
+    return (
+      <div className="w-full min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="text-center space-y-4">
+          <p className="text-slate-500 font-bold">ไม่พบข้อมูลการชำระเงิน</p>
+          <button onClick={() => navigate('/')} className="text-purple-600 underline text-xs">กลับหน้าหลัก</button>
+        </div>
+      </div>
+    );
+  }
 
   const handleVerifyPayment = async () => {
     setIsVerifying(true);

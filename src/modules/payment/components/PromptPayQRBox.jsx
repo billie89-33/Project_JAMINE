@@ -17,7 +17,7 @@ const PromptPayQRBox = ({ totalAmount = 2000 }) => {
     return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
   };
 
-  const targetPromptPayId = "081-xxx-xxxx"; 
+  const targetPromptPayId = "0641199580"; 
   const promptPayTextPayload = generatePayload(targetPromptPayId, { amount: totalAmount });
 
   return (
