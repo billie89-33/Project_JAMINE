@@ -10,6 +10,9 @@ const categories = [
   { id: 3, name: 'Computer ', type: 'computer', image: 'https://unsplash.com' },
   { id: 4, name: 'Monitor', type: 'monitor', image: 'https://unsplash.com' },
   { id: 5, name: 'Gaming Mouse', type: 'mouse', image: 'https://unsplash.com' },
+  { id: 6, name: 'Graphics Card', type: 'graphicscard', image: 'https://unsplash.com' },
+  { id: 7, name: 'RAM', type: 'ram', image: 'https://unsplash.com' },
+  { id: 8, name: 'Mainboard', type: 'mainboard', image: 'https://unsplash.com' },
 ];
 
 const CategorySlider = () => {

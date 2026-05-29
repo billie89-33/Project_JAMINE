@@ -10,10 +10,11 @@ export const useDashboard = () => {
 
     const [salesByCategory] = useState([
         { name: 'Notebook', value: '$1200.42', color: 'bg-blue-500' },
-        { name: 'Computer Hardware', value: '$353.42', color: 'bg-orange-400' },
+        { name: 'Graphics Card', value: '$850.15', color: 'bg-orange-500' },
         { name: 'Monitor', value: '$413.31', color: 'bg-pink-500' },
         { name: 'Keyboard', value: '$235.72', color: 'bg-cyan-400' },
-        { name: 'Mouse', value: '$125.00', color: 'bg-purple-500' }
+        { name: 'RAM', value: '$150.20', color: 'bg-green-500' },
+        { name: 'Mainboard', value: '$320.10', color: 'bg-purple-500' }
     ]);
 
     return {

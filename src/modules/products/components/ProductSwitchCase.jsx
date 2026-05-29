@@ -1,4 +1,4 @@
-import { NotebookSpecs, KeyboardSpecs, ComputerSpecs, MonitorSpecs, MouseSpecs } from "./specs";
+import { NotebookSpecs, KeyboardSpecs, ComputerSpecs, MonitorSpecs, MouseSpecs, GraphicsCardSpecs, RAMSpecs, MainboardSpecs } from "./specs";
 
 // คอมโพเนนต์จำลองกรณีหมวดหมู่นั้นยังไม่มีสเปกเฉพาะ (เช่น Computer, Monitor, Mouse)
 const DefaultProductList = ({ categoryName }) => (
@@ -32,6 +32,12 @@ const ProductSwitchCase = ({ type }) => {
         return <MonitorSpecs />;
       case 'mouse':
         return <MouseSpecs />;
+      case 'graphicscard':
+        return <GraphicsCardSpecs />;
+      case 'ram':
+        return <RAMSpecs />;
+      case 'mainboard':
+        return <MainboardSpecs />;
       default:
         return (
           <div className="w-full p-12 text-center bg-purple-50 rounded-xl border border-purple-200">

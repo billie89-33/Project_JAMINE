@@ -3,3 +3,4 @@
 
 export * from './components';
 export * from './hooks/useAddProduct';
+export * from './hooks/useProductActions';
