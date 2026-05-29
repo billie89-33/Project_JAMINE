@@ -22,7 +22,20 @@ export const AuthProvider = ({ children }) => {
                 }
             } catch (error) {
                 console.warn('User not authenticated (Initial check)');
-                setUser(null);
+
+                // 🧪 Safe Dev Mock: จะทำงานเฉพาะตอนรัน npm run dev ในเครื่องตัวเองเท่านั้น
+                // และต้องเปิด VITE_DEV_MOCK_ADMIN=true ในไฟล์ .env.local
+                if (import.meta.env.DEV && import.meta.env.VITE_DEV_MOCK_ADMIN === 'true') {
+                    console.log('🛠️ [Dev Mode] Mocking Admin session for testing...');
+                    setUser({
+                        _id: 'dev-mock-admin-id',
+                        username: 'Dev_Admin',
+                        email: 'admin@test.com',
+                        role: 'admin'
+                    });
+                } else {
+                    setUser(null);
+                }
             } finally {
                 setLoading(false);
             }
