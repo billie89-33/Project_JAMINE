@@ -85,26 +85,26 @@ export const loginApi = async (email, password) => {
 
 ---
 
-## 🚀 6. Troubleshooting & Pro-Tips (Lessons Learned)
+## 🚀 6. มาตรฐานการพัฒนา (Updated Standards & Pro-Tips)
 
-### 🍪 6.1 ปัญหา "หาคุกกี้ไม่เจอ" หรือ Login แล้วหลุด
-*   **อาการ:** ยิง Login สำเร็จ แต่ Request ถัดไป (เช่น `/me`) แจ้งว่า 401 Unauthorized
-*   **สาเหตุที่พบบ่อย:**
-    1.  **LocalStorage Conflict:** ไปเขียนโค้ดเก็บ Token ลง LocalStorage เอง ทำให้ระบบงงและไม่ได้ใช้คุกกี้ HttpOnly
-    2.  **Missing `withCredentials`:** ลืมตั้งค่า `withCredentials: true` ใน `apiClient.js`
-    3.  **Base URL Mismatch:** Frontend ยิงไปหา Backend ผิด URL (เช่น ยิงไป Production แทน Localhost) ทำให้คุกกี้ไม่ถูกแชร์
-*   **วิธีแก้:** ลบโค้ดจัดการ LocalStorage ออกให้หมด และเช็ค `baseURL` ใน `apiClient.js` ให้ตรงกับ Backend ที่รันอยู่จริง
+จากบทเรียนการพัฒนาล่าสุด เราได้สรุป 3 กฎเหล็กที่ต้องทำตามในทุกโปรเจกต์เพื่อลดความผิดพลาดและเพิ่มความปลอดภัยครับ:
 
-### 🌐 6.2 การจัดการ Base URL ในเครื่อง (Localhost)
-*   **มาตรฐาน:** Backend ปกติมักรันที่พอร์ต `4001` (หรือตามที่ระบุใน `API_SPEC.md`)
-*   **Pro-Tip:** ใน `apiClient.js` ควรตั้ง Fallback URL ให้ตรงกับพอร์ตมาตรฐานของโปรเจกต์เสมอ เพื่อลดความยุ่งยากของเพื่อนร่วมทีม
-    ```javascript
-    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:4001/api/v1'
-    ```
+### 🔐 6.1 มาตรฐานความปลอดภัย (Authentication & Cookie)
+*   **No Token in LocalStorage:** ห้ามใช้ `localStorage.setItem('token', ...)` โดยเด็ดขาด เพราะเสี่ยงต่อการถูกขโมยผ่าน Script (XSS)
+*   **HttpOnly Cookie:** ใช้คุกกี้ที่เซิร์ฟเวอร์ตั้งค่ามาให้เท่านั้น (HttpOnly) โดย Frontend ไม่ต้องเขียนโค้ดจัดการ Token เอง
+*   **Mandatory `withCredentials`:** ใน `apiClient.js` ต้องตั้งค่า `withCredentials: true` เสมอ เพื่อให้เบราว์เซอร์ส่งคุกกี้กลับไปหาเซิร์ฟเวอร์ในทุก Request
 
-### 🛡️ 6.3 กฎเหล็กของ CORS (Backend Requirement)
-เพื่อให้คุกกี้ HttpOnly ทำงานได้ Backend ต้องตั้งค่า CORS ดังนี้:
-1.  `credentials: true`
-2.  `origin: [Frontend_URL]` (ห้ามใช้ `*`)
-3.  `methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']`
+### 🔄 6.2 มาตรฐานกระบวนการสั่งซื้อ (Checkout Flow Pattern)
+เพื่อให้ข้อมูลมีความแม่นยำและป้องกันการข้ามขั้นตอน:
+*   **Transactional Navigation:** เมื่อทำขั้นตอนหนึ่งเสร็จ (เช่น Checkout) ให้ใช้ `navigate('/target', { state: { ...data } })` เพื่อส่งข้อมูลไปยังหน้าถัดไป (เช่น ยอดเงิน, Order ID)
+*   **Single Point of Truth:** หน้า Payment ควรรับยอดเงินจาก `location.state` ที่ส่งมาจากหน้า Checkout เท่านั้น เพื่อป้องกันไม่ให้ผู้ใช้แก้ไขยอดเงินเองในตะกร้าหลังจากสร้างออเดอร์แล้ว
+
+### 💳 6.3 มาตรฐานระบบชำระเงิน (Payment & Dynamic QR)
+*   **Dynamic Data:** หน้าชำระเงินต้องรองรับการแสดงผลตามข้อมูลจริงที่ได้รับมา (Total Amount, Order ID)
+*   **Functional QR Generation:** การใช้ Library เช่น `promptpay-qr` ต้องใช้หมายเลข PromptPay (เบอร์โทร/เลขผู้เสียภาษี) ที่ถูกต้องเท่านั้นเพื่อให้แอปธนาคารสแกนได้จริง
+*   **Import Strategy:** หากหน้าเว็บเกิด Error #130 ให้เปลี่ยนจากการ Import ผ่าน Barrel File (`index.js`) มาเป็นการ **Import ตรงจากไฟล์ Component** เพื่อป้องกันปัญหา Circular Dependency และค่าที่เป็น `undefined`
+
+### 🌐 6.4 การจัดการ Base URL และสภาพแวดล้อม
+*   **Localhost Standard:** ตั้งค่า Fallback URL ให้ตรงกับ Backend ในเครื่องเสมอ (เช่น พอร์ต 4001)
+*   **Environment Check:** ก่อน Deploy ต้องเช็คไฟล์ `.env` ว่า `VITE_API_URL` ถูกต้องตาม Server จริงหรือไม่
 
