@@ -25,7 +25,20 @@ export const getProductById = async (id) => {
 };
 
 /**
- * สร้างสินค้าใหม่
+ * สร้างสินค้าใหม่ (รองรับ FormData สำหรับไฟล์รูปภาพ)
+ * @param {FormData} formData - ข้อมูลสินค้าพร้อมไฟล์ภาพ
+ */
+export const createProductApi = async (formData) => {
+    const response = await apiClient.post('/products', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+    return response.data;
+};
+
+/**
+ * สร้างสินค้าใหม่ (แบบ JSON ปกติ - เก็บไว้เป็นทางเลือก)
  * @param {Object} productData - ข้อมูลสินค้าตาม Product Model
  */
 export const createProduct = async (productData) => {

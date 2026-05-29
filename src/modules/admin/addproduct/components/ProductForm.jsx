@@ -1,7 +1,7 @@
 import  { useState, useEffect } from 'react';
 import ImageUploadBox from './ImageUploadBox';
 import SpecFields from './SpecFields';
-import { createProductApi } from '../services/adminApi'; // ⚠️ ตรวจสอบพาธไฟล์ service ของคุณด้วยนะครับ
+import { createProductApi } from '@/modules/admin/services'; // ✅ เชื่อมต่อกับ Service ส่วนกลางของ Admin
 
 const ProductForm = () => {
     // 💾 State ข้อมูลทั่วไป
