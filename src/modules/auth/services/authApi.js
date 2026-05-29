@@ -3,6 +3,7 @@ import apiClient from '@/shared/api/apiClient';
 /**
  * 🔐 Auth API Services
  * จัดการการเข้าสู่ระบบ, สมัครสมาชิก และดึงข้อมูลผู้ใช้
+ * ใช้ระบบ HttpOnly Cookie ในการจัดการ Session (ไม่เก็บ Token ใน LocalStorage)
  */
 
 // 1. เข้าสู่ระบบ (Login)
