@@ -1,55 +1,39 @@
-import { useState } from 'react';
-import { useNavigate, NavLink } from 'react-router-dom';
-import { useAuth } from '@/shared/contexts/AuthContext';
-import { loginApi } from '../services/authApi';
+import { NavLink } from 'react-router-dom';
+import { useLogin } from '../hooks/useLogin';
 
+/**
+ * 🎨 LoginForm (UI Component)
+ * เน้นการแสดงผลเท่านั้น ส่วน Logic ทั้งหมดถูกดึงไปไว้ใน useLogin Hook
+ */
 const LoginForm = () => {
-  const { login } = useAuth();
-  const navigate = useNavigate();
-  
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleLoginSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-
-    if (!email.trim() || !password.trim()) {
-      setError('กรุณากรอกอีเมลและรหัสผ่าน');
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const res = await loginApi(email, password);
-      if (res.success) {
-        login(res.data);
-        navigate('/', { replace: true });
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || err.message || 'เข้าสู่ระบบไม่สำเร็จ');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // 🎣 ดึงสมอง (Logic) มาจาก Hook
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    showPassword,
+    toggleShowPassword,
+    loading,
+    error,
+    handleLoginSubmit
+  } = useLogin();
 
   return (
     <form 
       onSubmit={handleLoginSubmit} 
       className="bg-white rounded-3xl p-6 shadow-2xl text-slate-800 space-y-3.5 relative"
     >
+      {/* ⚠️ การแสดง Error */}
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-xs">
+        <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-xs animate-shake">
           {error}
         </div>
       )}
 
       <h4 className="text-sm font-black text-slate-900 border-b border-slate-100 pb-2">Sign In</h4>
       
+      {/* 📧 อีเมล */}
       <div className="space-y-1">
         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Your Email</label>
         <input
@@ -62,6 +46,7 @@ const LoginForm = () => {
         />
       </div>
 
+      {/* 🔑 รหัสผ่าน */}
       <div className="space-y-1">
         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Password</label>
         <div className="relative">
@@ -75,7 +60,7 @@ const LoginForm = () => {
           />
           <button
             type="button"
-            onClick={() => setShowPassword(!showPassword)}
+            onClick={toggleShowPassword}
             className="absolute right-3 top-2 text-slate-400 hover:text-slate-600 transition-colors text-xs"
           >
             {showPassword ? "🙈" : "👁️"}
@@ -83,10 +68,11 @@ const LoginForm = () => {
         </div>
       </div>
 
+      {/* 🚀 ปุ่ม Sign In */}
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-[#130933] hover:bg-purple-900 disabled:bg-slate-400 text-white text-xs font-bold py-2.5 rounded-xl transition-colors shadow-md mt-3"
+        className="w-full bg-[#130933] hover:bg-purple-900 disabled:bg-slate-400 text-white text-xs font-bold py-2.5 rounded-xl transition-colors shadow-md mt-3 active:scale-95"
       >
         {loading ? 'กำลังเข้าสู่ระบบ...' : 'Sign In'}
       </button>
