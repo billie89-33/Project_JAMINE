@@ -108,3 +108,38 @@ export const loginApi = async (email, password) => {
 *   **Localhost Standard:** ตั้งค่า Fallback URL ให้ตรงกับ Backend ในเครื่องเสมอ (เช่น พอร์ต 4001)
 *   **Environment Check:** ก่อน Deploy ต้องเช็คไฟล์ `.env` ว่า `VITE_API_URL` ถูกต้องตาม Server จริงหรือไม่
 
+---
+
+## 🛠️ 7. รูปแบบมาตรฐาน: useApi Hook (Portable Pattern)
+
+เราใช้ `useApi` เป็น Hook กลางในการจัดการ API ทั้งแอป เพื่อให้ได้มาตรฐานความปลอดภัยและ UX ที่เหมือนกันทั่งโปรเจกต์
+
+### 7.1 จุดเด่น (Key Features)
+- **Auto Loading/Error:** ไม่ต้องประกาศ State ซ้ำซ้อนในทุกหน้า
+- **Flexible Callbacks:** รองรับ `onSuccess`, `onError`, `onFinally`
+- **Toast Integration:** สั่งโชว์ Toast (Success/Error) ได้ง่ายๆ ผ่าน Options
+- **Portable:** สามารถ Copy ไฟล์ `src/shared/hooks/useApi.js` ไปใช้ในโปรเจกต์อื่นได้ทันที (ต้องการแค่ `useState`, `useCallback` และ library toast)
+
+### 7.2 ตัวอย่างการใช้งาน (Code Examples)
+
+#### แบบง่าย (Simple Usage)
+```javascript
+const { loading, error, execute } = useApi(loginApi);
+
+const onSubmit = () => {
+    execute(email, password); // ยิง API ทันที
+};
+```
+
+#### แบบขั้นสูง (Advanced Usage)
+```javascript
+const { loading, data, execute } = useApi(updateProfileApi, {
+    showToast: true,
+    successMessage: "อัปเดตโปรไฟล์สำเร็จ!",
+    onSuccess: (data) => {
+        console.log("บันทึกสำเร็จ:", data);
+        navigate('/profile');
+    }
+});
+```
+
