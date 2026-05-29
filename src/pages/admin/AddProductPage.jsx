@@ -1,4 +1,4 @@
-import { ProductForm } from '@/modules/products/components';
+import { ProductForm } from '@/modules/admin/products/components';
 
 const AddProductPage = () => {
     return (
