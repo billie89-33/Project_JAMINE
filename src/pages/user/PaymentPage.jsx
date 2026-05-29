@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { Navbar } from '@/shared/components'; 
-import { 
-  PaymentStepper, 
-  PromptPayQRBox, 
-  CheckoutItemsList, 
-  OrderSummaryCard 
-} from '@/modules/payment';
+import { Navbar } from '@/shared/components/Navbar'; 
+import PaymentStepper from '@/modules/payment/components/PaymentStepper';
+import PromptPayQRBox from '@/modules/payment/components/PromptPayQRBox';
+import CheckoutItemsList from '@/modules/checkout/components/CheckoutItemsList';
+import OrderSummaryCard from '@/shared/components/OrderSummaryCard/OrderSummaryCard';
 
 /**
  * 📲 PaymentPage
@@ -91,7 +89,7 @@ const PaymentPage = () => {
               subtotal={subtotal} 
               shipping={0}
               discount={0}
-              total={subtotal}
+              total={payableAmount}
               buttonText="Verify Payment" 
               onAction={handleVerifyPayment} 
               isSubmitting={isVerifying}

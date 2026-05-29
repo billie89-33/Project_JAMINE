@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import generatePayload from 'promptpay-qr';
-import QRCode from 'react-qr-code'; 
+import QRCodeComp from 'react-qr-code'; 
+
+// 🛡️ Fix for potential CJS/ESM interop issues with react-qr-code
+const QRCode = QRCodeComp.default || QRCodeComp;
 
 const PromptPayQRBox = ({ totalAmount = 2000 }) => {
   const [timeLeft, setTimeLeft] = useState(15 * 60);
