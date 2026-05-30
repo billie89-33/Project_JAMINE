@@ -34,5 +34,10 @@
 
 ---
 
-### 🔐 4. Secure API Client
-การตั้งค่า `withCredentials: true` และการใช้ HttpOnly Cookies เป็นมาตรฐานความปลอดภัยสูงสุดในการจัดการ Session
+### 🗝️ 5. Unified Data Mapping Standard
+เพื่อป้องกันบั๊กข้อมูลไม่แสดงผลเมื่อมีการเปลี่ยนชื่อ Key ในอนาคต ให้ยึดหลักการดังนี้:
+1.  **Primary Keys:** ใช้ `modelName` (แทน name), `stock` (แทน quantity), และ `price` เป็นมาตรฐานหลัก
+2.  **Cross-Component Check:** เมื่อมีการแก้ไขโครงสร้างข้อมูลในโมดูล Admin (เช่น AddProduct) ต้องตรวจสอบโมดูลแสดงผล (เช่น ProductDetail, ProductGrid) เสมอ
+3.  **Mapping Logic:** ใน Component ที่รับข้อมูลหลายแหล่ง ให้ใช้การทำ Mapping หรือ Default Value เช่น:
+    `const displayName = product.modelName || product.name;`
+    `const displayStock = product.stock ?? product.quantity;`

@@ -8,10 +8,11 @@ import { useProductActions } from './useProductActions';
  */
 export const useAddProduct = () => {
     // 💾 1. State ข้อมูลทั่วไป
-    const [name, setName] = useState('');
+    const [modelName, setModelName] = useState('');
+    const [description, setDescription] = useState(''); // 🆕 เพิ่มฟิลด์รายละเอียดสินค้า
     const [sku, setSku] = useState('');
     const [tags, setTags] = useState('');
-    const [quantity, setQuantity] = useState(1);
+    const [stock, setStock] = useState(1); // เปลี่ยนจาก quantity เป็น stock
     const [regularPrice, setRegularPrice] = useState('');
     const [category, setCategory] = useState('Keyboard');
 
@@ -45,10 +46,11 @@ export const useAddProduct = () => {
      * เคลียร์ข้อมูลในฟอร์มทั้งหมด
      */
     const resetForm = () => {
-        setName(''); 
+        setModelName(''); 
+        setDescription('');
         setSku(''); 
         setTags(''); 
-        setQuantity(1); 
+        setStock(1); 
         setRegularPrice('');
         setSelectedFile(null); 
         setImagePreview(null); 
@@ -67,7 +69,7 @@ export const useAddProduct = () => {
         }
         
         const rawData = {
-            name, sku, tags, quantity, regularPrice, category, selectedFile, specifications
+            modelName, description, sku, tags, stock, regularPrice, category, selectedFile, specifications
         };
 
         const result = await handleAddProduct(rawData);
@@ -80,10 +82,11 @@ export const useAddProduct = () => {
     // ส่งค่าทั้งหมดออกไปให้ UI ใช้งาน
     return {
         // States
-        name, setName,
+        modelName, setModelName,
+        description, setDescription,
         sku, setSku,
         tags, setTags,
-        quantity, setQuantity,
+        stock, setStock,
         regularPrice, setRegularPrice,
         category, setCategory,
         selectedFile,
