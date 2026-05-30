@@ -42,10 +42,13 @@ const NavMenu = () => {
           >
             {[
               { name: "Notebook", slug: "notebook" },
+              { name: "Keyboard", slug: "keyboard" },
               { name: "Computer", slug: "computer" },
               { name: "Monitor", slug: "monitor" },
-              { name: "Keyboard", slug: "keyboard" },
-              { name: "Mouse", slug: "mouse" }
+              { name: "Gaming Mouse", slug: "mouse" },
+              { name: "Graphics Card", slug: "graphicscard" },
+              { name: "RAM", slug: "ram" },
+              { name: "Mainboard", slug: "mainboard" }
             ].map((cat) => (
               <NavLink
                 key={cat.slug}

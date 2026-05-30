@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const categories = [
   { id: 1, name: 'Notebook', type: 'notebook', image: 'https://unsplash.com' },
   { id: 2, name: 'Keyboard', type: 'keyboard', image: 'https://unsplash.com' },
-  { id: 3, name: 'Computer ', type: 'computer', image: 'https://unsplash.com' },
+  { id: 3, name: 'Computer', type: 'computer', image: 'https://unsplash.com' },
   { id: 4, name: 'Monitor', type: 'monitor', image: 'https://unsplash.com' },
   { id: 5, name: 'Gaming Mouse', type: 'mouse', image: 'https://unsplash.com' },
   { id: 6, name: 'Graphics Card', type: 'graphicscard', image: 'https://unsplash.com' },

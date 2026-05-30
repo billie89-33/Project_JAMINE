@@ -1,12 +1,18 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const Pagination = () => {
-  // ข้อมูลจำลองสำหรับระบบหลังบ้าน (เมื่อ API พร้อม จะเปลี่ยนมารับค่าเหล่านี้ผ่าน Props)
-  const currentPage = 1;   // หน้าปัจจุบันที่ผู้ใช้งานกำลังเปิดอยู่
-  const totalPages = 5;     // จำนวนหน้าทั้งหมดที่ API คำนวณให้ตามจำนวนสินค้าใน Database
-
+const Pagination = ({ currentPage = 1, totalPages = 1, onPageChange }) => {
   // วิธีแปลงจำนวนหน้าทั้งหมด (ตัวเลข) ให้กลายเป็น Array เพื่อนำไป .map() ลูปสร้างปุ่ม
   const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+
+  // ฟังก์ชันป้องกันเพื่อความปลอดภัย (เซฟตี้อีกชั้น)
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages && newPage !== currentPage) {
+      onPageChange(newPage);
+    }
+  };
+
+  // ซ่อนระบบแบ่งหน้าถ้าระบบมีแค่หน้าเดียว (เพื่อความสวยงาม)
+  if (totalPages <= 1) return null;
 
   return (
     <div className="flex justify-center items-center gap-1.5 mt-6 bg-white py-3 px-5 rounded-xl border border-purple-100 shadow-sm max-w-max mx-auto text-xs font-semibold select-none">
@@ -14,6 +20,7 @@ const Pagination = () => {
       {/* 1. ปุ่มย้อนกลับ (Previous) จะกดไม่ได้ (Disabled) หากอยู่หน้าแรกสุด */}
       <button 
         disabled={currentPage === 1}
+        onClick={() => handlePageChange(currentPage - 1)}
         className={`flex items-center gap-1 px-3 py-2 rounded-lg border transition-all ${
           currentPage === 1 
             ? 'bg-gray-50 border-gray-100 text-gray-300 cursor-not-allowed' 
@@ -31,6 +38,7 @@ const Pagination = () => {
           return (
             <button
               key={page}
+              onClick={() => handlePageChange(page)}
               className={`w-8 h-8 rounded-lg font-bold text-center border transition-all active:scale-95 ${
                 isCurrent
                   ? 'bg-purple-600 border-purple-600 text-white shadow-md shadow-purple-200' // ไฮไลท์สีม่วงเข้มสะดุดตาสำหรับหน้าปัจจุบัน
@@ -46,6 +54,7 @@ const Pagination = () => {
       {/* 3. ปุ่มถัดไป (Next) จะกดไม่ได้หากอยู่หน้าสุดท้าย*/}
       <button 
         disabled={currentPage === totalPages}
+        onClick={() => handlePageChange(currentPage + 1)}
         className={`flex items-center gap-1 px-3 py-2 rounded-lg border transition-all ${
           currentPage === totalPages 
             ? 'bg-gray-50 border-gray-100 text-gray-300 cursor-not-allowed' 
