@@ -1,9 +1,8 @@
 import  { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-const NotebookCategoryPage = () => {
+const NotebookSpecs = ({ setTotalPages, currentPage = 1 }) => {
   const navigate = useNavigate();
-  const { type } = useParams(); 
 
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [priceRange, setPriceRange] = useState({ min: 0, max: 40000 }); // ปรับ Max ขึ้นเป็น 40,000 ให้คลุมเครื่องราคาสูง
@@ -98,8 +97,14 @@ const NotebookCategoryPage = () => {
       return matchBrand && matchPrice && matchStock && matchCpu && matchRam;
     });
 
-    setProducts(filtered);
-  }, [selectedBrands, priceRange, inStockOnly, selectedCpu, selectedRam]);
+    const itemsPerPage = 12;
+    const calculatedTotalPages = Math.ceil(filtered.length / itemsPerPage);
+    if (setTotalPages) setTotalPages(calculatedTotalPages);
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedItems = filtered.slice(startIndex, startIndex + itemsPerPage);
+    setProducts(paginatedItems);
+  }, [selectedBrands, priceRange, inStockOnly, selectedCpu, selectedRam, currentPage, setTotalPages]);
 
   const handleBrandChange = (brand) => {
     if (selectedBrands.includes(brand)) {

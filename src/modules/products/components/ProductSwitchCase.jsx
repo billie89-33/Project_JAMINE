@@ -14,30 +14,33 @@ const DefaultProductList = ({ categoryName }) => (
   </div>
 );
 
-const ProductSwitchCase = ({ type }) => {
+const ProductSwitchCase = ({ type, setTotalPages, currentPage }) => {
   
   // แปลงตัวอักษรพิมพ์เล็กพิมพ์ใหญ่ให้ตรงกันเพื่อป้องกันข้อผิดพลาด
   const currentCategory = type?.toLowerCase();
 
   // ฟังก์ชันสลับการแสดงผลหน้า UI ตามหมวดหมู่สินค้า
   const renderCategoryContent = () => {
+    // เตรียม Props พื้นฐานสำหรับคอมโพเนนต์ลูก
+    const commonProps = { setTotalPages, currentPage };
+
     switch (currentCategory) {
       case 'notebook':
-        return <NotebookSpecs />;
+        return <NotebookSpecs {...commonProps} />;
       case 'keyboard':
-        return <KeyboardSpecs />;
+        return <KeyboardSpecs {...commonProps} />;
       case 'computer':
-        return <ComputerSpecs />;
+        return <ComputerSpecs {...commonProps} />;
       case 'monitor':
-        return <MonitorSpecs />;
+        return <MonitorSpecs {...commonProps} />;
       case 'mouse':
-        return <MouseSpecs />;
+        return <MouseSpecs {...commonProps} />;
       case 'graphicscard':
-        return <GraphicsCardSpecs />;
+        return <GraphicsCardSpecs {...commonProps} />;
       case 'ram':
-        return <RAMSpecs />;
+        return <RAMSpecs {...commonProps} />;
       case 'mainboard':
-        return <MainboardSpecs />;
+        return <MainboardSpecs {...commonProps} />;
       default:
         return (
           <div className="w-full p-12 text-center bg-purple-50 rounded-xl border border-purple-200">
