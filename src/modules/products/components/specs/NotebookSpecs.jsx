@@ -234,4 +234,4 @@ const NotebookCategoryPage = () => {
   );
 };
 
-export default NotebookCategoryPage;
+export default NotebookSpecs;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const MouseSpecs = () => {
+const MouseSpecs = ({ setTotalPages, currentPage = 1 }) => {
   const navigate = useNavigate();
 
   // 1. สเตตัสสำหรับเก็บค่าฟิลเตอร์ประเภทต่างๆ ของเมาส์เกมมิ่ง
@@ -19,107 +19,31 @@ const MouseSpecs = () => {
 
   // 2. ข้อมูลสินค้าเมาส์จำลอง (Mock Data โครงสร้างรองรับการส่งสเปกข้ามหน้า)
   const mockMouseDatabase = [
-    {
-      id: "401",
-      brand: 'LOGITECH',
-      name: 'GAMING MOUSE LOGITECH G PRO X SUPERLIGHT 2 WIRELESS (< 60G) BLACK',
-      price: 4990,
-      inStock: true,
-      category: "Mouse",
-      description: "เมาส์เกมมิ่งไร้สายระดับไอคอนิก เจเนอเรชันใหม่น้ำหนักเบาเป็นพิเศษไม่ถึง 60 กรัม แม่นยำสูงสุดด้วยเซนเซอร์ HERO 2 เพื่อนักแข่ง Esport",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "LOGITECH",
-        "Model": "G Pro X Superlight 2",
-        "Sensor": "HERO 2 (32,000 DPI)",
-        "Connection": "LIGHTSPEED Wireless / Type-C USB",
-        "Weight": "54g (Ultra-light < 60g)",
-        "Polling Rate": "2,000Hz (Wireless)",
-        "Battery Life": "สูงสุด 95 ชั่วโมง",
-        "Warranty": "2 Years"
-      }
-    },
-    {
-      id: "402",
-      brand: 'RAZER',
-      name: 'GAMING MOUSE RAZER DEATHADDER V3 PRO WIRELESS (60G-80G) WHITE',
-      price: 4690,
-      inStock: true,
-      category: "Mouse",
-      description: "เมาส์ทรง Ergonomic โค้งรับอุ้งมือที่สมบูรณ์แบบ น้ำหนักเบาเพียง 63 กรัม ตอบสนองไว ดุดัน เหมาะสำหรับสายดึงข้อและสะบัดเมาส์ยิง",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "RAZER",
-        "Model": "DeathAdder V3 Pro",
-        "Sensor": "Focus Pro 30K Optical Sensor",
-        "Connection": "Razer HyperSpeed Wireless / Wired",
-        "Weight": "63g (Lightweight 60g-80g)",
-        "Switch Type": "Razer Optical Mouse Switches Gen-3",
-        "Battery Life": "สูงสุด 90 ชั่วโมง",
-        "Warranty": "2 Years"
-      }
-    },
-    {
-      id: "403",
-      brand: 'RAZER',
-      name: 'GAMING MOUSE RAZER VIPER MINI ULTRA-LIGHTWEIGHT WIRED (< 60G)',
-      price: 990,
-      inStock: false,
-      category: "Mouse",
-      description: "เมาส์เกมมิ่งมีสายขนาดเล็กกะทัดรัด น้ำหนักเบาจับง่ายกระชับมือ ในราคาสุดคุ้มค่า ทนทานด้วยสวิตช์ออปติคอลความเร็วสูง",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "RAZER",
-        "Model": "Viper Mini",
-        "Sensor": "8,500 DPI Optical Sensor",
-        "Connection": "Wired (สาย Razer Speedflex)",
-        "Weight": "61g (Lightweight 60g-80g)",
-        "Lighting": "Razer Chroma™ RGB",
-        "Warranty": "2 Years"
-      }
-    },
-    {
-      id: "404",
-      brand: 'ASUS',
-      name: 'GAMING MOUSE ASUS ROG CHAKRAM X ORIGIN BLUETOOTH / WIRELESS (> 80G)',
-      price: 3990,
-      inStock: true,
-      category: "Mouse",
-      description: "เมาส์จัดเต็มฟังก์ชันระดับพรีเมียม มาพร้อมจอยสติ๊กด้านข้างปรับแต่งได้ เชื่อมต่อได้ครบ 3 โหมด ยืนระยะทำงานและเล่นเกมได้ยาวนาน",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "ASUS ROG",
-        "Model": "Chakram X Origin",
-        "Sensor": "ROG AimPoint (36,000 DPI)",
-        "Connection": "2.4GHz RF / Bluetooth / Wired USB",
-        "Weight": "123g (Standard > 80g)",
-        "Special Feature": "Programmable Joystick / Hot-swappable Switch Socket",
-        "Warranty": "3 Years"
-      }
-    }
+    { id: "401", brand: 'LOGITECH', name: 'GAMING MOUSE LOGITECH G PRO X SUPERLIGHT 2 WIRELESS (< 60G) BLACK', price: 4990, inStock: true, category: "Mouse", description: "...", image: "https://unsplash.com", specifications: { "Brand": "LOGITECH" } },
+    { id: "402", brand: 'RAZER', name: 'GAMING MOUSE RAZER DEATHADDER V3 PRO WIRELESS (60G-80G) WHITE', price: 4690, inStock: true, category: "Mouse", description: "...", image: "https://unsplash.com", specifications: { "Brand": "RAZER" } },
+    { id: "403", brand: 'RAZER', name: 'GAMING MOUSE RAZER VIPER MINI ULTRA-LIGHTWEIGHT WIRED (< 60G)', price: 990, inStock: false, category: "Mouse", description: "...", image: "https://unsplash.com", specifications: { "Brand": "RAZER" } },
+    { id: "404", brand: 'ASUS', name: 'GAMING MOUSE ASUS ROG CHAKRAM X ORIGIN BLUETOOTH / WIRELESS (> 80G)', price: 3990, inStock: true, category: "Mouse", description: "...", image: "https://unsplash.com", specifications: { "Brand": "ASUS ROG" } }
   ];
 
   // 🛠️ 3. LOGIC การสแกนจับคำค้นหาจาก "ชื่อสินค้า" (Text-Matching)
   useEffect(() => {
     const filtered = mockMouseDatabase.filter(product => {
       const productName = product.name.toLowerCase();
-
-      // เงื่อนไขคัดกรองราคา และสต็อกสินค้า
       const matchPrice = product.price >= priceRange.min && product.price <= priceRange.max;
       const matchStock = !inStockOnly || product.inStock;
-
-      // 🔍 คัดกรองตามข้อความชื่อสินค้า: ถ้าไม่คลิกปุ่มจะผ่านฉลุย แต่ถ้ากดเลือก คำนั้นต้องถูกพบซ่อนอยู่ในชื่อสินค้า
-      const matchConnection = selectedConnections.length === 0 || 
-                              selectedConnections.some(conn => productName.includes(conn.toLowerCase()));
-      
-      const matchWeight = selectedWeights.length === 0 || 
-                          selectedWeights.some(weight => productName.includes(weight.toLowerCase()));
-
+      const matchConnection = selectedConnections.length === 0 || selectedConnections.some(conn => productName.includes(conn.toLowerCase()));
+      const matchWeight = selectedWeights.length === 0 || selectedWeights.some(weight => productName.includes(weight.toLowerCase()));
       return matchPrice && matchStock && matchConnection && matchWeight;
     });
 
-    setProducts(filtered);
-  }, [selectedConnections, selectedWeights, priceRange, inStockOnly]);
+    const itemsPerPage = 12;
+    const calculatedTotalPages = Math.ceil(filtered.length / itemsPerPage);
+    if (setTotalPages) setTotalPages(calculatedTotalPages);
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedItems = filtered.slice(startIndex, startIndex + itemsPerPage);
+    setProducts(paginatedItems);
+  }, [selectedConnections, selectedWeights, priceRange, inStockOnly, currentPage, setTotalPages]);
 
   // ฟังก์ชันสลับหยิบค่าในอาเรย์ตัวกรอง (ติ๊กเข้า / ติ๊กออก)
   const handleFilterToggle = (value, state, setState) => {

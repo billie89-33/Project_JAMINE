@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-const RAMSpecs = () => {
+const RAMSpecs = ({ setTotalPages, currentPage = 1 }) => {
   const navigate = useNavigate();
-  const { type } = useParams();
 
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [priceRange, setPriceRange] = useState({ min: 0, max: 20000 });
@@ -16,72 +15,9 @@ const RAMSpecs = () => {
   const capacityOptions = ["8GB", "16GB", "32GB", "64GB"];
 
   const mockDatabase = [
-    {
-      id: "ram-1",
-      brand: "CORSAIR",
-      name: "CORSAIR VENGEANCE RGB 32GB (2x16GB) DDR5 6000MHz CL36",
-      price: 4990,
-      inStock: true,
-      category: "RAM",
-      description: "High-performance DDR5 memory with integrated RGB lighting and Corsair iCUE support.",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "CORSAIR",
-        "Series": "Vengeance RGB",
-        "Capacity": "32GB (2 x 16GB)",
-        "Memory Type (DDR)": "DDR5",
-        "Speed (MHz)": "6000 MHz",
-        "Latency (CAS)": "CL36-36-36-76",
-        "Voltage": "1.35V",
-        "Color": "Black",
-        "RGB Lighting": "Yes",
-        "Warranty": "Lifetime"
-      }
-    },
-    {
-      id: "ram-2",
-      brand: "G.SKILL",
-      name: "G.SKILL TRIDENT Z5 RGB 32GB (2x16GB) DDR5 6400MHz CL32",
-      price: 5590,
-      inStock: true,
-      category: "RAM",
-      description: "Premium DDR5 memory engineered for ultra-high performance on DDR5 platforms.",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "G.SKILL",
-        "Series": "Trident Z5 RGB",
-        "Capacity": "32GB (2 x 16GB)",
-        "Memory Type (DDR)": "DDR5",
-        "Speed (MHz)": "6400 MHz",
-        "Latency (CAS)": "CL32-39-39-102",
-        "Voltage": "1.40V",
-        "Color": "Metallic Silver",
-        "RGB Lighting": "Yes",
-        "Warranty": "Lifetime"
-      }
-    },
-    {
-      id: "ram-3",
-      brand: "KINGSTON",
-      name: "KINGSTON FURY BEAST 16GB (1x16GB) DDR4 3200MHz CL16",
-      price: 1590,
-      inStock: true,
-      category: "RAM",
-      description: "Cost-effective high-performance DDR4 upgrade for gaming and content creation.",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "KINGSTON",
-        "Series": "Fury Beast",
-        "Capacity": "16GB",
-        "Memory Type (DDR)": "DDR4",
-        "Speed (MHz)": "3200 MHz",
-        "Latency (CAS)": "CL16",
-        "Voltage": "1.35V",
-        "Color": "Black",
-        "RGB Lighting": "No",
-        "Warranty": "Lifetime"
-      }
-    }
+    { id: "ram-1", brand: "CORSAIR", name: "CORSAIR VENGEANCE RGB 32GB (2x16GB) DDR5 6000MHz CL36", price: 4990, inStock: true, category: "RAM", description: "...", image: "https://unsplash.com", specifications: { "Brand": "CORSAIR" } },
+    { id: "ram-2", brand: "G.SKILL", name: "G.SKILL TRIDENT Z5 RGB 32GB (2x16GB) DDR5 6400MHz CL32", price: 5590, inStock: true, category: "RAM", description: "...", image: "https://unsplash.com", specifications: { "Brand": "G.SKILL" } },
+    { id: "ram-3", brand: "KINGSTON", name: "KINGSTON FURY BEAST 16GB (1x16GB) DDR4 3200MHz CL16", price: 1590, inStock: true, category: "RAM", description: "...", image: "https://unsplash.com", specifications: { "Brand": "KINGSTON" } }
   ];
 
   useEffect(() => {
@@ -91,11 +27,17 @@ const RAMSpecs = () => {
       const matchPrice = product.price >= priceRange.min && product.price <= priceRange.max;
       const matchStock = !inStockOnly || product.inStock;
       const matchCapacity = selectedCapacity === '' || productName.includes(selectedCapacity.toLowerCase());
-
       return matchBrand && matchPrice && matchStock && matchCapacity;
     });
-    setProducts(filtered);
-  }, [selectedBrands, priceRange, inStockOnly, selectedCapacity]);
+
+    const itemsPerPage = 12;
+    const calculatedTotalPages = Math.ceil(filtered.length / itemsPerPage);
+    if (setTotalPages) setTotalPages(calculatedTotalPages);
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedItems = filtered.slice(startIndex, startIndex + itemsPerPage);
+    setProducts(paginatedItems);
+  }, [selectedBrands, priceRange, inStockOnly, selectedCapacity, currentPage, setTotalPages]);
 
   return (
     <div className="w-full min-h-screen bg-gray-50/50 py-6 text-sm">

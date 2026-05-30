@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const MonitorSpecs = () => {
+const MonitorSpecs = ({ setTotalPages, currentPage = 1 }) => {
   const navigate = useNavigate();
 
   // 1. สเตตัสสำหรับเก็บค่าฟิลเตอร์ประเภทต่างๆ ของจอมอนิเตอร์
@@ -19,114 +19,31 @@ const MonitorSpecs = () => {
 
   // 2. ข้อมูลสินค้าจอมอนิเตอร์จำลอง (Mock Data โครงสร้างรองรับการส่งสเปกข้ามหน้า)
   const mockMonitorDatabase = [
-    {
-      id: "301",
-      brand: 'ASUS',
-      name: 'GAMING MONITOR ASUS TUF GAMING VG249Q3A 23.8" IPS 180Hz (144HZ SUPPORT)',
-      price: 4590,
-      inStock: true,
-      category: "Monitor",
-      description: "จอมอนิเตอร์เกมมิ่งสเปกสุดคุ้มค่า พาเนล IPS สีสันสดใส มุมมองกว้าง พร้อมความลื่นไหลระดับเทพ ตอบโจทย์เกมเมอร์สาย FPS เป็นอย่างดี",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "ASUS",
-        "Series": "TUF Gaming",
-        "Screen Size": "23.8 inch",
-        "Resolution": "FHD (1920 x 1080)",
-        "Panel Type": "IPS",
-        "Refresh Rate": "180Hz (รองรับตั้งแต่ 60Hz/144Hz)",
-        "Response Time": "1ms (GTG)",
-        "Aspect Ratio": "16:9",
-        "Warranty": "3 Years"
-      }
-    },
-    {
-      id: "302",
-      brand: 'SAMSUNG',
-      name: 'GAMING MONITOR SAMSUNG ODYSSEY G6 G65B 27" VA 2K 240HZ CURVED',
-      price: 13900,
-      inStock: true,
-      category: "Monitor",
-      description: "จอเกมมิ่งความโค้งระดับ 1000R โอบรับสายตาได้อย่างสมบูรณ์แบบ ความละเอียดระดับ 2K คมชัดทะลุมิติ พร้อมอัตรารีเฟรชเรทที่ลื่นไหลสะใจ",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "SAMSUNG",
-        "Series": "Odyssey G6",
-        "Screen Size": "27.0 inch",
-        "Resolution": "QHD / 2K (2560 x 1440)",
-        "Panel Type": "VA (Curved 1000R)",
-        "Refresh Rate": "240Hz",
-        "Response Time": "1ms (MPRT)",
-        "Smart Features": "Tizen OS Built-in",
-        "Warranty": "3 Years"
-      }
-    },
-    {
-      id: "303",
-      brand: 'LG',
-      name: 'GAMING MONITOR LG ULTRAGEAR 27GR95QE-B 27" OLED 2K 240HZ',
-      price: 29900,
-      inStock: false,
-      category: "Monitor",
-      description: "ที่สุดแห่งจอภาพสำหรับเกมเมอร์ระดับฮาร์ดคอร์ ด้วยพาเนล OLED ดำสนิทสมจริง คอนทราสต์ระดับอนันต์ และการตอบสนองที่ไวที่สุดในวงการ",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "LG",
-        "Series": "UltraGear",
-        "Screen Size": "26.5 inch",
-        "Resolution": "QHD / 2K (2560 x 1440)",
-        "Panel Type": "OLED (Anti-glare)",
-        "Refresh Rate": "240Hz",
-        "Response Time": "0.03ms (GTG)",
-        "Color Gamut": "DCI-P3 98.5%",
-        "Warranty": "3 Years"
-      }
-    },
-    {
-      id: "304",
-      brand: 'GIGABYTE',
-      name: 'GAMING MONITOR GIGABYTE G27F 2 27" IPS 165HZ (144HZ SUPPORT)',
-      price: 5990,
-      inStock: true,
-      category: "Monitor",
-      description: "จอภาพขนาด 27 นิ้วเต็มตา สีตรงผ่านมาตรฐานอุตสาหกรรมกราฟิก ตอบโจทย์ทั้งการเล่นเกมความเร็วสูงและการทำงานแต่งภาพตัดต่อวิดีโอ",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "GIGABYTE",
-        "Model": "G27F 2",
-        "Screen Size": "27.0 inch",
-        "Resolution": "FHD (1920 x 1080)",
-        "Panel Type": "IPS",
-        "Refresh Rate": "165Hz (รองรับ 144Hz)",
-        "Response Time": "1ms (MPRT)",
-        "Color Support": "95% DCI-P3 / 130% sRGB",
-        "Warranty": "3 Years"
-      }
-    }
+    { id: "301", brand: 'ASUS', name: 'GAMING MONITOR ASUS TUF GAMING VG249Q3A 23.8" IPS 180Hz (144HZ SUPPORT)', price: 4590, inStock: true, category: "Monitor", description: "...", image: "https://unsplash.com", specifications: { "Brand": "ASUS" } },
+    { id: "302", brand: 'SAMSUNG', name: 'GAMING MONITOR SAMSUNG ODYSSEY G6 G65B 27" VA 2K 240HZ CURVED', price: 13900, inStock: true, category: "Monitor", description: "...", image: "https://unsplash.com", specifications: { "Brand": "SAMSUNG" } },
+    { id: "303", brand: 'LG', name: 'GAMING MONITOR LG ULTRAGEAR 27GR95QE-B 27" OLED 2K 240HZ', price: 29900, inStock: false, category: "Monitor", description: "...", image: "https://unsplash.com", specifications: { "Brand": "LG" } },
+    { id: "304", brand: 'GIGABYTE', name: 'GAMING MONITOR GIGABYTE G27F 2 27" IPS 165HZ (144HZ SUPPORT)', price: 5990, inStock: true, category: "Monitor", description: "...", image: "https://unsplash.com", specifications: { "Brand": "GIGABYTE" } }
   ];
 
   // 🛠️ 3. LOGIC การสแกนจับคำค้นหาจาก "ชื่อสินค้า" (Text-Matching)
   useEffect(() => {
     const filtered = mockMonitorDatabase.filter(product => {
       const productName = product.name.toLowerCase();
-
-      // เงื่อนไขคัดกรองราคา และสต็อกสินค้า
       const matchPrice = product.price >= priceRange.min && product.price <= priceRange.max;
       const matchStock = !inStockOnly || product.inStock;
-
-      // 🔍 คัดกรองตามข้อความชื่อสินค้า: ถ้าไม่คลิกปุ่มจะผ่านฉลุย แต่ถ้ากดเลือก คำสะกดนั้นต้องพบอยู่ในชื่อสินค้า
-      // พิเศษสำหรับ Hz ดักคำว่า 144Hz ให้สามารถกดเจอหน้าจอตัวที่มีกำลังขับสูงกว่าได้ยืดหยุ่นขึ้น
-      const matchHz = selectedHz.length === 0 || 
-                      selectedHz.some(hz => productName.includes(hz.toLowerCase()));
-      
-      const matchPanel = selectedPanels.length === 0 || 
-                         selectedPanels.some(panel => productName.includes(panel.toLowerCase()));
-
+      const matchHz = selectedHz.length === 0 || selectedHz.some(hz => productName.includes(hz.toLowerCase()));
+      const matchPanel = selectedPanels.length === 0 || selectedPanels.some(panel => productName.includes(panel.toLowerCase()));
       return matchPrice && matchStock && matchHz && matchPanel;
     });
 
-    setProducts(filtered);
-  }, [selectedHz, selectedPanels, priceRange, inStockOnly]);
+    const itemsPerPage = 12;
+    const calculatedTotalPages = Math.ceil(filtered.length / itemsPerPage);
+    if (setTotalPages) setTotalPages(calculatedTotalPages);
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedItems = filtered.slice(startIndex, startIndex + itemsPerPage);
+    setProducts(paginatedItems);
+  }, [selectedHz, selectedPanels, priceRange, inStockOnly, currentPage, setTotalPages]);
 
   // ฟังก์ชันสลับหยิบค่าติ๊กเข้า / ติ๊กออก ในอาเรย์สเตตัสฟิลเตอร์
   const handleFilterToggle = (value, state, setState) => {

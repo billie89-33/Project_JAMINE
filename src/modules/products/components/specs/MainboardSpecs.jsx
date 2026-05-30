@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-const MainboardSpecs = () => {
+const MainboardSpecs = ({ setTotalPages, currentPage = 1 }) => {
   const navigate = useNavigate();
-  const { type } = useParams();
 
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [priceRange, setPriceRange] = useState({ min: 0, max: 40000 });
@@ -16,72 +15,9 @@ const MainboardSpecs = () => {
   const socketOptions = ["AM5", "LGA1700", "AM4", "LGA1200"];
 
   const mockDatabase = [
-    {
-      id: "mb-1",
-      brand: "ASUS",
-      name: "ASUS ROG MAXIMUS Z790 HERO (LGA1700)",
-      price: 24900,
-      inStock: true,
-      category: "Mainboard",
-      description: "High-end Z790 motherboard with robust power delivery and advanced cooling for Intel 14th Gen processors.",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "ASUS",
-        "Series": "ROG Maximus",
-        "Socket": "LGA1700",
-        "Chipset": "Intel Z790",
-        "Form Factor": "ATX",
-        "Memory Slots": "4 x DDR5",
-        "Max Memory Support": "192GB",
-        "Expansion Slots": "2 x PCIe 5.0 x16",
-        "Storage (SATA/M.2)": "5 x M.2 slots, 6 x SATA 6Gb/s",
-        "Warranty": "3 Years"
-      }
-    },
-    {
-      id: "mb-2",
-      brand: "MSI",
-      name: "MSI MAG B650 TOMAHAWK WIFI (AM5)",
-      price: 8590,
-      inStock: true,
-      category: "Mainboard",
-      description: "Balanced AM5 motherboard for AMD Ryzen 7000 series with WIFI 6E and excellent value.",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "MSI",
-        "Series": "MAG",
-        "Socket": "AM5",
-        "Chipset": "AMD B650",
-        "Form Factor": "ATX",
-        "Memory Slots": "4 x DDR5",
-        "Max Memory Support": "128GB",
-        "Expansion Slots": "1 x PCIe 4.0 x16",
-        "Onboard LAN/WiFi": "WIFI 6E, 2.5G LAN",
-        "Warranty": "3 Years"
-      }
-    },
-    {
-      id: "mb-3",
-      brand: "GIGABYTE",
-      name: "GIGABYTE X670E AORUS MASTER (AM5)",
-      price: 18900,
-      inStock: false,
-      category: "Mainboard",
-      description: "Premium X670E board featuring PCIe 5.0 support for both GPU and NVMe SSDs.",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "GIGABYTE",
-        "Series": "AORUS",
-        "Socket": "AM5",
-        "Chipset": "AMD X670E",
-        "Form Factor": "E-ATX",
-        "Memory Slots": "4 x DDR5",
-        "Max Memory Support": "128GB",
-        "Expansion Slots": "PCIe 5.0 x16",
-        "Onboard LAN/WiFi": "WIFI 6E, 2.5G LAN",
-        "Warranty": "3 Years"
-      }
-    }
+    { id: "mb-1", brand: "ASUS", name: "ASUS ROG MAXIMUS Z790 HERO (LGA1700)", price: 24900, inStock: true, category: "Mainboard", description: "...", image: "https://unsplash.com", specifications: { "Brand": "ASUS" } },
+    { id: "mb-2", brand: "MSI", name: "MSI MAG B650 TOMAHAWK WIFI (AM5)", price: 8590, inStock: true, category: "Mainboard", description: "...", image: "https://unsplash.com", specifications: { "Brand": "MSI" } },
+    { id: "mb-3", brand: "GIGABYTE", name: "GIGABYTE X670E AORUS MASTER (AM5)", price: 18900, inStock: false, category: "Mainboard", description: "...", image: "https://unsplash.com", specifications: { "Brand": "GIGABYTE" } }
   ];
 
   useEffect(() => {
@@ -91,11 +27,17 @@ const MainboardSpecs = () => {
       const matchPrice = product.price >= priceRange.min && product.price <= priceRange.max;
       const matchStock = !inStockOnly || product.inStock;
       const matchSocket = selectedSocket === '' || productName.includes(selectedSocket.toLowerCase());
-
       return matchBrand && matchPrice && matchStock && matchSocket;
     });
-    setProducts(filtered);
-  }, [selectedBrands, priceRange, inStockOnly, selectedSocket]);
+
+    const itemsPerPage = 12;
+    const calculatedTotalPages = Math.ceil(filtered.length / itemsPerPage);
+    if (setTotalPages) setTotalPages(calculatedTotalPages);
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedItems = filtered.slice(startIndex, startIndex + itemsPerPage);
+    setProducts(paginatedItems);
+  }, [selectedBrands, priceRange, inStockOnly, selectedSocket, currentPage, setTotalPages]);
 
   return (
     <div className="w-full min-h-screen bg-gray-50/50 py-6 text-sm">

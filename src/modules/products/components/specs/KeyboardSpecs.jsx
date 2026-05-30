@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const KeyboardSpecs = () => {
+const KeyboardSpecs = ({ setTotalPages, currentPage = 1 }) => {
   const navigate = useNavigate();
 
   // สเตตัสสำหรับเก็บค่าฟิลเตอร์ประเภทต่างๆ ของคีย์บอร์ด
@@ -19,107 +19,31 @@ const KeyboardSpecs = () => {
 
   // 🌟 1. อัปเดตชุดข้อมูลคีย์บอร์ดจำลอง (Mock Data) ให้มีโครงสร้างละเอียดพร้อมส่งไปกางเป็นตารางหน้า Detail
   const mockKeyboardDatabase = [
-    {
-      id: "101", // ปรับเป็น String เพื่อให้อ่านคู่กับ useParams ได้เสถียร
-      brand: 'LOGITECH',
-      name: 'MECHANICAL KEYBOARD LOGITECH G PRO X TKL LIGHTSPEED (BROWN SWITCH)',
-      price: 4990,
-      inStock: true,
-      category: "Keyboard",
-      description: "คีย์บอร์ดเกมมิ่งระดับโปรเพลเยอร์ ออกแบบร่วมกับนักแข่งระดับโลก การเชื่อมต่อไร้สาย LIGHTSPEED เสถียร แม่นยำ ไร้ดีเลย์",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "LOGITECH",
-        "Model": "G PRO X TKL",
-        "Switch Type": "GX Brown Tactile Switches",
-        "Layout": "Tenkeyless (TKL)",
-        "Connectivity": "LIGHTSPEED Wireless / Bluetooth / USB-C Wired",
-        "Lighting": "LIGHTSYNC RGB Per-Key",
-        "Battery Life": "สูงสุด 50 ชั่วโมง",
-        "Warranty": "2 Years"
-      }
-    },
-    {
-      id: "102",
-      brand: 'KEYCHRON',
-      name: 'MECHANICAL KEYBOARD KEYCHRON V1 MAX 75% WIRELESS (RED SWITCH)',
-      price: 3690,
-      inStock: true,
-      category: "Keyboard",
-      description: "คีย์บอร์ดแมคคานิคอลไร้สายขนาด 75% โครงสร้าง Gasket Mount พร้อมโฟมซับเสียงหนาพิเศษเพื่อเสียงพิมพ์ที่นุ่มนวลและสนุกมือ",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "KEYCHRON",
-        "Model": "V1 Max",
-        "Switch Type": "Gateron Jupiter Red (Linear)",
-        "Layout": "75% Compact Layout",
-        "Connectivity": "2.4GHz Wireless / Bluetooth 5.1 / Type-C Wired",
-        "Hot-swappable": "Yes (รองรับสวิตช์แบบ 3-pin และ 5-pin)",
-        "OS Support": "macOS / Windows / Linux",
-        "Warranty": "1 Year"
-      }
-    },
-    {
-      id: "103",
-      brand: 'RAZER',
-      name: 'MECHANICAL KEYBOARD RAZER HUNTSMAN MINI 60% RGB (RED SWITCH)',
-      price: 3990,
-      inStock: false,
-      category: "Keyboard",
-      description: "คีย์บอร์ดขนาดจิ๋ว 60% ขุมพลังสวิตช์แสง Razer Optical Linear Switches ตอบสนองไวเหนือแสง ประหยัดพื้นที่บนโต๊ะคอมพิวเตอร์ของคุณ",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "RAZER",
-        "Model": "Huntsman Mini",
-        "Switch Type": "Razer™ Linear Optical Switches",
-        "Layout": "60% Ultra-compact Layout",
-        "Keycaps": "Razer Doubleshot PBT Keycaps",
-        "Connectivity": "Detachable Type-C Cable",
-        "Lighting": "Razer Chroma™ RGB",
-        "Warranty": "2 Years"
-      }
-    },
-    {
-      id: "104",
-      brand: 'DURGOD',
-      name: 'MECHANICAL KEYBOARD DURGOD K310 FULL SIZE CHERRY MX (BLUE SWITCH)',
-      price: 2590,
-      inStock: true,
-      category: "Keyboard",
-      description: "คีย์บอร์ดขนาดเต็ม 104 ปุ่ม ดีไซน์คลาสสิก แข็งแรงทนทานด้วยวัสดุเกรดพรีเมียม ตอบโจทย์ผู้ที่ต้องใช้แป้นตัวเลขทำงานและชอบเสียงพิมพ์สะใจ",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "DURGOD",
-        "Model": "Taurus K310",
-        "Switch Type": "Cherry MX Blue (Clicky)",
-        "Layout": "100% Full Size (104 Keys)",
-        "Keycaps": "Hard PBT Double-shot",
-        "Connectivity": "USB Type-C to Type-C / Type-A",
-        "Software Support": "Durgod Zeus Engine",
-        "Warranty": "1 Year"
-      }
-    }
+    { id: "101", brand: 'LOGITECH', name: 'MECHANICAL KEYBOARD LOGITECH G PRO X TKL LIGHTSPEED (BROWN SWITCH)', price: 4990, inStock: true, category: "Keyboard", description: "...", image: "https://unsplash.com", specifications: { "Brand": "LOGITECH" } },
+    { id: "102", brand: 'KEYCHRON', name: 'MECHANICAL KEYBOARD KEYCHRON V1 MAX 75% WIRELESS (RED SWITCH)', price: 3690, inStock: true, category: "Keyboard", description: "...", image: "https://unsplash.com", specifications: { "Brand": "KEYCHRON" } },
+    { id: "103", brand: 'RAZER', name: 'MECHANICAL KEYBOARD RAZER HUNTSMAN MINI 60% RGB (RED SWITCH)', price: 3990, inStock: false, category: "Keyboard", description: "...", image: "https://unsplash.com", specifications: { "Brand": "RAZER" } },
+    { id: "104", brand: 'DURGOD', name: 'MECHANICAL KEYBOARD DURGOD K310 FULL SIZE CHERRY MX (BLUE SWITCH)', price: 2590, inStock: true, category: "Keyboard", description: "...", image: "https://unsplash.com", specifications: { "Brand": "DURGOD" } }
   ];
 
   // LOGIC การสแกนจับคำค้นหาจาก "ชื่อสินค้า" (Text-Matching)
   useEffect(() => {
     const filtered = mockKeyboardDatabase.filter(product => {
       const productName = product.name.toLowerCase();
-
       const matchPrice = product.price >= priceRange.min && product.price <= priceRange.max;
       const matchStock = !inStockOnly || product.inStock;
-
-      const matchSwitch = selectedSwitches.length === 0 || 
-                          selectedSwitches.some(sw => productName.includes(sw.toLowerCase()));
-      
-      const matchLayout = selectedLayouts.length === 0 || 
-                          selectedLayouts.some(ly => productName.includes(ly.toLowerCase()));
-
+      const matchSwitch = selectedSwitches.length === 0 || selectedSwitches.some(sw => productName.includes(sw.toLowerCase()));
+      const matchLayout = selectedLayouts.length === 0 || selectedLayouts.some(ly => productName.includes(ly.toLowerCase()));
       return matchPrice && matchStock && matchSwitch && matchLayout;
     });
 
-    setProducts(filtered);
-  }, [selectedSwitches, selectedLayouts, priceRange, inStockOnly]);
+    const itemsPerPage = 12;
+    const calculatedTotalPages = Math.ceil(filtered.length / itemsPerPage);
+    if (setTotalPages) setTotalPages(calculatedTotalPages);
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedItems = filtered.slice(startIndex, startIndex + itemsPerPage);
+    setProducts(paginatedItems);
+  }, [selectedSwitches, selectedLayouts, priceRange, inStockOnly, currentPage, setTotalPages]);
 
   const handleFilterToggle = (value, state, setState) => {
     if (state.includes(value)) {

@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-const GraphicsCardSpecs = () => {
+const GraphicsCardSpecs = ({ setTotalPages, currentPage = 1 }) => {
   const navigate = useNavigate();
-  const { type } = useParams();
 
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [priceRange, setPriceRange] = useState({ min: 0, max: 100000 });
@@ -16,73 +15,9 @@ const GraphicsCardSpecs = () => {
   const vramOptions = ["8GB", "12GB", "16GB", "24GB"];
 
   const mockDatabase = [
-    {
-      id: "vga-1",
-      brand: "ASUS",
-      name: "ASUS ROG STRIX GEFORCE RTX 4090 OC EDITION 24GB GDDR6X",
-      price: 79900,
-      inStock: true,
-      category: "Graphics Card",
-      description: "The ultimate gaming graphics card with massive 24GB VRAM and ROG cooling performance.",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "ASUS",
-        "Series": "ROG Strix",
-        "GPU Chipset": "NVIDIA GeForce RTX 4090",
-        "Video Memory (VRAM)": "24GB",
-        "Memory Type": "GDDR6X",
-        "Core Clock": "2610 MHz (OC Mode)",
-        "Memory Clock": "21 Gbps",
-        "Interface": "PCIe 4.0",
-        "Power Connector": "1 x 16-pin",
-        "Recommended PSU": "1000W",
-        "Warranty": "3 Years"
-      }
-    },
-    {
-      id: "vga-2",
-      brand: "MSI",
-      name: "MSI GEFORCE RTX 4070 SUPER 12G VENTUS 2X OC",
-      price: 24900,
-      inStock: true,
-      category: "Graphics Card",
-      description: "Excellent performance for 1440p gaming with dual-fan efficient cooling.",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "MSI",
-        "Series": "Ventus 2X",
-        "GPU Chipset": "NVIDIA GeForce RTX 4070 SUPER",
-        "Video Memory (VRAM)": "12GB",
-        "Memory Type": "GDDR6X",
-        "Core Clock": "2505 MHz",
-        "Interface": "PCIe 4.0",
-        "Power Connector": "1 x 16-pin",
-        "Recommended PSU": "650W",
-        "Warranty": "3 Years"
-      }
-    },
-    {
-      id: "vga-3",
-      brand: "GIGABYTE",
-      name: "GIGABYTE RADEON RX 7900 XTX GAMING OC 24G",
-      price: 36900,
-      inStock: false,
-      category: "Graphics Card",
-      description: "AMD's flagship graphics card offering elite performance and 24GB of high-speed memory.",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "GIGABYTE",
-        "Series": "Gaming OC",
-        "GPU Chipset": "AMD Radeon RX 7900 XTX",
-        "Video Memory (VRAM)": "24GB",
-        "Memory Type": "GDDR6",
-        "Memory Clock": "20 Gbps",
-        "Interface": "PCIe 4.0",
-        "Power Connector": "2 x 8-pin",
-        "Recommended PSU": "850W",
-        "Warranty": "3 Years"
-      }
-    }
+    { id: "vga-1", brand: "ASUS", name: "ASUS ROG STRIX GEFORCE RTX 4090 OC EDITION 24GB GDDR6X", price: 79900, inStock: true, category: "Graphics Card", description: "...", image: "https://unsplash.com", specifications: { "Brand": "ASUS" } },
+    { id: "vga-2", brand: "MSI", name: "MSI GEFORCE RTX 4070 SUPER 12G VENTUS 2X OC", price: 24900, inStock: true, category: "Graphics Card", description: "...", image: "https://unsplash.com", specifications: { "Brand": "MSI" } },
+    { id: "vga-3", brand: "GIGABYTE", name: "GIGABYTE RADEON RX 7900 XTX GAMING OC 24G", price: 36900, inStock: false, category: "Graphics Card", description: "...", image: "https://unsplash.com", specifications: { "Brand": "GIGABYTE" } }
   ];
 
   useEffect(() => {
@@ -92,11 +27,17 @@ const GraphicsCardSpecs = () => {
       const matchPrice = product.price >= priceRange.min && product.price <= priceRange.max;
       const matchStock = !inStockOnly || product.inStock;
       const matchVram = selectedVram === '' || productName.includes(selectedVram.toLowerCase());
-
       return matchBrand && matchPrice && matchStock && matchVram;
     });
-    setProducts(filtered);
-  }, [selectedBrands, priceRange, inStockOnly, selectedVram]);
+
+    const itemsPerPage = 12;
+    const calculatedTotalPages = Math.ceil(filtered.length / itemsPerPage);
+    if (setTotalPages) setTotalPages(calculatedTotalPages);
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedItems = filtered.slice(startIndex, startIndex + itemsPerPage);
+    setProducts(paginatedItems);
+  }, [selectedBrands, priceRange, inStockOnly, selectedVram, currentPage, setTotalPages]);
 
   return (
     <div className="w-full min-h-screen bg-gray-50/50 py-6 text-sm">

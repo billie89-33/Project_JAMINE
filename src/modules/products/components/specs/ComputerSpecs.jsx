@@ -1,7 +1,7 @@
 import  { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const ComputerSpecs = () => {
+const ComputerSpecs = ({ setTotalPages, currentPage = 1 }) => {
   const navigate = useNavigate();
 
   // 1. สเตตัสสำหรับเก็บค่าตัวกรองประเภทต่างๆ ของคอมพิวเตอร์ประกอบ
@@ -19,113 +19,39 @@ const ComputerSpecs = () => {
 
   // 2. ข้อมูลสินค้าคอมพิวเตอร์จำลอง (Mock Data โครงสร้างรองรับการส่งสเปกข้ามหน้า)
   const mockComputerDatabase = [
-    {
-      id: "201",
-      brand: 'IHV',
-      name: 'DESKTOP PC SET INTEL I5-14400F / RTX 4060 / 16GB DDR5 / 750W (MID TOWER)',
-      price: 28900,
-      inStock: true,
-      category: "Computer",
-      description: "คอมพิวเตอร์ประกอบชุดสุดคุ้มสำหรับเกมเมอร์ เล่นเกมลื่นไหลทุกเกมในระดับ Full HD สตรีมเกม ทำงานกราฟิกตัดต่อวิดีโอได้สบาย",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "iHAVE-SET",
-        "CPU": "Intel Core i5-14400F (10 Cores / 16 Threads)",
-        "Mainboard": "B760M DDR5 Support",
-        "Memory (RAM)": "16GB DDR5 5200MHz",
-        "Graphics Card": "NVIDIA GeForce RTX 4060 8GB GDDR6",
-        "Storage": "SSD NVMe M.2 512GB PCIe 4.0",
-        "Power Supply": "750W 80 Plus Bronze",
-        "Case Size": "Mid Tower (RGB Fans Included)",
-        "Warranty": "3 Years"
-      }
-    },
-    {
-      id: "202",
-      brand: 'IHV',
-      name: 'DESKTOP PC SET AMD RYZEN 7 7800X3D / RTX 4070 SUPER / 32GB / 850W (FULL TOWER)',
-      price: 65900,
-      inStock: true,
-      category: "Computer",
-      description: "คอมชุดระดับไฮเอนด์ด้วยขุมพลังซีพียูสำหรับเล่นเกมที่ดีที่สุดในโลก จับคู่การ์ดจอ RTX 4070 Super เล่นเกมระดับ 2K/4K ได้ลื่นไหลไม่มีสะดุด",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "iHAVE-SET",
-        "CPU": "AMD Ryzen 7 7800X3D (8 Cores / 16 Threads)",
-        "Mainboard": "X670 Gaming WiFi DDR5",
-        "Memory (RAM)": "32GB DDR5 6000MHz RGB",
-        "Graphics Card": "NVIDIA GeForce RTX 4070 Super 12GB GDDR6X",
-        "Storage": "SSD NVMe M.2 1TB PCIe 4.0 High Speed",
-        "Power Supply": "850W 80 Plus Gold (Full Modular)",
-        "Case Size": "Full Tower Premium Premium",
-        "Warranty": "3 Years"
-      }
-    },
-    {
-      id: "203",
-      brand: 'IHV',
-      name: 'DESKTOP PC SET INTEL I7-14700K / RTX 4080 SUPER / 64GB / 1000W (FULL TOWER)',
-      price: 89900,
-      inStock: false,
-      category: "Computer",
-      description: "ที่สุดของคอมพิวเตอร์ประกอบสำหรับงานสถาปัตยกรรม เรนเดอร์ 3D ขั้นสูง ตัดต่อวิดีโอ 8K และเล่นเกมระดัยบอัลตร้าเซ็ตติ้ง",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "iHAVE-SET",
-        "CPU": "Intel Core i7-14700K (20 Cores / 28 Threads)",
-        "Mainboard": "Z790 Creator DDR5 WiFi",
-        "Memory (RAM)": "64GB DDR5 5600MHz (32GBx2)",
-        "Graphics Card": "NVIDIA GeForce RTX 4080 Super 16GB GDDR6X",
-        "Storage": "SSD NVMe M.2 2TB PCIe 4.0 NVMe",
-        "Power Supply": "1000W 80 Plus Gold ATX 3.0",
-        "Case Size": "Full Tower Glass Design",
-        "Warranty": "3 Years"
-      }
-    },
-    {
-      id: "204",
-      brand: 'IHV',
-      name: 'DESKTOP PC MINI ITX AMD RYZEN 5 7600 / RTX 4060 TI / 16GB / 650W',
-      price: 34900,
-      inStock: true,
-      category: "Computer",
-      description: "คอมพิวเตอร์ขนาดเล็กกะทัดรัด สไตล์ Minimal ประหยัดพื้นที่จัดวางบนโต๊ะคอมพิวเตอร์ แต่คงไว้ซึ่งความแรงระดับดุดัน",
-      image: "https://unsplash.com",
-      specifications: {
-        "Brand": "iHAVE-SET",
-        "CPU": "AMD Ryzen 5 7600 (6 Cores / 12 Threads)",
-        "Mainboard": "A620I ITX Ultra Form Factor",
-        "Memory (RAM)": "16GB DDR5 5200MHz",
-        "Graphics Card": "NVIDIA GeForce RTX 4060 Ti 8GB GDDR6",
-        "Storage": "SSD NVMe M.2 512GB",
-        "Power Supply": "650W SFX 80 Plus Gold",
-        "Case Size": "Mini-ITX Small Form Factor",
-        "Warranty": "3 Years"
-      }
-    }
+    // ... สินค้าชิ้นเดิมที่มีอยู่ (id 201 - 204)
+    { id: "201", brand: 'IHV', name: 'DESKTOP PC SET INTEL I5-14400F / RTX 4060 / 16GB DDR5 / 750W (MID TOWER)', price: 28900, inStock: true, category: "Computer", description: "...", image: "https://unsplash.com", specifications: { "Brand": "iHAVE-SET", "Case Size": "Mid Tower" } },
+    { id: "202", brand: 'IHV', name: 'DESKTOP PC SET AMD RYZEN 7 7800X3D / RTX 4070 SUPER / 32GB / 850W (FULL TOWER)', price: 65900, inStock: true, category: "Computer", description: "...", image: "https://unsplash.com", specifications: { "Brand": "iHAVE-SET", "Case Size": "Full Tower" } },
+    { id: "203", brand: 'IHV', name: 'DESKTOP PC SET INTEL I7-14700K / RTX 4080 SUPER / 64GB / 1000W (FULL TOWER)', price: 89900, inStock: false, category: "Computer", description: "...", image: "https://unsplash.com", specifications: { "Brand": "iHAVE-SET", "Case Size": "Full Tower" } },
+    { id: "204", brand: 'IHV', name: 'DESKTOP PC MINI ITX AMD RYZEN 5 7600 / RTX 4060 TI / 16GB / 650W', price: 34900, inStock: true, category: "Computer", description: "...", image: "https://unsplash.com", specifications: { "Brand": "iHAVE-SET", "Case Size": "Mini-ITX" } }
   ];
 
   // 🛠️ 3. LOGIC การสแกนจับคำค้นหาจาก "ชื่อสินค้า" (Text-Matching)
   useEffect(() => {
     const filtered = mockComputerDatabase.filter(product => {
       const productName = product.name.toLowerCase();
-
-      // เงื่อนไขคัดกรองราคา และสต็อกสินค้า
       const matchPrice = product.price >= priceRange.min && product.price <= priceRange.max;
       const matchStock = !inStockOnly || product.inStock;
-
-      // 🔍 คัดกรองตามข้อความชื่อสินค้า: ถ้าไม่คลิกปุ่มจะผ่านฉลุย แต่ถ้ากดเลือก คำนั้นต้องซ่อนอยู่ในชื่อสินค้า
-      const matchCase = selectedCaseSizes.length === 0 || 
-                        selectedCaseSizes.some(size => productName.includes(size.toLowerCase()));
-      
-      const matchPsu = selectedPsuWatts.length === 0 || 
-                       selectedPsuWatts.some(watt => productName.includes(watt.toLowerCase()));
-
+      const matchCase = selectedCaseSizes.length === 0 || selectedCaseSizes.some(size => productName.includes(size.toLowerCase()));
+      const matchPsu = selectedPsuWatts.length === 0 || selectedPsuWatts.some(watt => productName.includes(watt.toLowerCase()));
       return matchPrice && matchStock && matchCase && matchPsu;
     });
 
-    setProducts(filtered);
-  }, [selectedCaseSizes, selectedPsuWatts, priceRange, inStockOnly]);
+    // 🌟 คำนวณจำนวนหน้าทั้งหมด (อิงตาม 12 ชิ้นต่อหน้า)
+    const itemsPerPage = 12;
+    const calculatedTotalPages = Math.ceil(filtered.length / itemsPerPage);
+    
+    // 🌟 ส่งค่าจำนวนหน้ากลับไปที่หน้าแม่ (CategoryPage)
+    if (setTotalPages) {
+      setTotalPages(calculatedTotalPages);
+    }
+
+    // 🌟 จำลองการทำ Pagination: ตัดอาร์เรย์มาโชว์แค่ช่วงของหน้านั้นๆ
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedItems = filtered.slice(startIndex, startIndex + itemsPerPage);
+
+    setProducts(paginatedItems);
+  }, [selectedCaseSizes, selectedPsuWatts, priceRange, inStockOnly, currentPage, setTotalPages]);
 
   // ฟังก์ชันช่วยสลับหยิบค่าในอาร์เรย์ตัวกรอง (ติ๊กเข้า / ติ๊กออก)
   const handleFilterToggle = (value, state, setState) => {
