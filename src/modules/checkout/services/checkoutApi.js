@@ -22,17 +22,25 @@ export const createOrderApi = async (orderData) => {
 export const getCheckoutSummaryApi = async () => {
     return new Promise((resolve) => {
         setTimeout(() => {
+            // จำลองการดึงตะกร้ามาคำนวณยอดเงินที่หลังบ้าน
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+            const shipping = 50; // ตัวอย่างยอดค่าส่งจากหลังบ้าน
+            const discount = 0;  // ตัวอย่างส่วนลด
+
             resolve({
                 success: true,
                 data: {
-                    items: JSON.parse(localStorage.getItem('cart')) || [],
+                    items: cart,
                     addresses: [
                         { id: 'addr1', name: 'Home', details: '123/45 Sukhumvit Rd, Bangkok 10110' },
                         { id: 'addr2', name: 'Office', details: 'Yada Building, 52 Silom Road, Bangkok 10500' }
                     ],
                     priceDetails: {
-                        shipping: 0,
-                        discount: 0
+                        subtotal,
+                        shipping,
+                        discount,
+                        total: subtotal + shipping - discount
                     }
                 }
             });
@@ -43,8 +51,18 @@ export const getCheckoutSummaryApi = async () => {
 export const createOrderApi = async (orderData) => {
     return new Promise((resolve) => {
         setTimeout(() => {
-            console.log("API Received Order Payload:", orderData);
-            resolve({ success: true, message: "Order created successfully" });
+            // 🚨 จำลองหลังบ้าน: รับแค่ addressId และ paymentMethod
+            // ยอดเงินต้องดึงจาก cart ของ user ในระบบหลังบ้านเอง
+            console.log("API RECEIVED SECURE PAYLOAD:", orderData);
+
+            resolve({ 
+                success: true, 
+                message: "Order created successfully",
+                data: {
+                    id: `ORD-${Date.now()}`,
+                    totalAmount: 1500, // ตัวอย่างยอดเงินที่สรุปจากหลังบ้าน
+                }
+            });
         }, 1500);
     });
 };

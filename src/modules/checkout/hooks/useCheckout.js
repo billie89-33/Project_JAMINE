@@ -44,12 +44,12 @@ export const useCheckout = () => {
           setAddresses(addresses);
           if (addresses.length > 0) setSelectedAddressId(addresses[0].id);
 
-          const subtotal = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+          // ✨ Trust the Backend: ใช้ยอดเงินสรุปจาก API โดยตรง ไม่คำนวณเองที่หน้าบ้าน
           setPriceDetails({
-            subtotal,
+            subtotal: apiPriceDetails.subtotal,
             shipping: apiPriceDetails.shipping,
             discount: apiPriceDetails.discount,
-            total: subtotal + apiPriceDetails.shipping - apiPriceDetails.discount
+            total: apiPriceDetails.total
           });
         }
       } catch (error) {
@@ -70,22 +70,23 @@ export const useCheckout = () => {
 
     setIsSubmitting(true);
     try {
+      // 🛡️ Tampering Prevention: ส่งแค่ addressId และ paymentMethod
+      // Backend จะเป็นผู้ดึงตะกร้าและคำนวณเงินจริงเอง
       const orderPayload = {
         addressId: selectedAddressId,
-        paymentMethod,
-        items: cartItems.map(item => ({ productId: item.id, quantity: item.quantity })),
-        totalAmount: priceDetails.total
+        paymentMethod
       };
 
       const res = await createOrderApi(orderPayload);
 
       if (res.success) {
         toast.success("สร้างคำสั่งซื้อสำเร็จ! กำลังไปที่หน้าชำระเงิน...");
-        // ไม่ต้องลบ cart ทันที ให้รอจ่ายเงินสำเร็จก่อน
+        
+        // 🚨 Navigation Security: ใช้ยอดเงินจริงที่ Backend ตอบกลับมาเท่านั้น
         navigate('/payment-gateway', { 
           state: { 
-            totalAmount: priceDetails.total,
-            orderId: res.data?.id || 'temp_id'
+            totalAmount: res.data?.totalAmount, 
+            orderId: res.data?.id
           } 
         }); 
       }
