@@ -12,7 +12,18 @@ export const useAdminProducts = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [searchTerm, setSearchTerm] = useState(''); // 🆕 เพิ่มสถานะคำค้นหา
+  const [debouncedSearch, setDebouncedSearch] = useState(''); // สำหรับหน่วงเวลาการค้นหา
   const [isLoading, setIsLoading] = useState(false);
+
+  // ⏱️ Debounce Logic: หน่วงเวลา 500ms ก่อนเริ่มค้นหาจริง
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+      setCurrentPage(1); // รีเซ็ตไปหน้า 1 เมื่อมีการค้นหาใหม่
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   // ฟังก์ชันดึงข้อมูลจาก API
   const fetchProducts = useCallback(async () => {
@@ -21,7 +32,8 @@ export const useAdminProducts = () => {
       const params = {
         page: currentPage,
         limit: 10,
-        category: selectedCategory === 'All' ? undefined : selectedCategory
+        category: selectedCategory === 'All' ? undefined : selectedCategory,
+        keyword: debouncedSearch || undefined // 🆕 ส่งคำค้นหาไปยัง Backend
       };
       
       const response = await getAdminProducts(params);
@@ -37,7 +49,7 @@ export const useAdminProducts = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [currentPage, selectedCategory]);
+  }, [currentPage, selectedCategory, debouncedSearch]);
 
   useEffect(() => {
     fetchProducts();
@@ -46,7 +58,14 @@ export const useAdminProducts = () => {
   // Handler สำหรับการเปลี่ยนหมวดหมู่
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
-    setCurrentPage(1); // รีเซ็ตไปหน้า 1 เสมอเมื่อเปลี่ยนหมวดหมู่
+    setCurrentPage(1); 
+  };
+
+  // 🆕 Handler สำหรับการล้างตัวกรองทั้งหมด
+  const handleClearFilters = () => {
+    setSelectedCategory('All');
+    setSearchTerm('');
+    setCurrentPage(1);
   };
 
   // Handler สำหรับการลบสินค้า
@@ -56,7 +75,7 @@ export const useAdminProducts = () => {
         const response = await deleteProduct(id);
         if (response.success) {
           toast.success('ลบสินค้าสำเร็จ');
-          fetchProducts(); // โหลดข้อมูลใหม่
+          fetchProducts(); 
         }
       } catch (error) {
         toast.error('ลบสินค้าไม่สำเร็จ');
@@ -71,8 +90,11 @@ export const useAdminProducts = () => {
     currentPage,
     setCurrentPage,
     selectedCategory,
+    searchTerm, // 🆕 ส่งออกเพื่อให้ UI ผูกค่า
+    setSearchTerm, // 🆕 ส่งออกเพื่อให้ UI พิมพ์ค่า
     isLoading,
     handleCategoryChange,
+    handleClearFilters, // 🆕 ส่งออกปุ่มล้างข้อมูล
     handleDeleteProduct,
     refreshProducts: fetchProducts
   };

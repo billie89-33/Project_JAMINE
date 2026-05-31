@@ -2,25 +2,24 @@ import { ProductForm } from '@/modules/admin/addproduct';
 
 const AddProductPage = () => {
     return (
-        // min-h-screen: บังคับให้พื้นหลังสูงเต็มหน้าจอ
-        // bg-[#E5E5E5]: ใช้สีพื้นหลังเทาอ่อนสไตล์หน้าแอดมิน เพื่อให้ตัวฟอร์มสีเข้มดูเด่นขึ้นมา
-        <div className="min-h-screen bg-[#F3F4F6] py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl mx-auto space-y-6">
+        <div className="min-h-screen bg-slate-50/50 p-4 md:p-8">
+            <div className="max-w-5xl mx-auto space-y-8">
                 
-                {/* ส่วนหัวข้อของหน้า (Page Header) */}
-                <div className="text-center">
-                    <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
-                        Create New Product
-                    </h1>
-                    <p className="mt-2 text-sm text-gray-600">
-                        ระบบจัดการคลังสินค้าหลังบ้านสำหรับผู้ดูแลระบบ (Admin Only)
-                    </p>
+                {/* ส่วนหัวข้อของหน้า (Page Header) - สไตล์เดียวกับหน้า Admin Products */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 className="text-3xl font-black text-slate-800 flex items-center gap-3">
+                            <span className="bg-purple-600 text-white p-2.5 rounded-2xl shadow-lg shadow-purple-200">✨</span>
+                            Create New Product
+                        </h1>
+                        <p className="text-slate-400 mt-1 font-medium ml-1">
+                            เพิ่มสินค้าใหม่เข้าสู่ระบบจัดการคลังสินค้าหลังบ้าน
+                        </p>
+                    </div>
                 </div>
 
                 {/* แสดงผลตัวฟอร์มที่เราแยก Component ไว้ */}
-                <div className="bg-white rounded-xl shadow-md overflow-hidden p-2">
-                    <ProductForm />
-                </div>
+                <ProductForm />
                 
             </div>
         </div>

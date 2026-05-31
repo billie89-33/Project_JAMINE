@@ -1,4 +1,4 @@
-import { CategoryFilter, ProductTable, useAdminProducts } from '@/modules/admin/products';
+import { FilterBar, ProductTable, useAdminProducts } from '@/modules/admin/products';
 import { Pagination } from '@/shared/components';
 import { Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -15,8 +15,11 @@ const ProductsPage = () => {
     currentPage,
     setCurrentPage,
     selectedCategory,
+    searchTerm,
+    setSearchTerm,
     isLoading,
     handleCategoryChange,
+    handleClearFilters,
     handleDeleteProduct
   } = useAdminProducts();
 
@@ -44,10 +47,13 @@ const ProductsPage = () => {
       {/* 2. Main Content - Full Width */}
       <div className="max-w-[1600px] mx-auto">
         
-        {/* Category Pills */}
-        <CategoryFilter 
+        {/* Integrated Filter Bar */}
+        <FilterBar 
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
           selectedCategory={selectedCategory} 
           onCategoryChange={handleCategoryChange} 
+          onClear={handleClearFilters}
         />
 
         {/* Data Table */}

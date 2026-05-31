@@ -21,12 +21,33 @@ const ProductTable = ({ products, onDelete, isLoading }) => {
 
   if (products.length === 0) {
     return (
-      <div className="w-full py-20 text-center bg-white rounded-3xl border-2 border-dashed border-purple-100">
-        <div className="bg-purple-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Box size={40} className="text-purple-300" />
+      <div className="w-full py-24 text-center bg-white rounded-[40px] border-2 border-dashed border-purple-100 shadow-inner bg-[radial-gradient(#fdfaff_1px,transparent_1px)] [background-size:20px_20px]">
+        <div className="relative w-32 h-32 mx-auto mb-8">
+          {/* Animated rings for visual interest */}
+          <div className="absolute inset-0 bg-purple-100 rounded-full animate-ping opacity-20"></div>
+          <div className="absolute -inset-4 bg-purple-50 rounded-full opacity-50 blur-xl"></div>
+          
+          <div className="relative bg-gradient-to-br from-purple-50 to-white w-32 h-32 rounded-full flex items-center justify-center shadow-lg border border-purple-50">
+            <Box size={56} className="text-purple-300 stroke-[1.5]" />
+          </div>
+          
+          {/* Sub-icon for context */}
+          <div className="absolute -bottom-2 -right-2 bg-white p-3 rounded-2xl shadow-xl border border-purple-50 animate-bounce">
+            <Tag size={20} className="text-purple-500" />
+          </div>
         </div>
-        <h3 className="text-xl font-bold text-slate-700">ไม่พบข้อมูลสินค้า</h3>
-        <p className="text-slate-400">ลองเปลี่ยนหมวดหมู่หรือเพิ่มสินค้าใหม่ลงระบบ</p>
+        
+        <h3 className="text-2xl font-black text-slate-800 mb-3">ไม่พบข้อมูลสินค้า</h3>
+        <p className="text-slate-400 max-w-sm mx-auto font-medium leading-relaxed px-6">
+          ดูเหมือนว่ายังไม่มีสินค้าในหมวดหมู่ที่เลือก <br /> 
+          หรือคำค้นหาของคุณอาจไม่ตรงกับสินค้าที่มีอยู่ในขณะนี้
+        </p>
+        
+        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="px-5 py-2 bg-slate-50 rounded-full text-[11px] font-black text-slate-400 uppercase tracking-widest border border-slate-100">
+            Tip: ลองเปลี่ยนคำค้นหาหรือเลือก "ทั้งหมด"
+          </div>
+        </div>
       </div>
     );
   }
