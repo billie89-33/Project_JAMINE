@@ -17,7 +17,7 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const { user } = useAuth();
   const [cartItems, setCartItems] = useState([]);
-  const [summary, setSummary] = useState({ subtotal: 0, total: 0, itemCount: 0 });
+  const [summary, setSummary] = useState({ subtotal: 0, total: 0, itemCount: 0, shippingFee: 0 });
   const [loading, setLoading] = useState(false);
 
   // 1. ดึงข้อมูลตะกร้าจาก API
