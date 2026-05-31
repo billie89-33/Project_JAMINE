@@ -1,2 +1,2 @@
-export { default as Pagination } from './Pagination';
+export { Pagination } from '@/shared/components';
 export { default as ProductSwitchCase } from './ProductSwitchCase';
