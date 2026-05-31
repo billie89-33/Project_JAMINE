@@ -2,11 +2,13 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { ShoppingCart, Zap, ShieldCheck, Truck, Package } from 'lucide-react';
+import { useCart } from '@/modules/cart';
 
 const ProductMainInfo = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const [activeImgIndex, setActiveImgIndex] = useState(0);
   const navigate = useNavigate();
+  const { addToCart } = useCart();
 
   if (!product) return null;
 
@@ -25,46 +27,13 @@ const ProductMainInfo = ({ product }) => {
     if (type === "dec" && quantity > 1) setQuantity(quantity - 1);
   };
 
-  const handleAddToCart = () => {
-    try {
-      const currentCart = JSON.parse(localStorage.getItem('cart')) || [];
-      const productId = product._id || product.id;
-      const existingProductIndex = currentCart.findIndex(item => item.id === productId);
-
-      if (existingProductIndex > -1) {
-        currentCart[existingProductIndex].quantity += quantity;
-      } else {
-        currentCart.push({
-          id: productId,
-          name: displayName,
-          description: product.description || `Category: ${product.category}`,
-          price: displayPrice,
-          quantity: quantity,
-          image: currentImage
-        });
-      }
-
-      localStorage.setItem('cart', JSON.stringify(currentCart));
-      return true;
-    } catch (error) {
-      toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
-      return false;
-    }
+  const onAddToCartClick = async () => {
+    await addToCart(product._id || product.id, quantity);
   };
 
-  const onAddToCartClick = () => {
-    if (handleAddToCart()) {
-      toast.success(`เพิ่มลงตะกร้าแล้ว!`, {
-        icon: '🛒',
-        style: { borderRadius: '15px', fontWeight: 'bold' }
-      });
-    }
-  };
-
-  const onBuyNowClick = () => {
-    if (handleAddToCart()) {
-      navigate('/cart');
-    }
+  const onBuyNowClick = async () => {
+    await addToCart(product._id || product.id, quantity);
+    navigate('/cart');
   };
 
   return (

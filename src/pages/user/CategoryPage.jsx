@@ -35,10 +35,20 @@ const CategoryPage = () => {
   } = useProducts(type);
 
   return (
-    <div className="w-full min-h-screen bg-slate-50/50 pb-20">
+    <div className="w-full min-h-screen bg-white relative overflow-hidden pb-20">
       
-      {/* 1. Header Section: Banner & Category Slider (คงเดิมตามสไตล์โปรเจกต์) */}
-      <div className="bg-white border-b border-purple-50 pb-10">
+      {/* 🔮 Decorative Background Elements (ม่วงสดใส) */}
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none -z-10">
+        <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-purple-100/40 blur-[120px] rounded-full animate-pulse"></div>
+        <div className="absolute bottom-[20%] left-[-10%] w-[30%] h-[40%] bg-indigo-100/30 blur-[100px] rounded-full"></div>
+        <div className="absolute top-[40%] left-[20%] w-[20%] h-[20%] bg-purple-50/50 blur-[80px] rounded-full"></div>
+        
+        {/* Subtle Grid Pattern Overlay */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#7c3aed 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
+      </div>
+      
+      {/* 1. Header Section: Banner & Category Slider */}
+      <div className="bg-white/40 backdrop-blur-md border-b border-purple-50/50 pb-10">
         <div className="max-w-[1600px] mx-auto px-4 md:px-8 pt-6 space-y-10">
           <HeroBanner />
           <CategorySlider />
@@ -46,7 +56,7 @@ const CategoryPage = () => {
       </div>
 
       {/* 2. Main Content: Sidebar + Product Grid */}
-      <div className="max-w-[1600px] mx-auto px-4 md:px-8 mt-10">
+      <div className="max-w-[1600px] mx-auto px-4 md:px-8 mt-10 relative z-10">
         <div className="flex flex-col lg:flex-row gap-10">
           
           {/* ⬅️ Sidebar: ตัวกรองอัจฉริยะ (จะแสดงผลเมื่อเข้าหน้า Category) */}

@@ -21,59 +21,65 @@ const Sidebar = ({
   const [isPriceOpen, setIsPriceOpen] = useState(true);
 
   return (
-    <div className="w-full lg:w-72 flex flex-col gap-6 select-none">
+    <div className="w-full lg:w-72 flex flex-col gap-6 select-none relative">
       
+      {/* 🏔️ Decorative Background Blur for Sidebar */}
+      <div className="absolute -inset-2 bg-purple-100/20 blur-2xl rounded-[40px] -z-10"></div>
+
       {/* 1. Header & Clear Button */}
-      <div className="flex items-center justify-between bg-white p-5 rounded-3xl shadow-sm border border-slate-100">
+      <div className="flex items-center justify-between bg-white/90 backdrop-blur-md p-5 rounded-3xl shadow-xl shadow-purple-200/20 border border-purple-50">
         <div className="flex items-center gap-2">
-          <span className="bg-purple-600 text-white p-1.5 rounded-lg shadow-lg shadow-purple-100">
+          <div className="bg-gradient-to-br from-purple-600 to-indigo-600 text-white p-2 rounded-xl shadow-lg shadow-purple-200">
             <Filter size={14} strokeWidth={3} />
-          </span>
-          <h2 className="font-black text-slate-800 uppercase tracking-widest text-sm">Filters</h2>
+          </div>
+          <h2 className="font-black text-slate-800 uppercase tracking-[0.1em] text-xs">Smart Filters</h2>
         </div>
         <button 
           onClick={onClearAll}
-          className="text-[10px] font-black text-rose-500 uppercase tracking-widest hover:bg-rose-50 px-3 py-1.5 rounded-xl transition-all"
+          className="text-[9px] font-black text-rose-500 uppercase tracking-widest hover:bg-rose-50 px-3 py-1.5 rounded-xl transition-all border border-transparent hover:border-rose-100"
         >
-          Clear All
+          Reset
         </button>
       </div>
 
       {/* 2. Category Selection (Accordion) */}
-      <div className="bg-white rounded-[32px] border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-purple-50/40 backdrop-blur-sm rounded-[32px] border border-purple-100/50 shadow-sm overflow-hidden">
         <button 
           onClick={() => setIsCategoryOpen(!isCategoryOpen)}
-          className="w-full flex items-center justify-between p-6 hover:bg-slate-50 transition-colors"
+          className="w-full flex items-center justify-between p-6 hover:bg-white transition-colors"
         >
-          <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Categories</h3>
+          <div className="flex items-center gap-3">
+            <div className={`w-1.5 h-1.5 rounded-full ${isCategoryOpen ? 'bg-purple-500 animate-pulse' : 'bg-slate-300'}`}></div>
+            <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Categories</h3>
+          </div>
           <span className="text-slate-300">
             {isCategoryOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
           </span>
         </button>
 
         {isCategoryOpen && (
-          <div className="px-6 pb-6 pt-2 flex flex-col gap-1.5 animate-in fade-in slide-in-from-top-2 duration-300">
+          <div className="px-5 pb-6 pt-1 flex flex-col gap-1.5 animate-in fade-in slide-in-from-top-2 duration-300">
             <button
               onClick={() => setSelectedCategory('All')}
-              className={`w-full text-left px-4 py-3 rounded-2xl text-sm font-bold transition-all ${
+              className={`w-full text-left px-5 py-3.5 rounded-2xl text-xs font-black transition-all border ${
                 selectedCategory === 'All' || !selectedCategory
-                  ? 'bg-purple-600 text-white shadow-xl shadow-purple-100 translate-x-1'
-                  : 'text-slate-500 hover:bg-purple-50 hover:text-purple-600'
+                  ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white border-transparent shadow-lg shadow-purple-200 translate-x-2'
+                  : 'text-slate-500 bg-white/50 border-white hover:bg-white hover:text-purple-600 hover:border-purple-100'
               }`}
             >
-              📂 ทั้งหมด
+              📂 EXPLORE ALL
             </button>
             {categories.map(cat => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`w-full text-left px-4 py-3 rounded-2xl text-sm font-bold transition-all ${
+                className={`w-full text-left px-5 py-3.5 rounded-2xl text-xs font-black transition-all border ${
                   selectedCategory === cat
-                    ? 'bg-purple-600 text-white shadow-xl shadow-purple-100 translate-x-1'
-                    : 'text-slate-500 hover:bg-purple-50 hover:text-purple-600'
+                    ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white border-transparent shadow-lg shadow-purple-200 translate-x-2'
+                    : 'text-slate-500 bg-white/50 border-white hover:bg-white hover:text-purple-600 hover:border-purple-100'
                 }`}
               >
-                {cat}
+                {cat.toUpperCase()}
               </button>
             ))}
           </div>
@@ -81,23 +87,30 @@ const Sidebar = ({
       </div>
 
       {/* 3. Brand Filter (Accordion) */}
-      <div className="bg-white rounded-[32px] border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-purple-50/40 backdrop-blur-sm rounded-[32px] border border-purple-100/50 shadow-sm overflow-hidden">
         <button 
           onClick={() => setIsBrandOpen(!isBrandOpen)}
-          className="w-full flex items-center justify-between p-6 hover:bg-slate-50 transition-colors"
+          className="w-full flex items-center justify-between p-6 hover:bg-white transition-colors"
         >
-          <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Brands</h3>
+          <div className="flex items-center gap-3">
+            <div className={`w-1.5 h-1.5 rounded-full ${isBrandOpen ? 'bg-purple-500 animate-pulse' : 'bg-slate-300'}`}></div>
+            <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Top Brands</h3>
+          </div>
           <span className="text-slate-300">
             {isBrandOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
           </span>
         </button>
         
         {isBrandOpen && (
-          <div className="px-6 pb-6 pt-2 grid grid-cols-1 gap-2 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-purple-100">
+          <div className="px-5 pb-6 pt-1 grid grid-cols-1 gap-1.5 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-purple-200">
             {brands.map(brand => (
               <label 
                 key={brand}
-                className="group flex items-center gap-3 p-3 rounded-2xl cursor-pointer hover:bg-purple-50 transition-all border border-transparent hover:border-purple-100"
+                className={`group flex items-center gap-3 p-3 rounded-2xl cursor-pointer transition-all border ${
+                  selectedBrands.includes(brand)
+                    ? 'bg-white border-purple-100 shadow-sm'
+                    : 'bg-white/30 border-transparent hover:bg-white hover:border-purple-50'
+                }`}
               >
                 <div className="relative flex items-center justify-center">
                   <input 
@@ -111,7 +124,7 @@ const Sidebar = ({
                     <svg className="w-3 h-3 text-white fill-current" viewBox="0 0 20 20"><path d="M0 11l2-2 5 5L18 3l2 2L7 18z"/></svg>
                   </div>
                 </div>
-                <span className={`text-sm font-bold transition-colors ${selectedBrands.includes(brand) ? 'text-purple-600' : 'text-slate-600'}`}>
+                <span className={`text-[11px] font-black uppercase tracking-widest transition-colors ${selectedBrands.includes(brand) ? 'text-purple-600' : 'text-slate-500'}`}>
                   {brand}
                 </span>
               </label>
@@ -121,45 +134,47 @@ const Sidebar = ({
       </div>
 
       {/* 4. Price Filter */}
-      <div className="bg-white rounded-[32px] border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-purple-50/40 backdrop-blur-sm rounded-[32px] border border-purple-100/50 shadow-sm overflow-hidden">
         <button 
           onClick={() => setIsPriceOpen(!isPriceOpen)}
-          className="w-full flex items-center justify-between p-6 hover:bg-slate-50 transition-colors"
+          className="w-full flex items-center justify-between p-6 hover:bg-white transition-colors"
         >
-          <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Price Range</h3>
+          <div className="flex items-center gap-3">
+            <div className={`w-1.5 h-1.5 rounded-full ${isPriceOpen ? 'bg-purple-500 animate-pulse' : 'bg-slate-300'}`}></div>
+            <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Budget</h3>
+          </div>
           <span className="text-slate-300">
             {isPriceOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
           </span>
         </button>
 
         {isPriceOpen && (
-          <div className="px-8 pb-8 pt-2 space-y-6">
+          <div className="px-6 pb-8 pt-2 space-y-6">
             <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex-1 space-y-1">
-                  <span className="text-[10px] font-black text-slate-400 uppercase">Min</span>
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex-1 space-y-1.5">
+                  <span className="text-[9px] font-black text-slate-400 uppercase tracking-tighter ml-1">Min (฿)</span>
                   <input 
                     type="number" 
                     value={priceRange.min}
                     onChange={(e) => onPriceChange(Number(e.target.value), priceRange.max)}
-                    className="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-xs font-black text-slate-700 outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+                    className="w-full p-3 bg-white border border-purple-50 rounded-xl text-[11px] font-black text-slate-700 outline-none focus:ring-4 focus:ring-purple-500/10 focus:border-purple-400 transition-all shadow-sm"
                   />
                 </div>
-                <div className="flex-1 space-y-1">
-                  <span className="text-[10px] font-black text-slate-400 uppercase">Max</span>
+                <div className="flex-1 space-y-1.5">
+                  <span className="text-[9px] font-black text-slate-400 uppercase tracking-tighter ml-1">Max (฿)</span>
                   <input 
                     type="number" 
                     value={priceRange.max}
                     onChange={(e) => onPriceChange(priceRange.min, Number(e.target.value))}
-                    className="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-xs font-black text-slate-700 outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+                    className="w-full p-3 bg-white border border-purple-50 rounded-xl text-[11px] font-black text-slate-700 outline-none focus:ring-4 focus:ring-purple-500/10 focus:border-purple-400 transition-all shadow-sm"
                   />
                 </div>
               </div>
               
-              {/* Range Visualization (Progress Bar style) */}
-              <div className="relative h-2 bg-slate-100 rounded-full overflow-hidden">
+              <div className="relative h-2 bg-white/50 rounded-full border border-purple-50 overflow-hidden">
                 <div 
-                  className="absolute h-full bg-gradient-to-r from-purple-400 to-purple-600"
+                  className="absolute h-full bg-gradient-to-r from-purple-400 to-indigo-600 shadow-[0_0_10px_rgba(168,85,247,0.4)]"
                   style={{ width: '100%' }}
                 ></div>
               </div>

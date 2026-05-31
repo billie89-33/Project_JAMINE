@@ -1,48 +1,53 @@
 export default function CartItem({ product, onIncrease, onDecrease, onRemove }) {
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 py-8 last:border-0">
-      {/* ข้อมูลสินค้า */}
-      <div className="flex gap-4 flex-1">
-        <div className="w-24 h-24 bg-gray-100 rounded-xl overflow-hidden flex-shrink-0 border border-gray-50 flex items-center justify-center text-gray-400">
-          🖼️
+    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-purple-50 py-10 last:border-0 group">
+      {/* 🖼️ ข้อมูลสินค้า */}
+      <div className="flex gap-6 flex-1">
+        <div className="w-28 h-28 bg-slate-50 rounded-[24px] overflow-hidden flex-shrink-0 border border-slate-100 flex items-center justify-center p-4 transition-all group-hover:shadow-lg group-hover:shadow-purple-100/50">
+          <img 
+            src={product.image || 'https://via.placeholder.com/150'} 
+            alt={product.name} 
+            className="w-full h-full object-contain"
+          />
         </div>
         <div className="flex flex-col justify-between py-1">
-          <div>
-            <h3 className="font-semibold text-gray-800 text-base">{product.name}</h3>
-            <p className="text-gray-400 text-sm mt-0.5">{product.description}</p>
+          <div className="space-y-1">
+            <h3 className="font-black text-slate-800 text-lg leading-tight group-hover:text-purple-600 transition-colors">{product.name}</h3>
+            <p className="text-slate-400 text-xs font-medium line-clamp-2 max-w-md">{product.description}</p>
           </div>
           <button 
             onClick={() => onRemove(product.id)}
-            className="text-red-400 text-xs text-left font-medium hover:text-red-600 transition-colors mt-2"
+            className="text-rose-400 text-[10px] font-black uppercase tracking-widest text-left hover:text-rose-600 transition-colors mt-4 bg-rose-50 px-3 py-1.5 rounded-xl w-fit"
           >
-            Remove
+            Remove Item
           </button>
         </div>
       </div>
 
-      {/* ตัวปรับจำนวนและราคา */}
-      <div className="flex items-center justify-between sm:justify-end gap-8 w-full sm:w-auto">
+      {/* 🔢 ตัวปรับจำนวนและราคา */}
+      <div className="flex items-center justify-between sm:justify-end gap-10 w-full sm:w-auto bg-slate-50/50 p-4 sm:p-0 rounded-2xl sm:bg-transparent">
         {/* ปุ่มเพิ่มลด */}
-        <div className="flex items-center border border-gray-200 bg-gray-50 rounded-lg p-1">
+        <div className="flex items-center bg-white border border-slate-200 rounded-2xl p-1.5 shadow-sm">
           <button 
             onClick={() => onDecrease(product.id)} 
-            className="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-white rounded-md transition-all font-medium text-lg"
+            className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition-all font-black text-xl active:scale-90"
           >
             -
           </button>
-          <span className="w-10 text-center font-semibold text-gray-700 text-sm">{product.quantity}</span>
+          <span className="w-10 text-center font-black text-slate-700 text-sm font-mono">{product.quantity}</span>
           <button 
             onClick={() => onIncrease(product.id)} 
-            className="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-white rounded-md transition-all font-medium text-lg"
+            className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition-all font-black text-xl active:scale-90"
           >
             +
           </button>
         </div>
 
         {/* ราคารวมของชิ้นนั้นๆ */}
-        <div className="text-right min-w-[80px]">
-          <span className="text-xl font-bold text-gray-800">
-            {(product.price * product.quantity).toLocaleString()}.-
+        <div className="text-right min-w-[100px] flex flex-col">
+          <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-1">Total</span>
+          <span className="text-2xl font-black text-slate-900">
+            ฿{(product.price * product.quantity).toLocaleString()}
           </span>
         </div>
       </div>
