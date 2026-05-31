@@ -45,7 +45,11 @@ export const useProductActions = () => {
         formData.append('brand', brand); // ดึงจาก State โดยตรง ไม่ใช้ Mock
         formData.append('modelName', modelName);
         formData.append('description', description);
-        formData.append('price', Number(price));
+        
+        // 🧼 2.1 จัดการ Price: ลบคอมม่าออกก่อนแปลงเป็น Number
+        const cleanPrice = price.toString().replace(/,/g, '');
+        formData.append('price', Number(cleanPrice));
+        
         formData.append('sku', sku);
         formData.append('category', category);
         formData.append('stock', Number(stock));

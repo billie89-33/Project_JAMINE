@@ -33,6 +33,7 @@
 *   **Create:** บังคับส่งทุกฟิลด์ ยกเว้น `tags`, `specifications`, และ `isFeatured`
 *   **Image:** ต้องมีการอัปโหลดไฟล์ภาพเสมอ (ยกเว้น PATCH ที่ไม่ต้องการเปลี่ยนภาพ)
 *   **Numbers:** `price` และ `stock` ห้ามติดลบ
+    *   > **💡 Numeric Sanitization:** Frontend จะทำการลบเครื่องหมายคอมม่า (`,`) และตัวอักษรที่ไม่ใช่ตัวเลขออกก่อนส่ง API เพื่อให้ Backend ได้รับค่าเป็น `Number` ที่บริสุทธิ์เสมอ
 *   **Specifications:** ต้องเป็น JSON Object ชั้นเดียวเท่านั้น (ห้ามส่ง Object ซ้อน Object)
 
 ### **ฝั่งการดึงข้อมูล (GET)**

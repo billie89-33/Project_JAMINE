@@ -27,6 +27,13 @@ const productSchema = new mongoose.Schema({
         enum: ['Notebook', 'Keyboard', 'CPU', 'Monitor', 'Gaming Mouse', 'Graphics Card', 'RAM', 'Mainboard'] 
     },
     stock: { type: Number, required: true, default: 0 }, // ใช้ stock แทน quantity
+    status: { 
+        type: String, 
+        required: true, 
+        enum: ['active', 'inactive', 'draft'], 
+        default: 'active' 
+    }, // 🆕 สถานะสินค้า
+    isFeatured: { type: Boolean, default: false }, // 🆕 สินค้าแนะนำ
     specifications: { type: Map, of: String, default: {} }
 }, { timestamps: true });
 
@@ -42,55 +49,30 @@ export default mongoose.model('Product', productSchema);
 ```javascript
 export const getProducts = async (req, res, next) => {
     try {
-        const queryObj = {};
+        // 🌟 1. บังคับให้ User ทั่วไปเห็นเฉพาะสินค้าที่ 'active' เท่านั้น
+        // แต่ถ้าเป็น Admin (เรียกผ่านหน้าจัดการ) อาจจะอนุญาตให้กรอง status อื่นได้
+        const queryObj = { status: 'active' }; 
 
-        // 1. หมวดหมู่สินค้า
+        // 2. หมวดหมู่สินค้า
         if (req.query.category) queryObj.category = req.query.category;
+        
+        // 3. กรองตาม Featured (สำหรับหน้าแรก)
+        if (req.query.isFeatured) queryObj.isFeatured = req.query.isFeatured === 'true';
 
-        // 2. ค้นหาคำสำคัญ (Search)
+        // 4. ค้นหาคำสำคัญ (Search)
         if (req.query.keyword) {
             const regex = { $regex: req.query.keyword, $options: 'i' };
             queryObj.$or = [
                 { modelName: regex },
-                { description: regex }, // 🆕 ค้นหาในรายละเอียดสินค้าด้วย
+                { description: regex }, 
                 { brand: regex }
             ];
         }
 
-        // 3. กรองช่วงราคา
-        if (req.query.minPrice || req.query.maxPrice) {
-            queryObj.price = {};
-            if (req.query.minPrice) queryObj.price.$gte = Number(req.query.minPrice);
-            if (req.query.maxPrice) queryObj.price.$lte = Number(req.query.maxPrice);
-        }
-
-        // 4. 🌟 Dynamic Specs Filter (รองรับตัวกรองที่ขึ้นต้นด้วย spec_)
-        Object.keys(req.query).forEach(key => {
-            if (key.startsWith('spec_')) {
-                const specName = key.replace('spec_', '');
-                const specValue = req.query[key];
-                const valuesArray = Array.isArray(specValue) ? specValue : [specValue];
-                
-                queryObj[`specifications.${specName}`] = { 
-                    $in: valuesArray.map(val => new RegExp(val, 'i')) 
-                };
-            }
-        });
+        // ... กรองช่วงราคา และ Dynamic Specs Filter ...
 
         // Pagination & Sorting
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
-        const skip = (page - 1) * limit;
-
-        const products = await Product.find(queryObj)
-            .sort(req.query.sort === 'price_asc' ? 'price' : '-createdAt')
-            .skip(skip)
-            .limit(limit)
-            .lean();
-
-        const total = await Product.countDocuments(queryObj);
-
-        res.status(200).json({ success: true, total, data: products });
+        // ...
     } catch (error) { next(error); }
 };
 ```
@@ -104,12 +86,12 @@ export const getProducts = async (req, res, next) => {
 ```javascript
 export const createProduct = async (req, res, next) => {
     try {
-        // ข้อมูลเบื้องต้นที่ส่งมาจาก useProductActions.js
-        const { modelName, brand, price, sku, category, stock, description, specifications, tags } = req.body;
+        const { 
+            modelName, brand, price, sku, category, stock, 
+            description, specifications, tags, status, isFeatured 
+        } = req.body;
 
-        // หมายเหตุ: ตรงนี้ต้องมีระบบจัดการอัปโหลดภาพ (เช่น Cloudinary)
-        // เพื่อให้ได้ { url, publicId } ก่อนบันทึก
-        const imageData = { url: "...", publicId: "..." };
+        // ... imageData logic ...
 
         const product = await Product.create({
             brand,
@@ -120,7 +102,8 @@ export const createProduct = async (req, res, next) => {
             sku,
             category,
             stock: Number(stock),
-            // 🆕 การ Parse ข้อมูล JSON String กลับเป็น Array/Object
+            status: status || 'active', // 🆕 บันทึกสถานะ
+            isFeatured: isFeatured === 'true', // 🆕 บันทึก Featured flag
             tags: tags ? JSON.parse(tags) : [], 
             specifications: specifications ? JSON.parse(specifications) : {} 
         });
