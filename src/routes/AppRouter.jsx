@@ -6,11 +6,9 @@ import ProtectedRoute from "./ProtectedRoute";
 
 // Pages
 import { RegisterPage, LoginPage } from "@/pages/auth";
-import { HomePage, CategoryPage, ProductDetailPage, CheckoutPage, PaymentPage } from "@/pages/user";
+import { HomePage, CategoryPage, ProductDetailPage, CheckoutPage, PaymentPage, CartPage } from "@/pages/user";
 import * as AdminPages from "@/pages/admin";
 import { useAuth } from "@/shared/contexts/AuthContext";
-
-import CartPage from "@/pages/user/CartPage";
 
 // โครงสร้างหน้าเว็บจำลอง
 const TempPage = ({ name }) => (
