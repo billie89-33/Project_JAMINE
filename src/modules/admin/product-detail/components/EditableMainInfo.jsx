@@ -4,7 +4,7 @@ import { ImageUploadBox } from '@/modules/admin/addproduct';
  * 📝 EditableMainInfo
  * ส่วนจัดการข้อมูลพื้นฐานและสื่อ สำหรับหน้าแก้ไขสินค้า
  */
-const EditableMainInfo = ({ formData, setFormData, imagePreview, onFileSelect }) => {
+export const EditableMainInfo = ({ formData, setFormData, imagePreview, onFileSelect }) => {
   return (
     <div className="flex flex-col lg:flex-row gap-10">
       

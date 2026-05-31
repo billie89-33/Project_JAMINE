@@ -1,4 +1,4 @@
-import apiClient from '@/shared/api/apiClient';
+import { apiClient } from '@/shared/api';
 
 /**
  * 📦 Product Detail API Service
@@ -6,32 +6,38 @@ import apiClient from '@/shared/api/apiClient';
  */
 
 export const getProductByIdApi = async (productId) => {
-    // const response = await apiClient.get(`/products/${productId}`);
-    // return response.data;
-    
-    // Mock data for guidance
+    // 💡 Mock Data สำหรับทดสอบ UI (v2 Standard)
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve({
                 success: true,
                 data: {
-                    id: productId,
-                    name: `Product ${productId} (From API)`,
-                    price: 25900,
-                    category: 'notebook',
-                    description: 'This is a detailed description fetched from the API.',
+                    _id: productId,
+                    brand: 'Corsair',
+                    modelName: 'K70 RGB PRO',
+                    price: 5900,
+                    stock: 15,
+                    category: 'Keyboard',
+                    description: 'คีย์บอร์ดกลไกคุณภาพสูงพร้อมระบบไฟ RGB สวยงาม สัมผัสการพิมพ์ที่ยอดเยี่ยมและทนทาน รองรับการใช้งานหนักและการเล่นเกมระดับโปร',
                     specifications: {
-                        "Brand": "Jamine Tech",
-                        "Model": "Pro X1",
-                        "CPU": "Intel Core i7",
-                        "RAM": "16GB DDR5"
+                        "Brand": "Corsair",
+                        "Switch": "Cherry MX Blue",
+                        "Connectivity": "USB-C to USB-A",
+                        "Backlight": "RGB"
                     },
+                    image: { url: 'https://via.placeholder.com/600' },
                     images: [
-                        "https://via.placeholder.com/600",
-                        "https://via.placeholder.com/601"
+                        'https://via.placeholder.com/600',
+                        'https://via.placeholder.com/601',
+                        'https://via.placeholder.com/602'
                     ]
                 }
             });
-        }, 800);
+        }, 500);
     });
+
+    /* เส้นจริง:
+    const response = await apiClient.get(`/products/${productId}`);
+    return response.data;
+    */
 };

@@ -4,7 +4,7 @@ import { SpecFields } from '@/modules/admin/addproduct';
  * 🛠️ EditableSpecs
  * ส่วนจัดการคุณสมบัติสินค้าแบบ Dynamic ตามหมวดหมู่
  */
-const EditableSpecs = ({ category, specifications, onSpecChange }) => {
+export const EditableSpecs = ({ category, specifications, onSpecChange }) => {
   return (
     <div className="bg-white p-8 rounded-[40px] shadow-2xl shadow-purple-100/50 border border-purple-50">
       <div className="flex items-center gap-3 mb-8">
