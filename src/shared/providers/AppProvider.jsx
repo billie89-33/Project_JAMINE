@@ -1,5 +1,5 @@
 import { AuthProvider } from '@/shared/contexts/AuthContext';
-// import { ThemeProvider } from '@/shared/contexts/ThemeContext';
+import { CartProvider } from '@/shared/contexts/CartContext';
 
 /**
  * 📦 Global App Provider
@@ -7,10 +7,10 @@ import { AuthProvider } from '@/shared/contexts/AuthContext';
  */
 export const AppProvider = ({ children }) => {
     return (
-        /* <ThemeProvider> */
-            <AuthProvider>
+        <AuthProvider>
+            <CartProvider>
                 {children}
-            </AuthProvider>
-        /* </ThemeProvider> */
+            </CartProvider>
+        </AuthProvider>
     );
 };

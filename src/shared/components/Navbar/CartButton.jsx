@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import CartDrawer from './CartDrawer';
+import { useCart } from '@/shared/contexts/CartContext';
 
 const CartButton = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const cartCount = 3; 
+  const { summary } = useCart();
+  const cartCount = summary.itemCount || 0; 
 
   return (
     <>
