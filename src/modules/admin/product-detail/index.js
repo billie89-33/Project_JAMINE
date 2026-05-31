@@ -1,2 +1,3 @@
-// Centralized export for Admin Product Detail Module
-export {};
+export * from './components/EditableMainInfo';
+export * from './components/EditableSpecs';
+export * from './hooks/useEditProduct';

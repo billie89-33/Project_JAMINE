@@ -66,7 +66,7 @@ const router = createBrowserRouter([
       { index: true, element: <Navigate to="dashboard" replace /> },
       { path: "dashboard", element: <AdminPages.DashboardPage /> },
       { path: "products", element: <AdminPages.ProductsPage /> },
-      { path: "product-details", element: <AdminPages.ProductDetailPage /> },
+      { path: "product/:productId", element: <AdminPages.ProductDetailPage /> },
       { path: "add-product", element: <AdminPages.AddProductPage /> },
       { path: "order", element: <AdminPages.OrdersPage /> },
       { path: "order-details", element: <AdminPages.OrderDetailPage /> },

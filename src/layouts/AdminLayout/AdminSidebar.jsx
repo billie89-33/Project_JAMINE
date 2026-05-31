@@ -27,10 +27,8 @@ const AdminSidebar = () => {
     subNav: [
       
       { title: 'Products', path: 'products' },
-      { title: 'Product Details', path: 'product-details' },
       { title: 'Add Product', path: 'add-product' },
       { title: 'Order', path: 'order' },
-      { title: 'Order Details', path: 'order-details' },
       { title: 'Advertising', path: 'advertising' },
       { title: 'Shipping', path: 'shipping' }
     ]
