@@ -5,14 +5,15 @@ import { useNavigate } from 'react-router-dom';
 
 // 🌟 2. อัปเดตข้อมูลจำลอง: ปรับคีย์ 'type' ให้สะกดตัวพิมพ์เล็กตรงกับเงื่อนไข Router และ Switch Case ของคุณ
 const categories = [
-  { id: 1, name: 'Notebook', type: 'notebook', image: 'https://unsplash.com' },
-  { id: 2, name: 'Keyboard', type: 'keyboard', image: 'https://unsplash.com' },
-  { id: 3, name: 'Computer', type: 'computer', image: 'https://unsplash.com' },
-  { id: 4, name: 'Monitor', type: 'monitor', image: 'https://unsplash.com' },
-  { id: 5, name: 'Gaming Mouse', type: 'mouse', image: 'https://unsplash.com' },
-  { id: 6, name: 'Graphics Card', type: 'graphicscard', image: 'https://unsplash.com' },
-  { id: 7, name: 'RAM', type: 'ram', image: 'https://unsplash.com' },
-  { id: 8, name: 'Mainboard', type: 'mainboard', image: 'https://unsplash.com' },
+  { id: 1, name: 'Notebook', type: 'Notebook', image: 'https://unsplash.com' },
+  { id: 2, name: 'Keyboard', type: 'Keyboard', image: 'https://unsplash.com' },
+  { id: 3, name: 'Computer', type: 'Computer', image: 'https://unsplash.com' },
+  { id: 4, name: 'Monitor', type: 'Monitor', image: 'https://unsplash.com' },
+  { id: 5, name: 'Gaming Mouse', type: 'Gaming Mouse', image: 'https://Gaming Mouse' },
+  { id: 6, name: 'Graphics Card', type: 'Graphics Card', image: 'https://unsplash.com' },
+  { id: 7, name: 'RAM', type: 'RAM', image: 'https://unsplash.com' },
+  { id: 8, name: 'CPU', type: 'CPU', image: 'https://unsplash.com' },
+  { id: 9, name: 'Mainboard', type: 'Mainboard', image: 'https://unsplash.com' },
 ];
 
 const CategorySlider = () => {

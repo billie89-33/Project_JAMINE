@@ -14,6 +14,7 @@ const CategoryPage = () => {
   const { type } = useParams();
 
   // 🎣 ใช้งาน Hook หลักเพื่อคุม Logic ทั้งหมดของหน้านี้
+  // รองรับทั้ง Mock Data และข้อมูลจริงจาก DB ในอนาคต
   const {
     products,
     loading,
@@ -36,7 +37,7 @@ const CategoryPage = () => {
   return (
     <div className="w-full min-h-screen bg-slate-50/50 pb-20">
       
-      {/* 1. Top Section: Banner & Categories Slider */}
+      {/* 1. Header Section: Banner & Category Slider (คงเดิมตามสไตล์โปรเจกต์) */}
       <div className="bg-white border-b border-purple-50 pb-10">
         <div className="max-w-[1600px] mx-auto px-4 md:px-8 pt-6 space-y-10">
           <HeroBanner />
@@ -44,11 +45,11 @@ const CategoryPage = () => {
         </div>
       </div>
 
-      {/* 2. Main Content: Sidebar + Grid */}
+      {/* 2. Main Content: Sidebar + Product Grid */}
       <div className="max-w-[1600px] mx-auto px-4 md:px-8 mt-10">
         <div className="flex flex-col lg:flex-row gap-10">
           
-          {/* ⬅️ Sidebar: ตัวกรองด้านซ้าย */}
+          {/* ⬅️ Sidebar: ตัวกรองอัจฉริยะ (จะแสดงผลเมื่อเข้าหน้า Category) */}
           <aside className="flex-shrink-0">
             <Sidebar 
               categories={categories}
@@ -63,10 +64,10 @@ const CategoryPage = () => {
             />
           </aside>
 
-          {/* ➡️ Main Area: Header + Grid + Pagination */}
+          {/* ➡️ Main Content Area */}
           <main className="flex-grow space-y-8">
             
-            {/* Grid Header / Toolbar */}
+            {/* Toolbar: ข้อมูลสรุปและการเรียงลำดับ */}
             <div className="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div className="flex items-center gap-4">
                 <div className="bg-purple-50 p-3 rounded-2xl text-purple-600">
@@ -77,11 +78,12 @@ const CategoryPage = () => {
                     {selectedCategory === 'All' ? 'สินค้าทั้งหมด' : selectedCategory}
                   </h2>
                   <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">
-                    พบสินค้า <span className="text-purple-600">{(products.length).toLocaleString()}</span> รายการในหน้านี้
+                    พบสินค้า <span className="text-purple-600">{(products.length).toLocaleString()}</span> รายการ
                   </p>
                 </div>
               </div>
 
+              {/* Sort Dropdown */}
               <div className="flex items-center gap-4 bg-slate-50 p-1.5 rounded-2xl border border-slate-100">
                 <div className="flex items-center gap-2 px-3 text-slate-400">
                   <ListFilter size={16} />
@@ -100,13 +102,13 @@ const CategoryPage = () => {
               </div>
             </div>
 
-            {/* Product Grid Container */}
+            {/* Product Display Grid */}
             <ProductGrid 
               products={products}
               loading={loading}
             />
 
-            {/* Pagination Container */}
+            {/* Pagination */}
             <div className="pt-10">
               <Pagination 
                 currentPage={currentPage}

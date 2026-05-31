@@ -58,7 +58,7 @@ export const getCategoriesApi = async () => {
         setTimeout(() => {
             resolve({
                 success: true,
-                data: ['Keyboard', 'CPU', 'Monitor', 'Notebook', 'Gaming Mouse', 'Graphics Card', 'RAM', 'Mainboard']
+                data: ['Notebook', 'Keyboard', 'Computer', 'Monitor', 'Gaming Mouse', 'Graphics Card', 'RAM', 'CPU', 'Mainboard']
             });
         }, 300);
     });

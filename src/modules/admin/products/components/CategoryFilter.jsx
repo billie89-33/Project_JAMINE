@@ -4,8 +4,8 @@
  */
 const CategoryFilter = ({ selectedCategory, onCategoryChange }) => {
   const categories = [
-    'All', 'Notebook', 'Keyboard', 'CPU', 'Monitor', 
-    'Gaming Mouse', 'Graphics Card', 'RAM', 'Mainboard'
+    'All', 'Notebook', 'Keyboard', 'Computer', 'Monitor', 
+    'Gaming Mouse', 'Graphics Card', 'RAM', 'CPU', 'Mainboard'
   ];
 
   return (

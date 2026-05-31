@@ -150,7 +150,7 @@ const ProductForm = () => {
                                     onChange={e => setCategory(e.target.value)} 
                                     className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-bold focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none cursor-pointer shadow-sm"
                                 >
-                                    {['Keyboard', 'CPU', 'Monitor', 'Notebook', 'Gaming Mouse', 'Graphics Card', 'RAM', 'Mainboard'].map(cat => (
+                                    {['Notebook', 'Keyboard', 'Computer', 'Monitor', 'Gaming Mouse', 'Graphics Card', 'RAM', 'CPU', 'Mainboard'].map(cat => (
                                         <option key={cat} value={cat}>{cat}</option>
                                     ))}
                                 </select>

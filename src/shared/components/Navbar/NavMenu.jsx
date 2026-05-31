@@ -41,14 +41,15 @@ const NavMenu = () => {
             className="absolute top-8 left-0 w-40 bg-white rounded-lg shadow-xl border border-slate-100 py-1 text-slate-700 z-50 animate-in fade-in slide-in-from-top-1 duration-100"
           >
             {[
-              { name: "Notebook", slug: "notebook" },
-              { name: "Keyboard", slug: "keyboard" },
-              { name: "Computer", slug: "computer" },
-              { name: "Monitor", slug: "monitor" },
-              { name: "Gaming Mouse", slug: "mouse" },
-              { name: "Graphics Card", slug: "graphicscard" },
-              { name: "RAM", slug: "ram" },
-              { name: "Mainboard", slug: "mainboard" }
+              { name: "Notebook", slug: "Notebook" },
+              { name: "Keyboard", slug: "Keyboard" },
+              { name: "Computer", slug: "Computer" },
+              { name: "Monitor", slug: "Monitor" },
+              { name: "Gaming Mouse", slug: "Gaming Mouse" },
+              { name: "Graphics Card", slug: "Graphics Card" },
+              { name: "RAM", slug: "RAM" },
+              { name: "CPU", slug: "CPU" },
+              { name: "Mainboard", slug: "Mainboard" }
             ].map((cat) => (
               <NavLink
                 key={cat.slug}

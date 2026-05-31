@@ -23,6 +23,16 @@ export const useProducts = (initialCategory = '') => {
   const [priceRange, setPriceRange] = useState({ min: 0, max: 100000 });
   const [sort, setSort] = useState('newest');
 
+  // 🔄 Sync: เมื่อ URL Parameter (initialCategory) เปลี่ยน ให้รีเซ็ต State ภายใน
+  useEffect(() => {
+    if (initialCategory) {
+      setSelectedCategory(initialCategory);
+      // รีเซ็ตตัวกรองอื่นเมื่อเปลี่ยนหมวดหมู่ผ่าน URL เพื่อความไม่งงของ User
+      setSelectedBrands([]);
+      setCurrentPage(1);
+    }
+  }, [initialCategory]);
+
   // --- 🛰️ API Calls ---
 
   // ดึงข้อมูล Master Data (Categories & Brands)

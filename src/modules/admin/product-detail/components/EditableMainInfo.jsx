@@ -58,6 +58,29 @@ export const EditableMainInfo = ({ formData, setFormData, imagePreview, onFileSe
             />
           </div>
 
+          {/* SKU & Tags */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">SKU / Code</label>
+              <input 
+                type="text" 
+                value={formData.sku || ''} 
+                onChange={e => setFormData({...formData, sku: e.target.value})} 
+                className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-mono focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none transition-all shadow-sm" 
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Tags (Comma separated)</label>
+              <input 
+                type="text" 
+                value={formData.tags} 
+                onChange={e => setFormData({...formData, tags: e.target.value})} 
+                placeholder="New, Sale, Gaming"
+                className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-bold focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none transition-all shadow-sm" 
+              />
+            </div>
+          </div>
+
           {/* Price & Stock */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
@@ -89,7 +112,7 @@ export const EditableMainInfo = ({ formData, setFormData, imagePreview, onFileSe
                 onChange={e => setFormData({...formData, category: e.target.value})} 
                 className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-bold focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none cursor-pointer shadow-sm"
               >
-                {['Keyboard', 'CPU', 'Monitor', 'Notebook', 'Gaming Mouse', 'Graphics Card', 'RAM', 'Mainboard'].map(cat => (
+                {['Notebook', 'Keyboard', 'Computer', 'Monitor', 'Gaming Mouse', 'Graphics Card', 'RAM', 'CPU', 'Mainboard'].map(cat => (
                   <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>

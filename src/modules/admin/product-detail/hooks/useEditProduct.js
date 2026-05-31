@@ -107,6 +107,14 @@ export const useEditProduct = () => {
         }
       });
 
+      // ตรวจสอบ Tags
+      const currentTags = formData.tags.split(',').map(t => t.trim()).filter(Boolean);
+      const originalTags = Array.isArray(originalProduct.tags) ? originalProduct.tags : [];
+      if (JSON.stringify(currentTags) !== JSON.stringify(originalTags)) {
+        patchData.append('tags', JSON.stringify(currentTags));
+        hasChanges = true;
+      }
+
       // ตรวจสอบ Specifications
       if (JSON.stringify(formData.specifications) !== JSON.stringify(originalProduct.specifications)) {
         patchData.append('specifications', JSON.stringify(formData.specifications));
