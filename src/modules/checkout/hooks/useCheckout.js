@@ -53,7 +53,8 @@ export const useCheckout = () => {
           });
         }
       } catch (error) {
-        toast.error("ดึงข้อมูลเช็คเอาต์ล้มเหลว");
+        console.error("Checkout Summary Error:", error);
+        toast.error(error.response?.data?.message || "ดึงข้อมูลเช็คเอาต์ล้มเหลว");
       } finally {
         setLoading(false);
       }
@@ -70,11 +71,11 @@ export const useCheckout = () => {
 
     setIsSubmitting(true);
     try {
-      // 🛡️ Tampering Prevention: ส่งแค่ addressId และ paymentMethod
-      // Backend จะเป็นผู้ดึงตะกร้าและคำนวณเงินจริงเอง
+      // 🛡️ Tampering Prevention: ส่งข้อมูลที่จำเป็น และ clientTotal เพื่อให้ Backend ตรวจสอบความถูกต้อง
       const orderPayload = {
         addressId: selectedAddressId,
-        paymentMethod
+        paymentMethod,
+        clientTotal: priceDetails.total
       };
 
       const res = await createOrderApi(orderPayload);
@@ -91,7 +92,8 @@ export const useCheckout = () => {
         }); 
       }
     } catch (error) {
-      toast.error("ไม่สามารถสร้างคำสั่งซื้อได้");
+      console.error("Submit Order Error:", error);
+      toast.error(error.response?.data?.message || "ไม่สามารถสร้างคำสั่งซื้อได้");
     } finally {
       setIsSubmitting(false);
     }

@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Navbar } from '@/shared/components/Navbar'; 
-import PaymentStepper from '@/modules/payment/components/PaymentStepper';
-import PromptPayQRBox from '@/modules/payment/components/PromptPayQRBox';
-import CheckoutItemsList from '@/modules/checkout/components/CheckoutItemsList';
-import OrderSummaryCard from '@/shared/components/OrderSummaryCard/OrderSummaryCard';
+import { 
+  PaymentStepper, 
+  PromptPayQRBox, 
+  usePayment,
+  OrderSummaryCard,
+  CheckoutItemsList
+} from '@/modules/payment';
 
 /**
  * 📲 PaymentPage
@@ -13,44 +15,28 @@ import OrderSummaryCard from '@/shared/components/OrderSummaryCard/OrderSummaryC
  */
 const PaymentPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const [isVerifying, setIsVerifying] = useState(false);
+  
+  const {
+    order,
+    loading,
+    isVerifying,
+    verifyPayment
+  } = usePayment();
 
-  // 📝 รับข้อมูลจากหน้า Checkout (ผ่าน state)
-  const { totalAmount, orderId } = location.state || { totalAmount: 0, orderId: null };
-
-  // 🧪 รายชื่อสินค้าจำลอง (ดึงจาก LocalStorage)
-  const [cartItems] = useState(JSON.parse(localStorage.getItem('cart')) || []);
-
-  const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-  const payableAmount = totalAmount || subtotal; 
-
-  // ป้องกันการเข้าหน้านี้โดยไม่มีข้อมูล
-  if (payableAmount === 0 && cartItems.length === 0) {
+  // 🔄 สภาวะโหลดข้อมูล (Security First)
+  if (loading) {
     return (
       <div className="w-full min-h-screen flex items-center justify-center bg-slate-50">
         <div className="text-center space-y-4">
-          <p className="text-slate-500 font-bold">ไม่พบข้อมูลการชำระเงิน</p>
-          <button onClick={() => navigate('/')} className="text-purple-600 underline text-xs">กลับหน้าหลัก</button>
+          <div className="w-12 h-12 border-4 border-purple-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="text-slate-500 font-black uppercase tracking-widest text-[10px]">Verifying secure payment session...</p>
         </div>
       </div>
     );
   }
 
-  const handleVerifyPayment = async () => {
-    setIsVerifying(true);
-    try {
-      // จำลองการตรวจสอบ
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      toast.success("ระบบได้รับยอดโอนของท่านเรียบร้อยแล้ว!");
-      localStorage.removeItem('cart'); // ล้างตะกร้าหลังจ่ายเงินสำเร็จ
-      navigate('/'); // กลับไปหน้าแรก หรือหน้าขอบคุณ
-    } catch (error) {
-      toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
-    } finally {
-      setIsVerifying(false);
-    }
-  };
+  // 🚨 ตรวจสอบกรณีดึงข้อมูลไม่สำเร็จ
+  if (!order) return null;
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-purple-50 via-purple-100 to-slate-50 text-sm font-medium text-gray-700">
@@ -65,11 +51,11 @@ const PaymentPage = () => {
               onClick={() => navigate(-1)} 
               className="text-xs text-purple-600 font-extrabold flex items-center gap-1 w-fit hover:underline cursor-pointer"
             >
-              ← Return to gallery
+              ← Return to checkout
             </button>
-            <h1 className="text-xl font-black text-gray-900 tracking-tight mt-1">Secure Checkout</h1>
+            <h1 className="text-xl font-black text-gray-900 tracking-tight mt-1">Finalize Acquisition</h1>
             <p className="text-[11px] text-gray-400 max-w-sm leading-relaxed">
-              Complete your digital acquisition through our encrypted PromptPay gateway.
+              Scan QR code for Order <span className="text-slate-900 font-black">#{order._id || order.id}</span>
             </p>
           </div>
           
@@ -79,21 +65,20 @@ const PaymentPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start mt-2">
           
           <div className="md:col-span-2">
-            <PromptPayQRBox totalAmount={payableAmount} />
+            <PromptPayQRBox totalAmount={order.totalAmount} />
           </div>
 
           <div className="flex flex-col gap-6 sticky top-6">
-            <CheckoutItemsList cartItems={cartItems} />
+            <CheckoutItemsList cartItems={order.items || []} />
             
             <OrderSummaryCard 
-              subtotal={subtotal} 
-              shipping={0}
-              discount={0}
-              total={payableAmount}
-              buttonText="Verify Payment" 
-              onAction={handleVerifyPayment} 
+              subtotal={order.subtotal || (order.totalAmount - (order.shippingFee || 0))} 
+              shipping={order.shippingFee || 0}
+              discount={order.discount || 0}
+              total={order.totalAmount}
+              buttonText="Confirm Payment" 
+              onAction={verifyPayment} 
               isSubmitting={isVerifying}
-              isDisabled={cartItems.length === 0}
             />
           </div>
 
