@@ -13,7 +13,7 @@ export default function CartItem({ product, onIncrease, onDecrease, onRemove }) 
         <div className="flex flex-col justify-between py-1">
           <div className="space-y-1">
             <h3 className="font-black text-slate-800 text-lg leading-tight group-hover:text-purple-600 transition-colors">{product.name}</h3>
-            <p className="text-slate-400 text-xs font-medium line-clamp-2 max-w-md">{product.description}</p>
+            <p className="text-purple-500 text-[10px] font-black uppercase tracking-[0.2em]">{product.brand}</p>
           </div>
           <button 
             onClick={() => onRemove(product.id)}

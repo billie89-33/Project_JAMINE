@@ -1,10 +1,9 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import  { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { 
   getCartApi, 
   addToCartApi, 
   updateCartQuantityApi, 
-  removeFromCartApi,
-  getCartSummaryApi
+  removeFromCartApi
 } from '@/modules/cart/services/cartApi';
 import toast from 'react-hot-toast';
 import { useAuth } from '@/shared/contexts/AuthContext';
@@ -25,31 +24,43 @@ export const CartProvider = ({ children }) => {
   const fetchCart = useCallback(async () => {
     if (!user) {
       setCartItems([]);
-      setSummary({ subtotal: 0, total: 0, itemCount: 0 });
+      setSummary({ subtotal: 0, total: 0, itemCount: 0, shippingFee: 0 });
       return;
     }
     
     setLoading(true);
     try {
-      const [cartRes, summaryRes] = await Promise.all([
-        getCartApi(),
-        getCartSummaryApi()
-      ]);
+      const response = await getCartApi();
 
-      if (cartRes.success) {
-        const items = cartRes.data.map(item => ({
+      if (response.success) {
+        // แจ้งเตือนถ้ามีการปรับสต็อกอัตโนมัติจากหลังบ้าน
+        if (response.isStockAdjusted) {
+          toast('สินค้าบางรายการถูกปรับจำนวนเนื่องจากสต็อกไม่พอ', {
+            icon: '⚠️',
+            duration: 4000,
+            style: { borderRadius: '15px', fontWeight: 'bold', background: '#fffbeb', color: '#92400e' }
+          });
+        }
+
+        const { items: rawItems, subtotal, shippingFee, total } = response.data;
+        
+        const mappedItems = rawItems.map(item => ({
           id: item.product._id || item.product.id,
           name: item.product.modelName || item.product.name,
+          brand: item.product.brand,
           price: item.product.price,
           quantity: item.quantity,
           image: item.product.image?.url || item.product.image,
           description: item.product.description
         }));
-        setCartItems(items);
-      }
 
-      if (summaryRes.success) {
-        setSummary(summaryRes.data);
+        setCartItems(mappedItems);
+        setSummary({
+          subtotal,
+          shippingFee,
+          total,
+          itemCount: mappedItems.reduce((acc, item) => acc + item.quantity, 0)
+        });
       }
     } catch (error) {
       console.error("Failed to fetch cart", error);

@@ -1,39 +1,101 @@
 
 
+import { useState, useEffect } from 'react';
+import { ProductCard } from '@/modules/products';
+import { getProductsApi } from '@/modules/products/services/productApi';
+import { Sparkles, Loader2, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
 const ProductGrid = () => {
-  // จำลองรายการสินค้า 6 ชิ้น (เมื่อ API พร้อม เปลี่ยนไปใช้ useState และ useEffect ดึงข้อมูล)
-  const items = Array.from({ length: 6 }, (_, i) => ({ id: i + 1 }));
+  const navigate = useNavigate();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchLatestProducts = async () => {
+      try {
+        setLoading(true);
+        // ดึงสินค้าล่าสุด 8 ชิ้นมาโชว์หน้าแรก
+        const res = await getProductsApi({ limit: 8, sort: '-createdAt' });
+        if (res.success) {
+          setProducts(res.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch home products", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLatestProducts();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col gap-8 w-full">
+        <div className="flex items-center justify-between">
+          <div className="h-10 bg-slate-100 rounded-2xl w-48 animate-pulse"></div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="bg-white rounded-[40px] p-8 h-[400px] border border-slate-100 animate-pulse">
+              <div className="aspect-square bg-slate-50 rounded-3xl mb-6"></div>
+              <div className="space-y-3">
+                <div className="h-4 bg-slate-50 rounded-full w-3/4"></div>
+                <div className="h-4 bg-slate-50 rounded-full w-1/2"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col items-center w-full">
-      {/* กรอบคลุมตารางสินค้า */}
-      <div className="grid grid-cols-2 gap-4 w-full bg-purple-50/60 p-5 rounded-xl border border-purple-100 shadow-sm">
-        {items.map((item) => (
-          <div 
-            key={item.id} 
-            className="bg-white rounded-lg p-3 shadow-sm border border-purple-100 flex flex-col gap-3 hover:shadow-md hover:border-purple-300 transition-all duration-200 group cursor-pointer"
-          >
-            {/* พื้นที่รูปภาพสินค้า */}
-            <div className="w-full aspect-[4/3] bg-purple-200/50 rounded-md overflow-hidden flex items-center justify-center">
-              <img 
-                src="unsplash.com" 
-                alt="Product" 
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                onError={(e) => { e.target.src = 'placehold.co'; }}
-              />
-            </div>
-            {/* ข้อความด้านล่างสินค้า */}
-            <p className="text-gray-700 text-sm text-center font-semibold py-1 bg-gray-50 rounded group-hover:bg-purple-600 group-hover:text-white transition-colors duration-200">
-              รายละเอียดสินค้า {item.id}
-            </p>
+    <div className="flex flex-col gap-10 w-full relative">
+      {/* 🔮 Decorative Background Glow */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-purple-100/30 blur-[100px] rounded-full -z-10"></div>
+
+      {/* ✨ Section Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-purple-50 pb-8">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-8 h-[2px] bg-gradient-to-r from-purple-600 to-transparent rounded-full"></span>
+            <span className="text-[10px] font-black text-purple-600 uppercase tracking-[0.3em]">Fresh Arrivals</span>
           </div>
+          <h2 className="text-3xl font-black text-slate-800 tracking-tight flex items-center gap-3">
+            Newest <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">Gadgets</span>
+            <Sparkles className="text-amber-400 fill-amber-400" size={24} />
+          </h2>
+        </div>
+        
+        <button 
+          onClick={() => navigate('/category/All')}
+          className="group flex items-center gap-2 text-slate-400 hover:text-purple-600 transition-all font-black text-[10px] uppercase tracking-[0.2em]"
+        >
+          Explore All Products
+          <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+        </button>
+      </div>
+
+      {/* 📦 Product Grid (2 Columns on home, matching original sidebar layout) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full">
+        {products.map((product) => (
+          <ProductCard key={product._id} product={product} />
         ))}
       </div>
       
-      {/* ปุ่ม Load more */}
-      <button className="mt-5 px-8 py-2.5 bg-purple-600 text-white text-sm font-bold rounded-full hover:bg-purple-700 hover:shadow-lg hover:shadow-purple-200 shadow transition-all duration-200 active:scale-95">
-        Load more
-      </button>
+      {/* 🚀 Bottom Call to Action */}
+      {products.length > 0 && (
+        <div className="pt-4 flex justify-center">
+          <button 
+            onClick={() => navigate('/category/All')}
+            className="px-10 py-4 bg-slate-900 text-white text-[11px] font-black uppercase tracking-[0.3em] rounded-[24px] hover:bg-purple-600 hover:shadow-2xl hover:shadow-purple-200 transition-all active:scale-95 shadow-xl shadow-slate-100"
+          >
+            Load more items
+          </button>
+        </div>
+      )}
     </div>
   );
 };
