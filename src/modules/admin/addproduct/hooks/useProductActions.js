@@ -51,12 +51,20 @@ export const useProductActions = () => {
         formData.append('stock', Number(stock));
         formData.append('status', status);
         formData.append('isFeatured', isFeatured);
-        formData.append('tags', tags);
+        
+        // 🧼 3. จัดการ Tags: ตัดแบ่งด้วยคอมม่า, ตัดช่องว่าง, และเอาค่าว่างออก
+        const tagsArray = tags
+            ? tags.split(',').map(tag => tag.trim()).filter(tag => tag !== "")
+            : [];
+        
+        // ส่ง tags เป็น JSON string เนื่องจาก FormData รับ Array ตรงๆ ไม่ได้
+        // Backend จะต้องใช้ JSON.parse() หรือจัดการรับเป็น Array
+        formData.append('tags', JSON.stringify(tagsArray));
         
         // แปลง Object specifications เป็น JSON string
         formData.append('specifications', JSON.stringify(cleanSpecs));
 
-        // 🚀 3. ยิง API ผ่าน execute ของ useApi
+        // 🚀 4. ยิง API ผ่าน execute ของ useApi
         return await productCreate.execute(formData);
     };
 
