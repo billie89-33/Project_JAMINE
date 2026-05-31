@@ -1,50 +1,104 @@
-import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { useHome } from '../hooks/useHome';
+import { useNavigate } from 'react-router-dom';
 
-const HeroBanner = () => {
+const HeroBanner = ({ placement = 'home_hero' }) => {
+  const navigate = useNavigate();
+  const { banners, loading } = useHome(placement);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const mockBanners = [
-    { id: 1, imageUrl: 'unsplash.com' },
-    { id: 2, imageUrl: 'unsplash.com' },
-    { id: 3, imageUrl: 'unsplash.com' }
-  ];
+  // ระบบ Auto-play สไลด์ทุกๆ 5 วินาที
+  useEffect(() => {
+    if (banners.length <= 1) return;
+    const timer = setInterval(() => {
+      nextSlide();
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [currentIndex, banners.length]);
 
   const prevSlide = () => {
-    setCurrentIndex((prev) => (prev === 0 ? mockBanners.length - 1 : prev - 1));
+    setCurrentIndex((prev) => (prev === 0 ? banners.length - 1 : prev - 1));
   };
 
   const nextSlide = () => {
-    setCurrentIndex((prev) => (prev === mockBanners.length - 1 ? 0 : prev + 1));
+    setCurrentIndex((prev) => (prev === banners.length - 1 ? 0 : prev + 1));
   };
 
+  if (loading) {
+    return (
+      <div className="relative w-full h-[450px] rounded-[40px] overflow-hidden bg-slate-50 flex items-center justify-center border border-purple-50 animate-pulse">
+        <Loader2 className="text-purple-300 animate-spin" size={40} />
+      </div>
+    );
+  }
+
+  // กรณีไม่มีแบนเนอร์ให้โชว์เป็น Default Box
+  if (banners.length === 0) {
+    return (
+      <div className="relative w-full h-[450px] rounded-[40px] overflow-hidden bg-gradient-to-br from-purple-600 to-indigo-700 flex items-center justify-center shadow-2xl shadow-purple-100">
+        <div className="text-center space-y-4">
+          <h2 className="text-3xl font-black text-white uppercase tracking-widest">Jamine Grand Sale</h2>
+          <p className="text-purple-100 font-medium">สัมผัสประสบการณ์เทคโนโลยีระดับพรีเมียมที่นี่</p>
+        </div>
+      </div>
+    );
+  }
+
+  const currentBanner = banners[currentIndex];
+
   return (
-    <div className="relative w-full h-[350px] rounded-lg overflow-hidden group bg-purple-100 flex items-center justify-center border-2 border-purple-500 shadow-md">
+    <div className="relative w-full h-[300px] md:h-[450px] rounded-[40px] overflow-hidden group shadow-2xl shadow-purple-200/50 border-4 border-white">
       
-      {/* 1. รูปภาพแบนเนอร์ปัจจุบัน */}
-      <img
-        src={mockBanners[currentIndex].imageUrl}
-        alt={`Banner ${currentIndex + 1}`}
-        className="w-full h-full object-cover transition-all duration-500"
-        onError={(e) => { 
-          e.target.src = 'placehold.co'; 
-        }}
-      />
+      {/* 1. รูปภาพแบนเนอร์ปัจจุบัน (สามารถคลิกได้) */}
+      <div 
+        className="w-full h-full cursor-pointer overflow-hidden"
+        onClick={() => currentBanner.linkUrl && navigate(currentBanner.linkUrl)}
+      >
+        <img
+          src={currentBanner.image.url}
+          alt={currentBanner.title}
+          className="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105"
+        />
+        
+        {/* แถบพาดข้อมูลแบนเนอร์แบบจางๆ เพิ่มความหรูหรา */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent"></div>
+        <div className="absolute bottom-10 left-10 text-white space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+           <h3 className="text-2xl font-black uppercase tracking-widest drop-shadow-lg">{currentBanner.title}</h3>
+           <p className="text-xs font-bold text-purple-100 uppercase tracking-[0.3em] bg-purple-600/50 backdrop-blur-md px-4 py-1.5 rounded-full w-fit">Explore Collection</p>
+        </div>
+      </div>
 
       {/* 2. ปุ่มลูกศรซ้าย-ขวา ธีมม่วงสดใสสะดุดตา */}
-      <button
-        onClick={prevSlide}
-        className="absolute top-1/2 left-4 -translate-y-1/2 p-2 bg-white/95 rounded-full shadow-lg border border-purple-300 text-purple-600 hover:bg-purple-600 hover:text-white hover:border-purple-600 hover:shadow-purple-400/50 hover:shadow-xl transition-all duration-200 opacity-0 group-hover:opacity-100 scale-100 hover:scale-110"
-      >
-        <ChevronLeft size={20} className="stroke-[2.5]" />
-      </button>
+      {banners.length > 1 && (
+        <>
+          <button
+            onClick={(e) => { e.stopPropagation(); prevSlide(); }}
+            className="absolute top-1/2 left-6 -translate-y-1/2 p-4 bg-white/90 backdrop-blur-xl rounded-[20px] shadow-2xl text-purple-600 hover:bg-purple-600 hover:text-white transition-all duration-300 opacity-0 lg:group-hover:opacity-100 -translate-x-4 lg:group-hover:translate-x-0 active:scale-90"
+          >
+            <ChevronLeft size={24} strokeWidth={3} />
+          </button>
 
-      <button
-        onClick={nextSlide}
-        className="absolute top-1/2 right-4 -translate-y-1/2 p-2 bg-white/95 rounded-full shadow-lg border border-purple-300 text-purple-600 hover:bg-purple-600 hover:text-white hover:border-purple-600 hover:shadow-purple-400/50 hover:shadow-xl transition-all duration-200 opacity-0 group-hover:opacity-100 scale-100 hover:scale-110"
-      >
-        <ChevronRight size={20} />
-      </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); nextSlide(); }}
+            className="absolute top-1/2 right-6 -translate-y-1/2 p-4 bg-white/90 backdrop-blur-xl rounded-[20px] shadow-2xl text-purple-600 hover:bg-purple-600 hover:text-white transition-all duration-300 opacity-0 lg:group-hover:opacity-100 translate-x-4 lg:group-hover:translate-x-0 active:scale-90"
+          >
+            <ChevronRight size={24} strokeWidth={3} />
+          </button>
+
+          {/* 3. Indicators (จุดเล็กๆ ด้านล่าง) */}
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+            {banners.map((_, idx) => (
+              <div 
+                key={idx}
+                className={`h-1.5 rounded-full transition-all duration-500 ${
+                  currentIndex === idx ? 'w-8 bg-white' : 'w-2 bg-white/40'
+                }`}
+              ></div>
+            ))}
+          </div>
+        </>
+      )}
 
     </div>
   );

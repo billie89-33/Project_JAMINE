@@ -50,7 +50,7 @@ const CategoryPage = () => {
       {/* 1. Header Section: Banner & Category Slider */}
       <div className="bg-white/40 backdrop-blur-md border-b border-purple-50/50 pb-10">
         <div className="max-w-[1600px] mx-auto px-4 md:px-8 pt-6 space-y-10">
-          <HeroBanner />
+          <HeroBanner placement="category_hero" />
           <CategorySlider />
         </div>
       </div>
