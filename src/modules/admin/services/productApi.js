@@ -29,7 +29,7 @@ export const getProductById = async (id) => {
  * @param {FormData} formData - ข้อมูลสินค้าพร้อมไฟล์ภาพ
  */
 export const createProductApi = async (formData) => {
-    const response = await apiClient.post('/products', formData, {
+    const response = await apiClient.post('/admin/products', formData, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }

@@ -10,12 +10,15 @@ const ProductForm = () => {
     // 🎣 ดึง Logic และ State ทั้งหมดออกมาจาก Hook
     const {
         modelName, setModelName,
+        brand, setBrand,
         description, setDescription,
         sku, setSku,
         tags, setTags,
         stock, setStock,
-        regularPrice, setRegularPrice,
+        price, setPrice,
         category, setCategory,
+        status, setStatus,
+        isFeatured, setIsFeatured,
         imagePreview,
         specifications,
         isSubmitting,
@@ -33,23 +36,36 @@ const ProductForm = () => {
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 
-                {/* 1. คอมโพเนนต์กล่องอัปโหลดรูปภาพ - ตกแต่งให้ดูพรีเมียมขึ้น */}
+                {/* 1. คอมโพเนนต์กล่องอัปโหลดรูปภาพ */}
                 <div className="bg-slate-50 p-4 rounded-2xl border-2 border-dashed border-purple-200">
                     <ImageUploadBox imagePreview={imagePreview} onFileSelect={handleFileSelect} />
                 </div>
 
                 {/* โซนกรอกข้อมูลทั่วไป */}
                 <div className="grid grid-cols-1 gap-4">
-                    <div className="space-y-1">
-                        <label className="text-xs font-bold text-gray-400 uppercase ml-1">Product Name</label>
-                        <input 
-                            type="text" 
-                            placeholder="เช่น CORSAIR K70 RGB PRO..." 
-                            value={modelName} 
-                            onChange={e => setModelName(e.target.value)} 
-                            required 
-                            className="w-full p-3.5 bg-gray-50 border border-gray-100 rounded-xl text-gray-800 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white outline-none transition-all shadow-sm" 
-                        />
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                            <label className="text-xs font-bold text-gray-400 uppercase ml-1">Brand</label>
+                            <input 
+                                type="text" 
+                                placeholder="เช่น Corsair, Razer..." 
+                                value={brand} 
+                                onChange={e => setBrand(e.target.value)} 
+                                required 
+                                className="w-full p-3.5 bg-gray-50 border border-gray-100 rounded-xl text-gray-800 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white outline-none transition-all shadow-sm" 
+                            />
+                        </div>
+                        <div className="space-y-1">
+                            <label className="text-xs font-bold text-gray-400 uppercase ml-1">Model Name</label>
+                            <input 
+                                type="text" 
+                                placeholder="เช่น K70 RGB PRO..." 
+                                value={modelName} 
+                                onChange={e => setModelName(e.target.value)} 
+                                required 
+                                className="w-full p-3.5 bg-gray-50 border border-gray-100 rounded-xl text-gray-800 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white outline-none transition-all shadow-sm" 
+                            />
+                        </div>
                     </div>
 
                     <div className="space-y-1">
@@ -91,46 +107,63 @@ const ProductForm = () => {
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1">
                             <label className="text-xs font-bold text-gray-400 uppercase ml-1">Stock Quantity</label>
-                            <div className="flex items-center bg-gray-50 border border-gray-100 rounded-xl overflow-hidden shadow-sm">
-                                <span className="pl-4 text-xs text-gray-400">🔢</span>
-                                <input 
-                                    type="number" 
-                                    value={stock} 
-                                    onChange={e => setStock(e.target.value)} 
-                                    min="0" 
-                                    required 
-                                    className="w-full p-3.5 bg-transparent text-gray-800 text-sm focus:outline-none" 
-                                />
-                            </div>
+                            <input 
+                                type="number" 
+                                value={stock} 
+                                onChange={e => setStock(e.target.value)} 
+                                min="0" 
+                                required 
+                                className="w-full p-3.5 bg-gray-50 border border-gray-100 rounded-xl text-gray-800 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white outline-none transition-all shadow-sm" 
+                            />
                         </div>
 
                         <div className="space-y-1">
-                            <label className="text-xs font-bold text-gray-400 uppercase ml-1">Regular Price (฿)</label>
-                            <div className="flex items-center bg-gray-50 border border-gray-100 rounded-xl overflow-hidden shadow-sm">
-                                <span className="pl-4 text-xs text-gray-400 font-bold">฿</span>
-                                <input 
-                                    type="number" 
-                                    placeholder="0.00" 
-                                    value={regularPrice} 
-                                    onChange={e => setRegularPrice(e.target.value)} 
-                                    required 
-                                    className="w-full p-3.5 bg-transparent text-gray-800 text-sm focus:outline-none" 
-                                />
-                            </div>
+                            <label className="text-xs font-bold text-gray-400 uppercase ml-1">Price (฿)</label>
+                            <input 
+                                type="number" 
+                                placeholder="0.00" 
+                                value={price} 
+                                onChange={e => setPrice(e.target.value)} 
+                                required 
+                                className="w-full p-3.5 bg-gray-50 border border-gray-100 rounded-xl text-gray-800 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white outline-none transition-all shadow-sm" 
+                            />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                            <label className="text-xs font-bold text-gray-400 uppercase ml-1">Status</label>
+                            <select 
+                                value={status} 
+                                onChange={e => setStatus(e.target.value)} 
+                                className="w-full p-3.5 bg-gray-50 border border-gray-100 rounded-xl text-gray-800 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white outline-none cursor-pointer"
+                            >
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="draft">Draft</option>
+                            </select>
+                        </div>
+                        <div className="flex items-center gap-2 pt-6">
+                            <input 
+                                type="checkbox" 
+                                id="isFeatured"
+                                checked={isFeatured} 
+                                onChange={e => setIsFeatured(e.target.checked)} 
+                                className="w-5 h-5 accent-purple-600 cursor-pointer"
+                            />
+                            <label htmlFor="isFeatured" className="text-xs font-bold text-gray-600 cursor-pointer uppercase">สินค้าแนะนำ (Featured)</label>
                         </div>
                     </div>
                 </div>
 
-                {/* แถบเลือกหมวดหมู่สินค้า - ตกแต่งให้เด่นขึ้น */}
+                {/* แถบเลือกหมวดหมู่สินค้า */}
                 <div className="space-y-1">
-                    <label className="text-xs font-bold text-purple-600 uppercase ml-1 flex items-center gap-1">
-                        Select Category <span className="animate-bounce">👇</span>
-                    </label>
-                    <div className="p-1 bg-purple-50 rounded-2xl border border-purple-100 shadow-inner">
+                    <label className="text-xs font-bold text-purple-600 uppercase ml-1">Select Category</label>
+                    <div className="p-1 bg-purple-50 rounded-2xl border border-purple-100">
                         <select 
                             value={category} 
                             onChange={e => setCategory(e.target.value)} 
-                            className="w-full p-3 bg-white rounded-xl border-none text-gray-800 text-sm font-bold focus:ring-2 focus:ring-purple-500 outline-none cursor-pointer appearance-none text-center"
+                            className="w-full p-3 bg-white rounded-xl border-none text-gray-800 text-sm font-bold focus:ring-2 focus:ring-purple-500 outline-none cursor-pointer"
                         >
                             {['Keyboard', 'CPU', 'Monitor', 'Notebook', 'Gaming Mouse', 'Graphics Card', 'RAM', 'Mainboard'].map(cat => (
                                 <option key={cat} value={cat}>{cat}</option>
@@ -139,7 +172,7 @@ const ProductForm = () => {
                     </div>
                 </div>
 
-                {/* 2. คอมโพเนนต์ช่องกรอกคุณสมบัติสินค้าตามหมวดหมู่ - กั้นด้วยเส้นแบ่งสวยๆ */}
+                {/* 2. คอมโพเนนต์ช่องกรอกคุณสมบัติสินค้าตามหมวดหมู่ */}
                 <div className="pt-4 border-t border-gray-100">
                     <SpecFields 
                         category={category} 
@@ -148,22 +181,16 @@ const ProductForm = () => {
                     />
                 </div>
 
-                {/* ปุ่มกดส่งข้อมูล - ตกแต่งให้มีความวาวและเอฟเฟกต์สีสัน */}
                 <button 
                     type="submit" 
                     disabled={isSubmitting} 
                     className={`w-full py-4 rounded-2xl text-white font-black text-sm uppercase tracking-widest shadow-xl transition-all active:scale-95 ${
                         isSubmitting 
                         ? 'bg-gray-400 cursor-not-allowed' 
-                        : 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 hover:shadow-purple-200'
+                        : 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700'
                     }`}
                 >
-                    {isSubmitting ? (
-                        <span className="flex items-center justify-center gap-2">
-                            <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                            กำลังบันทึกข้อมูล...
-                        </span>
-                    ) : 'บันทึกสินค้าลงฐานข้อมูล 🚀'}
+                    {isSubmitting ? 'กำลังบันทึกข้อมูล...' : 'บันทึกสินค้าลงฐานข้อมูล 🚀'}
                 </button>
             </form>
         </div>

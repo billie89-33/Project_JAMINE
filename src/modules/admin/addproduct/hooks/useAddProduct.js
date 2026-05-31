@@ -9,12 +9,15 @@ import { useProductActions } from './useProductActions';
 export const useAddProduct = () => {
     // 💾 1. State ข้อมูลทั่วไป
     const [modelName, setModelName] = useState('');
-    const [description, setDescription] = useState(''); // 🆕 เพิ่มฟิลด์รายละเอียดสินค้า
+    const [brand, setBrand] = useState(''); // 🆕 เพิ่มฟิลด์แบรนด์
+    const [description, setDescription] = useState(''); 
     const [sku, setSku] = useState('');
     const [tags, setTags] = useState('');
-    const [stock, setStock] = useState(1); // เปลี่ยนจาก quantity เป็น stock
-    const [regularPrice, setRegularPrice] = useState('');
+    const [stock, setStock] = useState(1); 
+    const [price, setPrice] = useState(''); // เปลี่ยนจาก regularPrice เป็น price ให้ตรง Backend
     const [category, setCategory] = useState('Keyboard');
+    const [status, setStatus] = useState('active'); // 🆕 เพิ่มสถานะสินค้า
+    const [isFeatured, setIsFeatured] = useState(false); // 🆕 เพิ่มสินค้าแนะนำ
 
     // 💾 2. State คุมข้อมูลไฟล์ภาพ
     const [selectedFile, setSelectedFile] = useState(null);
@@ -47,14 +50,17 @@ export const useAddProduct = () => {
      */
     const resetForm = () => {
         setModelName(''); 
+        setBrand('');
         setDescription('');
         setSku(''); 
         setTags(''); 
         setStock(1); 
-        setRegularPrice('');
+        setPrice('');
         setSelectedFile(null); 
         setImagePreview(null); 
         setCategory('Keyboard');
+        setStatus('active');
+        setIsFeatured(false);
         setSpecifications({});
     };
 
@@ -69,7 +75,7 @@ export const useAddProduct = () => {
         }
         
         const rawData = {
-            modelName, description, sku, tags, stock, regularPrice, category, selectedFile, specifications
+            modelName, brand, description, sku, tags, stock, price, category, status, isFeatured, selectedFile, specifications
         };
 
         const result = await handleAddProduct(rawData);
@@ -83,12 +89,15 @@ export const useAddProduct = () => {
     return {
         // States
         modelName, setModelName,
+        brand, setBrand,
         description, setDescription,
         sku, setSku,
         tags, setTags,
         stock, setStock,
-        regularPrice, setRegularPrice,
+        price, setPrice,
         category, setCategory,
+        status, setStatus,
+        isFeatured, setIsFeatured,
         selectedFile,
         imagePreview,
         specifications,

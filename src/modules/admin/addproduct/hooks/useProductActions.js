@@ -25,7 +25,11 @@ export const useProductActions = () => {
      * @param {Object} rawData - ข้อมูลดิบจากฟอร์ม
      */
     const handleAddProduct = async (rawData) => {
-        const { modelName, description, sku, tags, stock, regularPrice, category, selectedFile, specifications } = rawData;
+        const { 
+            modelName, brand, description, sku, tags, 
+            stock, price, category, status, isFeatured, 
+            selectedFile, specifications 
+        } = rawData;
 
         // 🧼 1. กรองข้อมูล Specifications: ตัดช่องที่ไม่ได้กรอก หรือมีแค่ช่องว่างทิ้ง
         const cleanSpecs = Object.entries(specifications)
@@ -38,13 +42,15 @@ export const useProductActions = () => {
         // 💡 2. บรรจุของลง FormData (สำหรับส่งไฟล์ภาพ)
         const formData = new FormData();
         formData.append('image', selectedFile);
-        formData.append('brand', cleanSpecs['Brand'] || 'Unknown');
+        formData.append('brand', brand); // ดึงจาก State โดยตรง ไม่ใช้ Mock
         formData.append('modelName', modelName);
-        formData.append('description', description); // 🆕 เพิ่มฟิลด์รายละเอียดสินค้า
-        formData.append('price', Number(regularPrice));
+        formData.append('description', description);
+        formData.append('price', Number(price));
         formData.append('sku', sku);
         formData.append('category', category);
         formData.append('stock', Number(stock));
+        formData.append('status', status);
+        formData.append('isFeatured', isFeatured);
         formData.append('tags', tags);
         
         // แปลง Object specifications เป็น JSON string
