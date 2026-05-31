@@ -16,6 +16,7 @@ const Sidebar = ({
   onPriceChange,
   onClearAll 
 }) => {
+  const [isCategoryOpen, setIsCategoryOpen] = useState(true);
   const [isBrandOpen, setIsBrandOpen] = useState(true);
   const [isPriceOpen, setIsPriceOpen] = useState(true);
 
@@ -38,34 +39,45 @@ const Sidebar = ({
         </button>
       </div>
 
-      {/* 2. Category Selection (Horizontal Pills on Mobile, Vertical List on Desktop) */}
-      <div className="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm space-y-4">
-        <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Categories</h3>
-        <div className="flex flex-col gap-1.5">
-          <button
-            onClick={() => setSelectedCategory('All')}
-            className={`w-full text-left px-4 py-3 rounded-2xl text-sm font-bold transition-all ${
-              selectedCategory === 'All' || !selectedCategory
-                ? 'bg-purple-600 text-white shadow-xl shadow-purple-100 translate-x-1'
-                : 'text-slate-500 hover:bg-purple-50 hover:text-purple-600'
-            }`}
-          >
-            📂 ทั้งหมด
-          </button>
-          {categories.map(cat => (
+      {/* 2. Category Selection (Accordion) */}
+      <div className="bg-white rounded-[32px] border border-slate-100 shadow-sm overflow-hidden">
+        <button 
+          onClick={() => setIsCategoryOpen(!isCategoryOpen)}
+          className="w-full flex items-center justify-between p-6 hover:bg-slate-50 transition-colors"
+        >
+          <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Categories</h3>
+          <span className="text-slate-300">
+            {isCategoryOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </span>
+        </button>
+
+        {isCategoryOpen && (
+          <div className="px-6 pb-6 pt-2 flex flex-col gap-1.5 animate-in fade-in slide-in-from-top-2 duration-300">
             <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
+              onClick={() => setSelectedCategory('All')}
               className={`w-full text-left px-4 py-3 rounded-2xl text-sm font-bold transition-all ${
-                selectedCategory === cat
+                selectedCategory === 'All' || !selectedCategory
                   ? 'bg-purple-600 text-white shadow-xl shadow-purple-100 translate-x-1'
                   : 'text-slate-500 hover:bg-purple-50 hover:text-purple-600'
               }`}
             >
-              {cat}
+              📂 ทั้งหมด
             </button>
-          ))}
-        </div>
+            {categories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`w-full text-left px-4 py-3 rounded-2xl text-sm font-bold transition-all ${
+                  selectedCategory === cat
+                    ? 'bg-purple-600 text-white shadow-xl shadow-purple-100 translate-x-1'
+                    : 'text-slate-500 hover:bg-purple-50 hover:text-purple-600'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* 3. Brand Filter (Accordion) */}

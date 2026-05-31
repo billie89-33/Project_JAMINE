@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Filter } from 'lucide-react';
 // 🌟 1. นำเข้า useNavigate เพื่อเปิดใช้ระบบนำทางเปลี่ยนหน้า URL
 import { useNavigate } from 'react-router-dom';
 
@@ -17,7 +17,6 @@ const categories = [
 ];
 
 const CategorySlider = () => {
-  // 🌟 3. ประกาศเรียกใช้งานตัวแปรนำทางเปลี่ยนหน้ากระดาน
   const navigate = useNavigate();
   const scrollRef = useRef(null);
 
@@ -25,7 +24,7 @@ const CategorySlider = () => {
   const handleScroll = (direction) => {
     if (scrollRef.current) {
       const { scrollLeft, clientWidth } = scrollRef.current;
-      const scrollAmount = clientWidth * 0.5;
+      const scrollAmount = clientWidth * 0.4;
       scrollRef.current.scrollTo({
         left: direction === 'left' ? scrollLeft - scrollAmount : scrollLeft + scrollAmount,
         behavior: 'smooth'
@@ -34,66 +33,103 @@ const CategorySlider = () => {
   };
 
   return (
-    <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-gray-100 relative group/slider">
-      {/* ส่วนหัวข้อแสดงผล */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-5">
-        <div>
-          <h2 className="text-lg sm:text-xl font-bold text-gray-900">Shop by Category</h2>
-          <p className="text-sm text-gray-500 mt-1 max-w-xl">
-            Discover trending collections with a smooth horizontal carousel that fits every screen.
-          </p>
-        </div>
-        <button className="self-start sm:self-auto text-sm font-semibold text-gray-500 hover:text-black transition-colors">
-          View All
-        </button>
-      </div>
-
-      {/* ปุ่มลูกศรซ้าย */}
-      <button
-        onClick={() => handleScroll('left')}
-        className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-2 bg-white rounded-full border border-gray-200 text-gray-600 shadow-sm hover:bg-gray-50 transition-all opacity-0 group-hover/slider:opacity-100"
-      >
-        <ChevronLeft size={18} />
-      </button>
-
-      {/* แถบรายการหมวดหมู่สินค้า */}
-      <div
-        ref={scrollRef}
-        className="flex gap-4 sm:gap-5 overflow-x-auto scrollbar-none py-3 px-1 scroll-smooth"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-      >
-        {categories.map((cat) => (
-          <div
-            key={cat.id}
-            onClick={() => navigate(`/category/${cat.type}`)}
-            className="flex flex-col items-center gap-3 cursor-pointer flex-shrink-0 w-24 sm:w-28 group"
-          >
-            {/* วงกลมล้อมรอบรูปภาพ */}
-            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-50 rounded-full border border-gray-100 overflow-hidden flex items-center justify-center p-2 transition-transform duration-300 group-hover:scale-105 group-hover:shadow-sm">
-              <img
-                src={cat.image}
-                alt={cat.name}
-                className="w-full h-full object-cover rounded-full"
-                onError={(e) => {
-                  e.target.src = 'https://placehold.co/128';
-                }}
-              />
+    <div className="relative group/slider">
+      {/* 🏔️ Decorative Background Glow (ม่วงเรืองแสงอ่อนๆ ด้านหลัง) */}
+      <div className="absolute -inset-4 bg-gradient-to-r from-purple-100/30 to-indigo-100/30 blur-3xl rounded-[40px] -z-10"></div>
+      
+      <div className="bg-white/80 backdrop-blur-xl rounded-[40px] p-8 shadow-[0_20px_50px_rgba(124,58,237,0.08)] border border-white/50 relative overflow-hidden">
+        
+        {/* ☄️ ส่วนหัวข้อที่ดูพรีเมียมขึ้น */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-10">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="w-10 h-[2px] bg-purple-600 rounded-full"></span>
+              <span className="text-[10px] font-black text-purple-600 uppercase tracking-[0.3em]">Collections</span>
             </div>
-            {/* ชื่อหมวดหมู่สินค้า */}
-            <span className="text-sm sm:text-base text-gray-700 font-medium text-center line-clamp-1 group-hover:text-purple-600 transition-colors">
-              {cat.name}
-            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight">
+              Explore by <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">Category</span>
+            </h2>
           </div>
-        ))}
-      </div>
+          <button className="group/btn flex items-center gap-2 px-6 py-3 bg-purple-50 hover:bg-purple-600 text-purple-600 hover:text-white rounded-2xl text-xs font-black uppercase tracking-widest transition-all duration-300 shadow-sm hover:shadow-purple-200">
+            View All 
+            <ChevronRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
+          </button>
+        </div>
 
-      {/* ปุ่มลูกศรขวา */}
-      <button
-        onClick={() => handleScroll('right')}
-        className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-2 bg-white rounded-full border border-gray-200 text-gray-600 shadow-sm hover:bg-gray-50 transition-all opacity-0 group-hover/slider:opacity-100"
-      >
-        <ChevronRight size={18} />
-      </button>
+        {/* 🖱️ ปุ่มลูกศรแบบ Overlay สไตล์ Modern */}
+        <div className="absolute left-4 top-[65%] -translate-y-1/2 z-20 pointer-events-none lg:group-hover/slider:pointer-events-auto">
+          <button
+            onClick={() => handleScroll('left')}
+            className="p-4 bg-white/90 backdrop-blur-md rounded-2xl text-purple-600 shadow-2xl border border-purple-50 hover:bg-purple-600 hover:text-white transition-all duration-500 opacity-0 lg:group-hover/slider:opacity-100 -translate-x-4 lg:group-hover/slider:translate-x-0 active:scale-90"
+          >
+            <ChevronLeft size={24} strokeWidth={3} />
+          </button>
+        </div>
+
+        <div className="absolute right-4 top-[65%] -translate-y-1/2 z-20 pointer-events-none lg:group-hover/slider:pointer-events-auto">
+          <button
+            onClick={() => handleScroll('right')}
+            className="p-4 bg-white/90 backdrop-blur-md rounded-2xl text-purple-600 shadow-2xl border border-purple-50 hover:bg-purple-600 hover:text-white transition-all duration-500 opacity-0 lg:group-hover/slider:opacity-100 translate-x-4 lg:group-hover/slider:translate-x-0 active:scale-90"
+          >
+            <ChevronRight size={24} strokeWidth={3} />
+          </button>
+        </div>
+
+        {/* 🎡 รายการหมวดหมู่สินค้า */}
+        <div
+          ref={scrollRef}
+          className="flex gap-6 sm:gap-8 overflow-x-auto scrollbar-none py-4 px-2 scroll-smooth"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
+          {categories.map((cat) => (
+            <div
+              key={cat.id}
+              onClick={() => navigate(`/category/${cat.type}`)}
+              className="flex flex-col items-center gap-5 cursor-pointer flex-shrink-0 w-28 sm:w-32 group/item"
+            >
+              {/* 🌈 วงกลมล้อมรอบรูปภาพที่มีลูกเล่นไล่เฉด */}
+              <div className="relative">
+                {/* Outer Glow Ring */}
+                <div className="absolute -inset-2 bg-gradient-to-br from-purple-400 to-indigo-600 rounded-full opacity-0 group-hover/item:opacity-20 blur-md transition-opacity duration-500"></div>
+                
+                {/* Main Circle Container */}
+                <div className="relative w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-br from-slate-50 to-white rounded-full border-2 border-white shadow-xl group-hover/item:shadow-purple-200/50 flex items-center justify-center p-3 transition-all duration-500 group-hover/item:-translate-y-3 group-hover/item:scale-105 overflow-hidden">
+                  
+                  {/* Subtle Background Pattern in circle */}
+                  <div className="absolute inset-0 opacity-[0.03] group-hover/item:opacity-[0.07] transition-opacity">
+                    <svg width="100%" height="100%"><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" strokeWidth="0.5"/></pattern><rect width="100%" height="100%" fill="url(#grid)"/></svg>
+                  </div>
+
+                  <img
+                    src={cat.image}
+                    alt={cat.name}
+                    className="w-full h-full object-cover rounded-full group-hover/item:scale-110 transition-transform duration-700"
+                    onError={(e) => {
+                      // fallback icon style if image fails
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
+                  />
+                  <div className="hidden absolute inset-0 bg-purple-50 items-center justify-center text-purple-300">
+                    <Filter size={32} strokeWidth={1.5} />
+                  </div>
+
+                  {/* Glass Shine Effect */}
+                  <div className="absolute top-[-100%] left-[-100%] w-1/2 h-[200%] bg-white/20 rotate-[35deg] group-hover/item:top-[100%] group-hover/item:left-[100%] transition-all duration-1000 ease-in-out"></div>
+                </div>
+              </div>
+
+              {/* 🏷️ ชื่อหมวดหมู่สินค้าที่มีสไตล์ */}
+              <div className="flex flex-col items-center space-y-1">
+                <span className="text-sm sm:text-base text-slate-600 font-black tracking-tight group-hover/item:text-purple-600 transition-colors duration-300">
+                  {cat.name}
+                </span>
+                <div className="w-0 h-[3px] bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full group-hover/item:w-8 transition-all duration-500"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
