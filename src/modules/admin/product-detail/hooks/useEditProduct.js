@@ -19,6 +19,7 @@ export const useEditProduct = () => {
     price: 0,
     stock: 0,
     category: '',
+    tags: '', // 🆕 เก็บเป็น String เพื่อให้ UI แก้ไขได้ง่าย
     status: 'active',
     isFeatured: false,
     specifications: {}
@@ -46,6 +47,8 @@ export const useEditProduct = () => {
           price: product.price || 0,
           stock: product.stock || 0,
           category: product.category || '',
+          sku: product.sku || '',
+          tags: Array.isArray(product.tags) ? product.tags.join(', ') : (product.tags || ''), 
           status: product.status || 'active',
           isFeatured: !!product.isFeatured,
           specifications: product.specifications || {}
@@ -98,17 +101,24 @@ export const useEditProduct = () => {
       const patchData = new FormData();
       let hasChanges = false;
 
-      // ตรวจสอบฟิลด์ทั่วไป
+      // ตรวจสอบฟิลด์ทั่วไป (พร้อม Clean ข้อมูลตัวเลข)
       const fields = ['brand', 'modelName', 'description', 'price', 'stock', 'category', 'status', 'isFeatured'];
       fields.forEach(field => {
-        if (formData[field] !== originalProduct[field]) {
-          patchData.append(field, formData[field]);
+        let value = formData[field];
+        
+        // 🧼 Numeric Sanitization: ลบคอมม่าและทำให้เป็นตัวเลขที่คลีนก่อนส่ง
+        if (field === 'price' || field === 'stock') {
+          value = Number(String(value).replace(/,/g, '')) || 0;
+        }
+
+        if (value !== originalProduct[field]) {
+          patchData.append(field, value);
           hasChanges = true;
         }
       });
 
-      // ตรวจสอบ Tags
-      const currentTags = formData.tags.split(',').map(t => t.trim()).filter(Boolean);
+      // 🏷️ Tag Processing Pattern: จัดการ Tags ให้เป็น Array ที่คลีน
+      const currentTags = (formData.tags || '').split(',').map(t => t.trim()).filter(Boolean);
       const originalTags = Array.isArray(originalProduct.tags) ? originalProduct.tags : [];
       if (JSON.stringify(currentTags) !== JSON.stringify(originalTags)) {
         patchData.append('tags', JSON.stringify(currentTags));

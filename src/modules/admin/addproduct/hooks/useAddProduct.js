@@ -12,7 +12,7 @@ export const useAddProduct = () => {
     const [brand, setBrand] = useState(''); // 🆕 เพิ่มฟิลด์แบรนด์
     const [description, setDescription] = useState(''); 
     const [sku, setSku] = useState('');
-    const [tags, setTags] = useState('');
+    const [tags, setTags] = useState(''); // 🏷️ Tag Processing Pattern: เตรียมไว้เป็น String เพื่อแยกด้วยคอมม่า
     const [stock, setStock] = useState(1); 
     const [price, setPrice] = useState(''); // เปลี่ยนจาก regularPrice เป็น price ให้ตรง Backend
     const [category, setCategory] = useState('Keyboard');
