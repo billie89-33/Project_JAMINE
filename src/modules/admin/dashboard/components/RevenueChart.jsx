@@ -1,67 +1,95 @@
-import React from 'react';
+import { LineChart, ArrowUpRight } from 'lucide-react';
 
-const RevenueChart = () => {
-  const filters = ['All', '1M', '6M', '1Y'];
-  const [activeFilter, setActiveFilter] = React.useState('6M');
+/**
+ * 📈 RevenueChart Component
+ * กราฟแสดงแนวโน้มรายได้ (พรีเมียม Area Chart Mock)
+ */
+const RevenueChart = ({ data, period, onPeriodChange }) => {
+  const periods = [
+    { id: 'today', label: 'Today' },
+    { id: 'week', label: 'Week' },
+    { id: 'month', label: 'Month' },
+    { id: 'year', label: 'Year' }
+  ];
 
   return (
-    <div className="bg-[#1e293b] rounded-xl p-6 shadow-lg border border-slate-700/50">
-      <div className="flex justify-between items-center mb-8">
-        <h3 className="text-white font-bold">Revenue</h3>
-        <div className="flex bg-slate-800 p-1 rounded-lg gap-1">
-          {filters.map(filter => (
+    <div className="bg-white rounded-[40px] p-8 shadow-2xl shadow-purple-100/50 border border-purple-50 h-full flex flex-col">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-12">
+        <div>
+          <h3 className="text-xl font-black text-slate-800 flex items-center gap-2">
+            <LineChart className="text-purple-600" size={24} />
+            Revenue Trend
+          </h3>
+          <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">แนวโน้มรายได้</p>
+        </div>
+        
+        {/* Period Filter */}
+        <div className="flex bg-slate-50 p-1 rounded-2xl border border-slate-100">
+          {periods.map(p => (
             <button
-              key={filter}
-              onClick={() => setActiveFilter(filter)}
-              className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${
-                activeFilter === filter 
-                ? 'bg-slate-700 text-white shadow-sm' 
-                : 'text-slate-400 hover:text-slate-200'
+              key={p.id}
+              onClick={() => onPeriodChange(p.id)}
+              className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${
+                period === p.id 
+                ? 'bg-white text-purple-600 shadow-sm' 
+                : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100/50'
               }`}
             >
-              {filter}
+              {p.label}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Chart Visualization Placeholder */}
-      <div className="h-64 w-full relative mb-6">
-        {/* Simple SVG/CSS visualization of a line chart to match the UI feel */}
-        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-slate-700"></div>
-        <div className="absolute top-0 left-0 h-full w-[1px] bg-slate-700"></div>
-        
+      {/* Chart Visualization (Mock SVG Area Chart) */}
+      <div className="flex-1 w-full relative min-h-[300px] mb-8 px-2">
         {/* Grid lines */}
-        {[0, 20, 40, 60, 80, 100].map(val => (
-            <div key={val} className="absolute w-full h-[1px] bg-slate-800/50" style={{ bottom: `${val}%` }}>
-                <span className="absolute -left-8 -top-2 text-[10px] text-slate-500">{val}</span>
-            </div>
+        {[0, 25, 50, 75, 100].map(val => (
+          <div key={val} className="absolute w-full h-[1px] bg-slate-50" style={{ bottom: `${val}%` }}>
+            <span className="absolute -left-2 -top-2.5 text-[9px] font-bold text-slate-300 -translate-x-full">{val}k</span>
+          </div>
         ))}
 
-        {/* Waves/Lines simulation with SVG */}
-        <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <path d="M0 80 Q 25 60, 50 75 T 100 20" fill="none" stroke="#ec4899" strokeWidth="2" />
-            <path d="M0 90 Q 25 70, 50 85 T 100 40" fill="none" stroke="#06b6d4" strokeWidth="2" />
+        {/* X-Axis Labels */}
+        <div className="absolute -bottom-6 w-full flex justify-between px-4 text-[9px] font-bold text-slate-400">
+           {data.map((d, i) => <span key={i}>{d.date}</span>)}
+        </div>
+
+        {/* Mock Area Chart SVG */}
+        <svg className="absolute inset-0 w-full h-full overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <defs>
+                <linearGradient id="purpleGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#9333ea" stopOpacity="0.4" />
+                    <stop offset="100%" stopColor="#9333ea" stopOpacity="0.0" />
+                </linearGradient>
+            </defs>
+            {/* The Area */}
+            <path d="M0,100 L0,70 Q20,80 40,50 T80,30 L100,20 L100,100 Z" fill="url(#purpleGradient)" />
+            {/* The Line */}
+            <path d="M0,70 Q20,80 40,50 T80,30 L100,20" fill="none" stroke="#9333ea" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+            
+            {/* Data Points */}
+            <circle cx="0" cy="70" r="3" fill="white" stroke="#9333ea" strokeWidth="2" />
+            <circle cx="40" cy="50" r="3" fill="white" stroke="#9333ea" strokeWidth="2" />
+            <circle cx="80" cy="30" r="3" fill="white" stroke="#9333ea" strokeWidth="2" />
+            <circle cx="100" cy="20" r="3" fill="white" stroke="#9333ea" strokeWidth="2" />
         </svg>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 pt-6 border-t border-slate-800">
-        <div>
-          <p className="text-slate-500 text-[10px] font-bold uppercase mb-1 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-pink-500"></span> Current Week
-          </p>
-          <p className="text-white font-bold">$235,965</p>
-        </div>
-        <div>
-          <p className="text-slate-500 text-[10px] font-bold uppercase mb-1 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-cyan-400"></span> Past Week
-          </p>
-          <p className="text-white font-bold">$198,214</p>
-        </div>
-        <div>
-          <p className="text-slate-500 text-[10px] font-bold uppercase mb-1">Today's Earning</p>
-          <p className="text-white font-bold">$2,562.30</p>
-        </div>
+      <div className="mt-8 pt-6 border-t border-purple-50 flex items-center justify-between">
+         <div>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">ยอดขายรวมช่วงนี้</p>
+            <div className="flex items-center gap-3">
+                <h4 className="text-2xl font-black text-slate-800">฿130,500</h4>
+                <div className="flex items-center gap-1 text-[10px] font-black text-emerald-500 bg-emerald-50 px-2 py-1 rounded-lg">
+                    <ArrowUpRight size={12}/> 
+                    12%
+                </div>
+            </div>
+         </div>
+         <button className="text-[10px] font-black text-purple-600 bg-purple-50 px-4 py-2 rounded-xl hover:bg-purple-100 transition-colors uppercase tracking-widest">
+            ดูรายละเอียด
+         </button>
       </div>
     </div>
   );

@@ -8,10 +8,10 @@ import { apiClient } from '@/shared/api';
 
 /**
  * ดึงรายการสินค้าทั้งหมดพร้อมรองรับการกรอง (Filtering & Pagination)
- * @param {Object} params - Query parameters เช่น category, page, limit
+ * @param {Object} params - Query parameters เช่น category, page, limit, keyword, status
  */
 export const getAdminProducts = async (params) => {
-    const response = await apiClient.get('/products', { params });
+    const response = await apiClient.get('/admin/products', { params });
     return response.data;
 };
 
@@ -42,17 +42,17 @@ export const createProductApi = async (formData) => {
  * @param {Object} productData - ข้อมูลสินค้าตาม Product Model
  */
 export const createProduct = async (productData) => {
-    const response = await apiClient.post('/products', productData);
+    const response = await apiClient.post('/admin/products', productData);
     return response.data;
 };
 
 /**
- * แก้ไขข้อมูลสินค้าเดิม
+ * แก้ไขข้อมูลสินค้าเดิม (Surgical Update)
  * @param {string} id - ID ของสินค้าที่ต้องการแก้ไข
- * @param {Object} productData - ข้อมูลที่ต้องการอัปเดต
+ * @param {Object|FormData} productData - ข้อมูลที่ต้องการอัปเดต
  */
 export const updateProduct = async (id, productData) => {
-    const response = await apiClient.patch(`/products/${id}`, productData);
+    const response = await apiClient.patch(`/admin/products/${id}`, productData);
     return response.data;
 };
 
@@ -61,6 +61,6 @@ export const updateProduct = async (id, productData) => {
  * @param {string} id - ID ของสินค้าที่ต้องการลบ
  */
 export const deleteProduct = async (id) => {
-    const response = await apiClient.delete(`/products/${id}`);
+    const response = await apiClient.delete(`/admin/products/${id}`);
     return response.data;
 };

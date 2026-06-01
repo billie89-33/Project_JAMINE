@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getProductById, updateProduct } from '@/modules/admin/services/productApi';
+import { getProductById, updateProduct } from '@/modules/admin/services';
 import toast from 'react-hot-toast';
 
 /**
@@ -16,10 +16,11 @@ export const useEditProduct = () => {
     brand: '',
     modelName: '',
     description: '',
+    sku: '',
     price: 0,
     stock: 0,
     category: '',
-    tags: '', // 🆕 เก็บเป็น String เพื่อให้ UI แก้ไขได้ง่าย
+    tags: '', // 🏷️ เก็บเป็น String เพื่อให้ UI แก้ไขได้ง่าย
     status: 'active',
     isFeatured: false,
     specifications: {}
@@ -93,7 +94,7 @@ export const useEditProduct = () => {
 
   // 4. Surgical PATCH Logic: ตรวจสอบเฉพาะฟิลด์ที่เปลี่ยน (Dirty Check)
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setIsSubmitting(true);
 
     try {
@@ -101,8 +102,8 @@ export const useEditProduct = () => {
       const patchData = new FormData();
       let hasChanges = false;
 
-      // ตรวจสอบฟิลด์ทั่วไป (พร้อม Clean ข้อมูลตัวเลข)
-      const fields = ['brand', 'modelName', 'description', 'price', 'stock', 'category', 'status', 'isFeatured'];
+      // ตรวจสอบฟิลด์ทั่วไป (พร้อม Clean ข้อมูลตัวเลข และรวม SKU)
+      const fields = ['brand', 'modelName', 'description', 'sku', 'price', 'stock', 'category', 'status', 'isFeatured'];
       fields.forEach(field => {
         let value = formData[field];
         
@@ -151,6 +152,7 @@ export const useEditProduct = () => {
         setSelectedFile(null); // ล้างไฟล์ที่ค้างอยู่
       }
     } catch (error) {
+      console.error("Update Product Error:", error);
       toast.error(error.response?.data?.message || 'อัปเดตไม่สำเร็จ');
     } finally {
       setIsSubmitting(false);

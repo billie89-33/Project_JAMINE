@@ -1,65 +1,115 @@
 import { 
   ShoppingCart, 
-  DollarSign, 
+  Wallet, 
   Users, 
-  CreditCard 
+  Sparkles
 } from 'lucide-react';
 import { useDashboard } from '../hooks/useDashboard';
-import StatCard from './StatCard.jsx';
-import RevenueChart from './RevenueChart.jsx';
-import SalesDonut from './SalesDonut.jsx';
 
+// 🛡️ Fix: Import siblings directly to avoid circular dependency via components/index.js
+import StatCard from './StatCard';
+import RevenueChart from './RevenueChart';
+import SalesDonut from './SalesDonut';
+import RecentOrders from './RecentOrders';
+import TopProducts from './TopProducts';
+
+/**
+ * 🚀 DashboardContainer
+ * ส่วนแสดงผลหลักของหน้า Admin Dashboard (Full Layout)
+ */
 const DashboardContainer = () => {
-    const { stats, salesByCategory } = useDashboard();
+    const { 
+        isLoading, 
+        period, 
+        setPeriod, 
+        summary, 
+        revenueData, 
+        categorySales, 
+        recentOrders, 
+        topProducts 
+    } = useDashboard();
 
     return (
-        <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-slate-800 mb-6">Analytics</h2>
+        <div className="max-w-[1600px] mx-auto animate-in fade-in duration-700">
             
-            {/* Top Stat Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* 1. Welcome Header */}
+            <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div>
+                    <div className="flex items-center gap-2 mb-2">
+                        <Sparkles size={16} className="text-amber-500 fill-amber-500" />
+                        <span className="text-[10px] font-black text-purple-600 uppercase tracking-[0.2em]">System Overview</span>
+                    </div>
+                    <h1 className="text-3xl font-black text-slate-800">
+                        Analytics Dashboard
+                    </h1>
+                    <p className="text-slate-400 mt-1 font-medium ml-1">ยินดีต้อนรับกลับมา! นี่คือสรุปความเคลื่อนไหวของร้านค้าคุณ</p>
+                </div>
+
+                <div className="bg-white p-1.5 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-2">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-3">Filter By</span>
+                    <select 
+                        value={period}
+                        onChange={(e) => setPeriod(e.target.value)}
+                        className="bg-slate-50 text-slate-700 text-xs font-black px-4 py-2 rounded-xl border-none outline-none cursor-pointer hover:bg-slate-100 transition-colors"
+                    >
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                        <option value="year">This Year</option>
+                    </select>
+                </div>
+            </div>
+            
+            {/* 2. Top Stat Cards Row */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
                 <StatCard 
-                    title="Orders"
-                    value={stats.orders.value}
-                    trend={stats.orders.trend}
-                    linkText="View Orders"
-                    icon={<ShoppingCart size={20} />}
-                    trendColor={stats.orders.color}
+                    title="Total Revenue (Balance)"
+                    value={summary.balance.value}
+                    trend={summary.balance.trend}
+                    icon={<Wallet size={24} strokeWidth={2.5} />}
                 />
                 <StatCard 
-                    title="Profit"
-                    value={stats.profit.value}
-                    trend={stats.profit.trend}
-                    linkText="View Earnings"
-                    icon={<DollarSign size={20} />}
-                    trendColor={stats.profit.color}
+                    title="Total Orders"
+                    value={summary.orders.value}
+                    trend={summary.orders.trend}
+                    icon={<ShoppingCart size={24} strokeWidth={2.5} />}
                 />
                 <StatCard 
-                    title="Customer"
-                    value={stats.customers.value}
-                    trend={stats.customers.trend}
-                    linkText="All Customer"
-                    icon={<Users size={20} />}
-                    trendColor={stats.customers.color}
+                    title="New Customers"
+                    value={summary.customers.value}
+                    trend={summary.customers.trend}
+                    icon={<Users size={24} strokeWidth={2.5} />}
                 />
                 <StatCard 
-                    title="Balance (Total sale amount)"
-                    value={stats.balance.value}
-                    trend=""
-                    linkText="Withdraw Money"
-                    icon={<CreditCard size={20} />}
+                    title="Active Sessions"
+                    value={842}
+                    trend="+12%"
+                    icon={<Sparkles size={24} strokeWidth={2.5} />}
                 />
             </div>
 
-            {/* Charts Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2">
-                    <RevenueChart />
+            {/* 3. Charts & Analytics Row */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-10">
+                <div className="lg:col-span-2 min-h-[500px]">
+                    <RevenueChart 
+                        data={revenueData} 
+                        period={period} 
+                        onPeriodChange={setPeriod} 
+                    />
                 </div>
-                <div className="lg:col-span-1">
-                    <SalesDonut data={salesByCategory} />
+                <div className="lg:col-span-1 min-h-[500px]">
+                    <SalesDonut data={categorySales} />
                 </div>
             </div>
+
+            {/* 4. Bottom Data Row: Recent Orders & Top Selling */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <RecentOrders orders={recentOrders} />
+                <TopProducts products={topProducts} />
+            </div>
+
+            {/* Footer space */}
+            <div className="h-10"></div>
         </div>
     );
 };

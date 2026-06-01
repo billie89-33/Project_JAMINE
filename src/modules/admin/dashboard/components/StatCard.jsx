@@ -1,25 +1,32 @@
 import React from 'react';
 
-const StatCard = ({ title, value, trend, linkText, icon, trendColor = 'text-green-400' }) => {
+/**
+ * 📊 StatCard Component
+ * แสดงตัวเลขสถิติแบบย่อใน Dashboard (พรีเมียมเวอร์ชัน)
+ */
+const StatCard = ({ title, value, trend, icon }) => {
+  const isPositive = trend?.startsWith('+');
+  const trendColor = isPositive ? 'text-emerald-500 bg-emerald-50' : 'text-rose-500 bg-rose-50';
+
   return (
-    <div className="bg-[#1e293b] rounded-xl p-6 shadow-lg border border-slate-700/50">
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <p className="text-slate-400 text-sm font-medium mb-1">{title}</p>
-          <div className="flex items-baseline gap-2">
-            <h3 className="text-2xl font-bold text-white">{value}</h3>
-            <span className={`text-xs font-semibold ${trendColor}`}>
-              {trend}
-            </span>
-          </div>
-        </div>
-        <div className="p-3 bg-slate-800/50 rounded-lg text-blue-400">
+    <div className="bg-white rounded-[32px] p-6 lg:p-8 shadow-xl shadow-purple-100/50 border border-purple-50 flex flex-col justify-between hover:-translate-y-1 transition-transform duration-300">
+      <div className="flex justify-between items-start mb-6">
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-50 to-indigo-50 flex items-center justify-center text-purple-600 shadow-inner">
           {icon}
         </div>
+        {trend && (
+          <div className={`px-3 py-1 rounded-full text-[10px] font-black tracking-wider ${trendColor}`}>
+            {trend}
+          </div>
+        )}
       </div>
-      <a href="#" className="text-blue-500 text-xs font-semibold hover:underline flex items-center gap-1">
-        {linkText}
-      </a>
+      
+      <div>
+        <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-2">{title}</p>
+        <h3 className="text-3xl font-black text-slate-800">
+          {typeof value === 'number' && title.includes('Balance') ? `฿${value.toLocaleString()}` : value.toLocaleString()}
+        </h3>
+      </div>
     </div>
   );
 };

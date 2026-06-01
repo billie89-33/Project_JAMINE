@@ -1,3 +1,2 @@
-export * from './components/EditableMainInfo';
-export * from './components/EditableSpecs';
+export * from './components';
 export * from './hooks/useEditProduct';

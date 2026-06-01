@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getAdminProducts, deleteProduct } from '../../services/productApi';
+import { getAdminProducts, deleteProduct } from '@/modules/admin/services/productApi';
 import toast from 'react-hot-toast';
 
 /**
