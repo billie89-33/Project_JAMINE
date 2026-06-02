@@ -2,8 +2,11 @@ import {
   ShoppingCart, 
   Wallet, 
   Users, 
-  Sparkles
+  Sparkles,
+  AlertTriangle,
+  Clock
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useDashboard } from '../hooks/useDashboard';
 
 // 🛡️ Fix: Import siblings directly to avoid circular dependency via components/index.js
@@ -15,10 +18,11 @@ import TopProducts from './TopProducts';
 import DashboardSkeleton from './DashboardSkeleton';
 
 /**
- * 🚀 DashboardContainer
- * ส่วนแสดงผลหลักของหน้า Admin Dashboard (Full Layout)
+ * 🚀 DashboardContainer (Optimized v2)
+ * ส่วนแสดงผลหลักของหน้า Admin Dashboard พร้อมระบบแจ้งเตือน (Alerts)
  */
 const DashboardContainer = () => {
+    const navigate = useNavigate();
     const { 
         isLoading, 
         period, 
@@ -27,7 +31,9 @@ const DashboardContainer = () => {
         revenueData, 
         categorySales, 
         recentOrders, 
-        topProducts 
+        topProducts,
+        lowStockCount,
+        pendingOrdersCount
     } = useDashboard();
 
     if (isLoading) return <DashboardSkeleton />;
@@ -35,17 +41,17 @@ const DashboardContainer = () => {
     return (
         <div className="max-w-[1600px] mx-auto animate-in fade-in duration-700">
             
-            {/* 1. Welcome Header */}
+            {/* 1. Welcome Header & Filter */}
             <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
                     <div className="flex items-center gap-2 mb-2">
                         <Sparkles size={16} className="text-amber-500 fill-amber-500" />
-                        <span className="text-[10px] font-black text-purple-600 uppercase tracking-[0.2em]">System Overview</span>
+                        <span className="text-[10px] font-black text-purple-600 uppercase tracking-[0.2em]">Store Analytics</span>
                     </div>
                     <h1 className="text-3xl font-black text-slate-800">
-                        Analytics Dashboard
+                        Admin Dashboard
                     </h1>
-                    <p className="text-slate-400 mt-1 font-medium ml-1">ยินดีต้อนรับกลับมา! นี่คือสรุปความเคลื่อนไหวของร้านค้าคุณ</p>
+                    <p className="text-slate-400 mt-1 font-medium ml-1">ภาพรวมประสิทธิภาพและความเคลื่อนไหวของร้านค้าคุณ</p>
                 </div>
 
                 <div className="bg-white p-1.5 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-2">
@@ -63,10 +69,10 @@ const DashboardContainer = () => {
                 </div>
             </div>
             
-            {/* 2. Top Stat Cards Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+            {/* 2. Top Stats Row (Main Metrics) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
                 <StatCard 
-                    title="Total Revenue (Balance)"
+                    title="Total Revenue (All Time)"
                     value={summary.balance.value}
                     trend={summary.balance.trend}
                     icon={<Wallet size={24} strokeWidth={2.5} />}
@@ -78,20 +84,42 @@ const DashboardContainer = () => {
                     icon={<ShoppingCart size={24} strokeWidth={2.5} />}
                 />
                 <StatCard 
-                    title="New Customers"
+                    title="Total Customers"
                     value={summary.customers.value}
                     trend={summary.customers.trend}
                     icon={<Users size={24} strokeWidth={2.5} />}
                 />
-                <StatCard 
-                    title="Active Sessions"
-                    value={842}
-                    trend="+12%"
-                    icon={<Sparkles size={24} strokeWidth={2.5} />}
-                />
             </div>
 
-            {/* 3. Charts & Analytics Row */}
+            {/* 3. Urgent Alerts Row (Action Required) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div 
+                    onClick={() => navigate('/admin/products')} // สมมติว่าไปหน้าสินค้าเพื่อเติมสต็อก
+                    className="cursor-pointer group"
+                >
+                    <StatCard 
+                        title="Low Stock Items"
+                        value={lowStockCount}
+                        icon={<AlertTriangle size={24} strokeWidth={2.5} />}
+                        className="border-amber-200 bg-amber-50/30 group-hover:bg-amber-50 transition-colors"
+                        valueClassName="text-amber-600"
+                    />
+                </div>
+                <div 
+                    onClick={() => navigate('/admin/orders')} // ไปหน้าออเดอร์เพื่อจัดการสถานะ
+                    className="cursor-pointer group"
+                >
+                    <StatCard 
+                        title="Pending Orders"
+                        value={pendingOrdersCount}
+                        icon={<Clock size={24} strokeWidth={2.5} />}
+                        className="border-indigo-200 bg-indigo-50/30 group-hover:bg-indigo-50 transition-colors"
+                        valueClassName="text-indigo-600"
+                    />
+                </div>
+            </div>
+
+            {/* 4. Charts & Analytics Row */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-10">
                 <div className="lg:col-span-2 min-h-[500px]">
                     <RevenueChart 
@@ -105,7 +133,7 @@ const DashboardContainer = () => {
                 </div>
             </div>
 
-            {/* 4. Bottom Data Row: Recent Orders & Top Selling */}
+            {/* 5. Bottom Data Row: Recent Orders & Top Selling */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                 <RecentOrders orders={recentOrders} />
                 <TopProducts products={topProducts} />
