@@ -21,7 +21,7 @@ const AdminLayout = () => {
         </header>
 
         <section className="flex-1 p-10 overflow-y-auto bg-slate-50">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-[1600px] mx-auto">
              <Outlet /> 
           </div>
         </section>

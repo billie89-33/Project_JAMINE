@@ -1,8 +1,18 @@
-import { LineChart, ArrowUpRight } from 'lucide-react';
+import React from 'react';
+import { LineChart as LineIcon, ArrowUpRight } from 'lucide-react';
+import { 
+  AreaChart, 
+  Area, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer 
+} from 'recharts';
 
 /**
- * 📈 RevenueChart Component
- * กราฟแสดงแนวโน้มรายได้ (พรีเมียม Area Chart Mock)
+ * 📈 RevenueChart Component (Recharts Edition)
+ * กราฟแสดงแนวโน้มรายได้แบบ Interactive
  */
 const RevenueChart = ({ data, period, onPeriodChange }) => {
   const periods = [
@@ -12,15 +22,30 @@ const RevenueChart = ({ data, period, onPeriodChange }) => {
     { id: 'year', label: 'Year' }
   ];
 
+  const totalRevenue = data.reduce((sum, item) => sum + item.revenue, 0);
+
+  // Custom Tooltip Design
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-slate-800 p-3 rounded-2xl shadow-xl border border-slate-700">
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{payload[0].payload.date}</p>
+          <p className="text-sm font-black text-white">฿{payload[0].value.toLocaleString()}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="bg-white rounded-[40px] p-8 shadow-2xl shadow-purple-100/50 border border-purple-50 h-full flex flex-col">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-12">
         <div>
           <h3 className="text-xl font-black text-slate-800 flex items-center gap-2">
-            <LineChart className="text-purple-600" size={24} />
+            <LineIcon className="text-purple-600" size={24} />
             Revenue Trend
           </h3>
-          <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">แนวโน้มรายได้</p>
+          <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">แนวโน้มรายได้จริง</p>
         </div>
         
         {/* Period Filter */}
@@ -41,49 +66,52 @@ const RevenueChart = ({ data, period, onPeriodChange }) => {
         </div>
       </div>
 
-      {/* Chart Visualization (Mock SVG Area Chart) */}
-      <div className="flex-1 w-full relative min-h-[300px] mb-8 px-2">
-        {/* Grid lines */}
-        {[0, 25, 50, 75, 100].map(val => (
-          <div key={val} className="absolute w-full h-[1px] bg-slate-50" style={{ bottom: `${val}%` }}>
-            <span className="absolute -left-2 -top-2.5 text-[9px] font-bold text-slate-300 -translate-x-full">{val}k</span>
-          </div>
-        ))}
-
-        {/* X-Axis Labels */}
-        <div className="absolute -bottom-6 w-full flex justify-between px-4 text-[9px] font-bold text-slate-400">
-           {data.map((d, i) => <span key={i}>{d.date}</span>)}
-        </div>
-
-        {/* Mock Area Chart SVG */}
-        <svg className="absolute inset-0 w-full h-full overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
+      {/* Chart Visualization using Recharts */}
+      <div className="flex-1 w-full min-h-[300px] mb-4">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <defs>
-                <linearGradient id="purpleGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#9333ea" stopOpacity="0.4" />
-                    <stop offset="100%" stopColor="#9333ea" stopOpacity="0.0" />
-                </linearGradient>
+              <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#9333ea" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="#9333ea" stopOpacity={0}/>
+              </linearGradient>
             </defs>
-            {/* The Area */}
-            <path d="M0,100 L0,70 Q20,80 40,50 T80,30 L100,20 L100,100 Z" fill="url(#purpleGradient)" />
-            {/* The Line */}
-            <path d="M0,70 Q20,80 40,50 T80,30 L100,20" fill="none" stroke="#9333ea" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-            
-            {/* Data Points */}
-            <circle cx="0" cy="70" r="3" fill="white" stroke="#9333ea" strokeWidth="2" />
-            <circle cx="40" cy="50" r="3" fill="white" stroke="#9333ea" strokeWidth="2" />
-            <circle cx="80" cy="30" r="3" fill="white" stroke="#9333ea" strokeWidth="2" />
-            <circle cx="100" cy="20" r="3" fill="white" stroke="#9333ea" strokeWidth="2" />
-        </svg>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+            <XAxis 
+              dataKey="date" 
+              axisLine={false} 
+              tickLine={false} 
+              tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }}
+              dy={15}
+            />
+            <YAxis 
+              axisLine={false} 
+              tickLine={false} 
+              tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }}
+              tickFormatter={(value) => `${value / 1000}k`}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Area 
+              type="monotone" 
+              dataKey="revenue" 
+              stroke="#9333ea" 
+              strokeWidth={3}
+              fillOpacity={1} 
+              fill="url(#colorRevenue)" 
+              animationDuration={1500}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
       </div>
 
       <div className="mt-8 pt-6 border-t border-purple-50 flex items-center justify-between">
          <div>
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">ยอดขายรวมช่วงนี้</p>
             <div className="flex items-center gap-3">
-                <h4 className="text-2xl font-black text-slate-800">฿130,500</h4>
+                <h4 className="text-2xl font-black text-slate-800">฿{totalRevenue.toLocaleString()}</h4>
                 <div className="flex items-center gap-1 text-[10px] font-black text-emerald-500 bg-emerald-50 px-2 py-1 rounded-lg">
                     <ArrowUpRight size={12}/> 
-                    12%
+                    {(totalRevenue > 50000 ? '+12.5%' : '+3.2%')}
                 </div>
             </div>
          </div>

@@ -1,4 +1,5 @@
 export { default as DashboardContainer } from './DashboardContainer';
+export { default as DashboardSkeleton } from './DashboardSkeleton';
 export { default as StatCard } from './StatCard';
 export { default as RevenueChart } from './RevenueChart';
 export { default as SalesDonut } from './SalesDonut';

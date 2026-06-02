@@ -12,6 +12,7 @@ import RevenueChart from './RevenueChart';
 import SalesDonut from './SalesDonut';
 import RecentOrders from './RecentOrders';
 import TopProducts from './TopProducts';
+import DashboardSkeleton from './DashboardSkeleton';
 
 /**
  * 🚀 DashboardContainer
@@ -28,6 +29,8 @@ const DashboardContainer = () => {
         recentOrders, 
         topProducts 
     } = useDashboard();
+
+    if (isLoading) return <DashboardSkeleton />;
 
     return (
         <div className="max-w-[1600px] mx-auto animate-in fade-in duration-700">
