@@ -13,7 +13,7 @@ import {
  * กราฟวงกลมแสดงสัดส่วนยอดขายตามหมวดหมู่แบบมืออาชีพ
  */
 const SalesDonut = ({ data }) => {
-  const total = data.reduce((sum, item) => sum + item.sales, 0);
+  const total = data?.reduce((sum, item) => sum + (item.sales || 0), 0) || 0;
 
   // Helper to map tailwind color classes to hex for Recharts
   const getColorHex = (twClass) => {

@@ -18,7 +18,7 @@ const TopProducts = ({ products }) => {
       </div>
 
       <div className="space-y-6 flex-1">
-        {products.map((product, index) => (
+        {products?.map((product, index) => (
           <div key={product._id} className="flex items-center gap-5 relative group cursor-default">
             {/* Rank Badge */}
             <div className={`absolute -left-2 -top-2 w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-black border-4 border-white z-10 shadow-md transition-transform group-hover:scale-110

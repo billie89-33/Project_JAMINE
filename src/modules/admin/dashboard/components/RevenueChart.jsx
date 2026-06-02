@@ -22,7 +22,7 @@ const RevenueChart = ({ data, period, onPeriodChange }) => {
     { id: 'year', label: 'Year' }
   ];
 
-  const totalRevenue = data.reduce((sum, item) => sum + item.revenue, 0);
+  const totalRevenue = data?.reduce((sum, item) => sum + (item.revenue || 0), 0) || 0;
 
   // Custom Tooltip Design
   const CustomTooltip = ({ active, payload }) => {

@@ -20,6 +20,7 @@
     "react-hot-toast": "^2.6.0",
     "react-qr-code": "^2.0.21",
     "react-router-dom": "^7.15.0",
+    "recharts": "^2.12.7",
     "tailwindcss": "^4.3.0"
   },
   "devDependencies": {

@@ -30,7 +30,7 @@ const RecentOrders = ({ orders }) => {
       </div>
 
       <div className="space-y-4">
-        {orders.map((order) => (
+        {orders?.map((order) => (
           <div key={order._id} className="flex items-center justify-between p-5 rounded-[24px] hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100 group">
             <div className="flex items-center gap-4">
                 <div className="w-11 h-11 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 font-black text-sm shadow-sm group-hover:bg-white transition-colors">
