@@ -36,7 +36,7 @@ const TopProducts = ({ products }) => {
                 <p className="text-xs font-black text-purple-500 uppercase tracking-widest mb-1">Rank #{index + 1}</p>
                 <p className="text-sm font-bold text-slate-700 truncate mb-2">{product.name}</p>
                 <div className="flex items-center gap-4">
-                    <span className="text-sm font-black text-slate-800">฿{product.price.toLocaleString()}</span>
+                    <span className="text-sm font-black text-slate-800">฿{product.price?.toLocaleString() || 0}</span>
                     <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 rounded-lg">
                         <Package size={12} className="text-slate-400"/>
                         <span className="text-[10px] font-black text-slate-500 uppercase tracking-tighter">{product.sold} <span className="text-slate-300 font-medium">Sold</span></span>

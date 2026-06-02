@@ -66,7 +66,7 @@ const SalesDonut = ({ data }) => {
         {/* Center Text Overlaid on Donut */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
             <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Items</span>
-            <span className="text-3xl font-black text-slate-800">{total.toLocaleString()}</span>
+            <span className="text-3xl font-black text-slate-800">{(total || 0).toLocaleString()}</span>
         </div>
       </div>
 

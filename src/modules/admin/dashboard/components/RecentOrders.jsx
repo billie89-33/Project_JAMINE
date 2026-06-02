@@ -50,7 +50,7 @@ const RecentOrders = ({ orders }) => {
             </div>
             
             <div className="flex flex-col items-end gap-2">
-                <span className="text-sm font-black text-slate-800">฿{order.amount.toLocaleString()}</span>
+                <span className="text-sm font-black text-slate-800">฿{order.amount?.toLocaleString() || 0}</span>
                 <span className={`text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg border ${getStatusColor(order.status)}`}>
                     {order.status}
                 </span>

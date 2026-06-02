@@ -30,7 +30,7 @@ const RevenueChart = ({ data, period, onPeriodChange }) => {
       return (
         <div className="bg-slate-800 p-3 rounded-2xl shadow-xl border border-slate-700">
           <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{payload[0].payload.date}</p>
-          <p className="text-sm font-black text-white">฿{payload[0].value.toLocaleString()}</p>
+          <p className="text-sm font-black text-white">฿{(payload[0].value || 0).toLocaleString()}</p>
         </div>
       );
     }
@@ -108,7 +108,7 @@ const RevenueChart = ({ data, period, onPeriodChange }) => {
          <div>
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">ยอดขายรวมช่วงนี้</p>
             <div className="flex items-center gap-3">
-                <h4 className="text-2xl font-black text-slate-800">฿{totalRevenue.toLocaleString()}</h4>
+                <h4 className="text-2xl font-black text-slate-800">฿{(totalRevenue || 0).toLocaleString()}</h4>
                 <div className="flex items-center gap-1 text-[10px] font-black text-emerald-500 bg-emerald-50 px-2 py-1 rounded-lg">
                     <ArrowUpRight size={12}/> 
                     {(totalRevenue > 50000 ? '+12.5%' : '+3.2%')}

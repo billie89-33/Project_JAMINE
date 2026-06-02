@@ -24,7 +24,9 @@ const StatCard = ({ title, value, trend, icon }) => {
       <div>
         <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-2">{title}</p>
         <h3 className="text-3xl font-black text-slate-800">
-          {typeof value === 'number' && title.includes('Balance') ? `฿${value.toLocaleString()}` : value.toLocaleString()}
+          {typeof value === 'number' && title.includes('Balance') 
+            ? `฿${value.toLocaleString()}` 
+            : value?.toLocaleString() || 0}
         </h3>
       </div>
     </div>
