@@ -98,7 +98,7 @@ const ProductTable = ({ products, onDelete, isLoading }) => {
                 {/* 3. สต็อก */}
                 <td className="px-6 py-4 text-center">
                   <div className={`text-sm font-black ${product.stock <= 5 ? 'text-rose-500' : 'text-slate-600'}`}>
-                    {product.stock.toLocaleString()}
+                    {(product.stock || 0).toLocaleString()}
                     <p className="text-[10px] text-slate-300 font-medium">UNIT</p>
                   </div>
                 </td>
@@ -106,7 +106,7 @@ const ProductTable = ({ products, onDelete, isLoading }) => {
                 {/* 4. ราคา */}
                 <td className="px-6 py-4 text-center">
                   <div className="text-sm font-black text-purple-700 bg-purple-50 py-1.5 px-3 rounded-xl inline-block">
-                    ฿{product.price.toLocaleString()}
+                    ฿{(product.price || 0).toLocaleString()}
                   </div>
                 </td>
 
@@ -115,10 +115,10 @@ const ProductTable = ({ products, onDelete, isLoading }) => {
                   <div className="flex flex-col items-center gap-0.5 text-slate-400">
                     <div className="flex items-center gap-1 text-[10px] font-bold">
                       <Calendar size={10} />
-                      {new Date(product.updatedAt).toLocaleDateString('th-TH')}
+                      {product.updatedAt ? new Date(product.updatedAt).toLocaleDateString('th-TH') : 'N/A'}
                     </div>
                     <span className="text-[9px] font-medium">
-                      {new Date(product.updatedAt).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })} น.
+                      {product.updatedAt ? new Date(product.updatedAt).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) : '-'}
                     </span>
                   </div>
                 </td>

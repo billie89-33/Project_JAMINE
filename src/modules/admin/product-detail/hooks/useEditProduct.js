@@ -37,10 +37,12 @@ export const useEditProduct = () => {
     try {
       const response = await getProductById(productId);
       if (response.success) {
-        const product = response.data;
+        // 🛡️ Defensive Check: ป้องกันกรณี Backend ส่งมาเป็น { product: {...} } แทนที่จะเป็น {...}
+        const product = response.data?.product || response.data || {};
+        
         setOriginalProduct(product);
         
-        // เซ็ตข้อมูลลงฟอร์ม
+        // เซ็ตข้อมูลลงฟอร์ม พร้อม Fallback กันพัง
         setFormData({
           brand: product.brand || '',
           modelName: product.modelName || '',

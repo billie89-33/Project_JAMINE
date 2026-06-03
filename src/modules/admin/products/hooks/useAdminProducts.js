@@ -39,9 +39,14 @@ export const useAdminProducts = () => {
       const response = await getAdminProducts(params);
       
       if (response.success) {
-        setProducts(response.data);
-        setTotal(response.total);
-        setTotalPages(response.totalPages || Math.ceil(response.total / 10));
+        // 🛡️ Defensive Check: รองรับทั้งข้อมูลที่ส่งมาเป็น Array ตรงๆ หรือครอบใน Object
+        const productsList = Array.isArray(response.data) 
+            ? response.data 
+            : (response.data?.products || []);
+            
+        setProducts(productsList);
+        setTotal(response.total || response.data?.total || productsList.length);
+        setTotalPages(response.totalPages || response.data?.totalPages || Math.ceil((response.total || productsList.length) / 10));
       }
     } catch (error) {
       console.error('Failed to fetch products:', error);
