@@ -19,7 +19,7 @@ const RevenueChart = ({ data, period, onPeriodChange }) => {
   // ⚙️ ApexCharts Configuration
   const series = [{
     name: 'Revenue',
-    data: data?.map(item => item.revenue || 0) || []
+    data: data?.map(item => Number(item.revenue) || 0) || []
   }];
 
   const options = {
@@ -72,8 +72,11 @@ const RevenueChart = ({ data, period, onPeriodChange }) => {
       }
     },
     yaxis: {
-      // 🚀 Dynamic Scaling: ปรับค่าต่ำสุดให้สัมพันธ์กับข้อมูลจริงเพื่อให้เส้นกราฟดูมีมิติ
-      min: (min) => min > 1000 ? min * 0.98 : 0, 
+      // 🚀 Dynamic & Safe Scaling
+      min: (min) => {
+         if (typeof min !== 'number' || isNaN(min)) return 0;
+         return min > 1000 ? min * 0.98 : 0;
+      },
       labels: {
         formatter: (val) => `฿${(val / 1000).toFixed(0)}k`,
         style: {

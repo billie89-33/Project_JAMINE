@@ -41,7 +41,8 @@ export const useDashboard = () => {
         customers: { value: 0, trend: '', currentPeriodValue: 0 }
     }, [dashboardData]);
     
-    const revenueData = useMemo(() => dashboardData?.revenueData || [], [dashboardData]);
+    // ⚠️ Fix: Backend sends 'revenueChart' not 'revenueData'
+    const revenueData = useMemo(() => dashboardData?.revenueChart || [], [dashboardData]);
     const categorySales = useMemo(() => dashboardData?.categorySales || [], [dashboardData]);
     const recentOrders = useMemo(() => dashboardData?.recentOrders || [], [dashboardData]);
     const topProducts = useMemo(() => dashboardData?.topProducts || [], [dashboardData]);
