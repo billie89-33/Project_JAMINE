@@ -36,9 +36,9 @@ export const useDashboard = () => {
 
     // 🧩 Destructure with safety defaults (Defensive Rendering)
     const summary = useMemo(() => dashboardData?.summary || {
-        balance: { value: 0, trend: '', currentPeriodValue: 0 },
-        orders: { value: 0, trend: '', currentPeriodValue: 0 },
-        customers: { value: 0, trend: '', currentPeriodValue: 0 }
+        balance: { value: 0, trend: '', allTimeValue: 0 },
+        orders: { value: 0, trend: '', allTimeValue: 0 },
+        customers: { value: 0, trend: '', allTimeValue: 0 }
     }, [dashboardData]);
     
     // ⚠️ Fix: Backend sends 'revenueChart' not 'revenueData'

@@ -72,7 +72,7 @@ const DashboardContainer = () => {
             {/* 2. Top Stats Row (Main Metrics) */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
                 <StatCard 
-                    title="Total Revenue (All Time)"
+                    title="Total Revenue"
                     value={summary.balance.value}
                     trend={summary.balance.trend}
                     icon={<Wallet size={24} strokeWidth={2.5} />}
