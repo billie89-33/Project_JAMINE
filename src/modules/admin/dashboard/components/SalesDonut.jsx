@@ -1,21 +1,15 @@
 import React from 'react';
 import { PieChart as PieIcon } from 'lucide-react';
-import { 
-  PieChart, 
-  Pie, 
-  Cell, 
-  ResponsiveContainer, 
-  Tooltip 
-} from 'recharts';
+import ReactApexChart from 'react-apexcharts';
 
 /**
- * 🍩 SalesDonut Component (Recharts Edition)
- * กราฟวงกลมแสดงสัดส่วนยอดขายตามหมวดหมู่แบบมืออาชีพ
+ * 🍩 SalesDonut Component (ApexCharts Edition)
+ * กราฟวงกลมแสดงสัดส่วนยอดขายตามหมวดหมู่แบบพรีเมียม
  */
 const SalesDonut = ({ data }) => {
   const total = data?.reduce((sum, item) => sum + (item.sales || 0), 0) || 0;
 
-  // Helper to map tailwind color classes to hex for Recharts
+  // Helper to map tailwind color classes to hex for ApexCharts
   const getColorHex = (twClass) => {
     const map = {
       'bg-purple-500': '#9333ea',
@@ -25,6 +19,64 @@ const SalesDonut = ({ data }) => {
       'bg-rose-400': '#fb7185',
     };
     return map[twClass] || '#cbd5e1';
+  };
+
+  // ⚙️ ApexCharts Configuration
+  const series = data?.map(item => item.sales || 0) || [];
+  
+  const options = {
+    chart: {
+      type: 'donut',
+      fontFamily: 'inherit',
+      animations: {
+        enabled: true,
+        speed: 1000
+      }
+    },
+    colors: data?.map(item => getColorHex(item.color)) || [],
+    labels: data?.map(item => item.category) || [],
+    stroke: { show: false },
+    dataLabels: { enabled: false },
+    legend: { show: false },
+    plotOptions: {
+      pie: {
+        donut: {
+          size: '75%',
+          labels: {
+            show: true,
+            name: {
+               show: true,
+               fontSize: '9px',
+               fontWeight: 900,
+               color: '#94a3b8',
+               offsetY: -10
+            },
+            value: {
+               show: true,
+               fontSize: '24px',
+               fontWeight: 900,
+               color: '#1e293b',
+               offsetY: 5,
+               formatter: (val) => parseInt(val).toLocaleString()
+            },
+            total: {
+              show: true,
+              label: 'Total Items',
+              fontSize: '9px',
+              fontWeight: 900,
+              color: '#94a3b8',
+              formatter: () => (total || 0).toLocaleString()
+            }
+          }
+        }
+      }
+    },
+    tooltip: {
+      theme: 'dark',
+      y: {
+        formatter: (val) => `${val} ชิ้น`
+      }
+    }
   };
 
   return (
@@ -37,39 +89,17 @@ const SalesDonut = ({ data }) => {
         <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">สัดส่วนยอดขายจริง</p>
       </div>
       
-      {/* Dynamic Donut Chart using Recharts */}
+      {/* Dynamic Donut Chart using ApexCharts */}
       <div className="relative flex-1 min-h-[250px] w-full mt-4">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={data}
-              cx="50%"
-              cy="50%"
-              innerRadius={70}
-              outerRadius={90}
-              paddingAngle={5}
-              dataKey="sales"
-              stroke="none"
-              animationDuration={1500}
-            >
-              {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={getColorHex(entry.color)} />
-              ))}
-            </Pie>
-            <Tooltip 
-              contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
-              itemStyle={{ fontWeight: '900', fontSize: '12px' }}
-            />
-          </PieChart>
-        </ResponsiveContainer>
-        
-        {/* Center Text Overlaid on Donut */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Items</span>
-            <span className="text-3xl font-black text-slate-800">{(total || 0).toLocaleString()}</span>
-        </div>
+        <ReactApexChart 
+            options={options} 
+            series={series} 
+            type="donut" 
+            height="100%" 
+        />
       </div>
 
+      {/* Legend & Details */}
       <div className="space-y-4 mt-6">
         {data.map((item, index) => {
           const percentage = Math.round((item.sales / (total || 1)) * 100) || 0;

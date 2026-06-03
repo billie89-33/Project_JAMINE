@@ -59,7 +59,14 @@ const { loading, data, execute } = useApi(fetchAllData);
 
 ---
 
-## 📂 5. Portable Backend Blueprints
+## 🏗️ 5. Database Integrity Patterns (Master Skills)
+เพื่อความเสถียรของข้อมูลในระดับ Database (Backend Focused):
+
+1. **Atomic Stock Update:** ห้ามใช้ Read-Modify-Write (ดึงมาแก้แล้วเซฟ) ให้ใช้คำสั่ง SQL หรือ MongoDB `$inc` ที่มีเงื่อนไขตรวจสอบสต็อกในตัวเดียว (Atomic) เพื่อป้องกันสต็อกติดลบเมื่อมีการสั่งซื้อพร้อมกันจำนวนมาก
+2. **Automatic Cleanup Pattern:** ป้องกันการ "จองกั๊ก" สินค้า โดยมีระบบคืนสต็อกอัตโนมัติสำหรับออเดอร์ที่ค้าง `pending` นานเกินเวลาที่กำหนด (เช่น 30 นาที) ผ่าน Cron Job หรือ On-demand Check
+3. **Order State Machine:** กำหนดทิศทางการเปลี่ยนสถานะออเดอร์ให้ชัดเจน (Valid Transitions) เช่น `pending` -> `paid` เท่านั้น ห้ามข้ามขั้นหรือเปลี่ยนสถานะที่ยกเลิกไปแล้วกลับมาจ่ายเงินได้อีก
+
+## 📂 6. Portable Backend Blueprints
 **ปัญหา:** Frontend มักต้องรอ Backend ทำ API เสร็จถึงจะเริ่มงานได้ หรือทำเสร็จแล้ว Data Format ไม่ตรงกัน
 
 **✅ Best Practice:**

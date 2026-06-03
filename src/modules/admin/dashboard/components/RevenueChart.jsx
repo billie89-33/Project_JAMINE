@@ -1,18 +1,10 @@
 import React from 'react';
 import { LineChart as LineIcon, ArrowUpRight } from 'lucide-react';
-import { 
-  AreaChart, 
-  Area, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer 
-} from 'recharts';
+import ReactApexChart from 'react-apexcharts';
 
 /**
- * 📈 RevenueChart Component (Recharts Edition)
- * กราฟแสดงแนวโน้มรายได้แบบ Interactive
+ * 📈 RevenueChart Component (ApexCharts Edition)
+ * กราฟแสดงแนวโน้มรายได้แบบ Interactive พร้อมระบบ Dynamic Scaling
  */
 const RevenueChart = ({ data, period, onPeriodChange }) => {
   const periods = [
@@ -24,28 +16,96 @@ const RevenueChart = ({ data, period, onPeriodChange }) => {
 
   const totalRevenue = data?.reduce((sum, item) => sum + (item.revenue || 0), 0) || 0;
 
-  // Custom Tooltip Design
-  const CustomTooltip = ({ active, payload }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-slate-800 p-3 rounded-2xl shadow-xl border border-slate-700">
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{payload[0].payload.date}</p>
-          <p className="text-sm font-black text-white">฿{(payload[0].value || 0).toLocaleString()}</p>
-        </div>
-      );
+  // ⚙️ ApexCharts Configuration
+  const series = [{
+    name: 'Revenue',
+    data: data?.map(item => item.revenue || 0) || []
+  }];
+
+  const options = {
+    chart: {
+      type: 'area',
+      height: '100%',
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      fontFamily: 'inherit',
+      dropShadow: {
+        enabled: true,
+        top: 8,
+        left: 0,
+        blur: 12,
+        color: '#9333ea',
+        opacity: 0.1
+      }
+    },
+    colors: ['#9333ea'],
+    dataLabels: { enabled: false },
+    stroke: {
+      curve: 'smooth',
+      width: 4,
+      lineCap: 'round'
+    },
+    fill: {
+      type: 'gradient',
+      gradient: {
+        shadeIntensity: 1,
+        opacityFrom: 0.45,
+        opacityTo: 0.05,
+        stops: [0, 90, 100]
+      }
+    },
+    grid: {
+      borderColor: '#f1f5f9',
+      strokeDashArray: 4,
+      padding: { top: 0, right: 0, bottom: 0, left: 10 }
+    },
+    xaxis: {
+      categories: data?.map(item => item.date) || [],
+      axisBorder: { show: false },
+      axisTicks: { show: false },
+      labels: {
+        style: {
+          colors: '#94a3b8',
+          fontSize: '10px',
+          fontWeight: 700
+        }
+      }
+    },
+    yaxis: {
+      // 🚀 Dynamic Scaling: ปรับค่าต่ำสุดให้สัมพันธ์กับข้อมูลจริงเพื่อให้เส้นกราฟดูมีมิติ
+      min: (min) => min > 1000 ? min * 0.98 : 0, 
+      labels: {
+        formatter: (val) => `฿${(val / 1000).toFixed(0)}k`,
+        style: {
+          colors: '#94a3b8',
+          fontSize: '10px',
+          fontWeight: 700
+        }
+      }
+    },
+    tooltip: {
+      theme: 'dark',
+      x: { show: true },
+      y: {
+        formatter: (val) => `฿${val?.toLocaleString()}`
+      },
+      style: { fontSize: '12px' }
+    },
+    markers: {
+      size: 0,
+      hover: { size: 6 }
     }
-    return null;
   };
 
   return (
     <div className="bg-white rounded-[40px] p-8 shadow-2xl shadow-purple-100/50 border border-purple-50 h-full flex flex-col">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-12">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
           <h3 className="text-xl font-black text-slate-800 flex items-center gap-2">
             <LineIcon className="text-purple-600" size={24} />
             Revenue Trend
           </h3>
-          <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">แนวโน้มรายได้จริง</p>
+          <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">แนวโน้มรายได้จริง (Premium View)</p>
         </div>
         
         {/* Period Filter */}
@@ -66,42 +126,14 @@ const RevenueChart = ({ data, period, onPeriodChange }) => {
         </div>
       </div>
 
-      {/* Chart Visualization using Recharts */}
-      <div className="flex-1 w-full min-h-[300px] mb-4">
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-            <defs>
-              <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#9333ea" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#9333ea" stopOpacity={0}/>
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-            <XAxis 
-              dataKey="date" 
-              axisLine={false} 
-              tickLine={false} 
-              tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }}
-              dy={15}
-            />
-            <YAxis 
-              axisLine={false} 
-              tickLine={false} 
-              tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }}
-              tickFormatter={(value) => `${value / 1000}k`}
-            />
-            <Tooltip content={<CustomTooltip />} />
-            <Area 
-              type="monotone" 
-              dataKey="revenue" 
-              stroke="#9333ea" 
-              strokeWidth={3}
-              fillOpacity={1} 
-              fill="url(#colorRevenue)" 
-              animationDuration={1500}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+      {/* Chart Visualization using ApexCharts */}
+      <div className="flex-1 w-full min-h-[300px]">
+        <ReactApexChart 
+            options={options} 
+            series={series} 
+            type="area" 
+            height="100%" 
+        />
       </div>
 
       <div className="mt-8 pt-6 border-t border-purple-50 flex items-center justify-between">
