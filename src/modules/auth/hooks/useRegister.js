@@ -77,11 +77,12 @@ export const useRegister = () => {
     }
 
     try {
-      // 🚀 2. ยิง API (ใช้เฉพาะข้อมูลที่ Backend ต้องการ)
+      // 🚀 2. ยิง API (ส่งครบทั้ง 4 ฟิลด์ตามที่ Backend Validation ต้องการ)
       await registerRequest({ 
         username: username.trim(), 
         email: email.trim(), 
-        password: password 
+        password: password,
+        confirmPassword: confirmPassword // ✅ เพิ่มตัวนี้เข้าไปให้ตรงกับเงื่อนไข Backend
       });
     } catch (err) {
       // 🔍 Debug: พิมพ์ Error ทั้งหมดออกมาดูเพื่อหาสาเหตุ 400 Bad Request
