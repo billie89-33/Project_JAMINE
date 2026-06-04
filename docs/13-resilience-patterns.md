@@ -1,6 +1,6 @@
 # 🛡️ 13. High-Resilience Patterns (Stable & Scalable)
 
-เอกสารชุดนี้สรุป "บทเรียนราคาแพง" และ "Best Practices" จากการพัฒนา Admin Dashboard เพื่อเป็นมาตรฐานในการสร้างระบบที่เสถียร (Stable) และยืดหยุ่นพอที่จะนำไปใช้กับโปรเจกต์อื่นได้ทันที
+เอกสารชุดนี้สรุป "บทเรียนราคาแพง" และ "Best Practices" จากการพัฒนา Admin Dashboard และ Product Management เพื่อเป็นมาตรฐานในการสร้างระบบที่เสถียร (Stable) และยืดหยุ่นพอที่จะนำไปใช้กับโปรเจกต์อื่นได้ทันที
 
 ---
 
@@ -81,11 +81,11 @@ Frontend ควรสรุป **"Blueprint"** (Models, Controllers, Routes) อ
 ---
 
 ## 📊 7. Dynamic Dashboard & Chart Resilience Pattern
-**ปัญหา:** การสร้าง Dashboard ที่มี Filter (เช่น Today, Week, Month, Year) มักมีปัญหาการสื่อสารระหว่าง Frontend กับ Backend ทำให้ข้อมูลไม่ Sync กัน กราฟหาย หรือตัวเลขยอดรวมไม่เปลี่ยนตามช่วงเวลา
+**ปัญหา:** การสร้าง Dashboard ที่มี Filter (เช่น Today, Week, Month, Year) มักมีปัญหาการสื่อสารระหว่าง Frontend กับ Backend ทำให้ข้อมูลไม่ Sync กัน กราฟหาย หรือตัวเลขยอดรวมไม่เปลี่ยนตามช่วงเวลา 
 
 **✅ Best Practice (สิ่งที่ต้องทำ):**
 1. **Dynamic Metrics Sync (ทุกอย่างต้องเปลี่ยนตาม):** เมื่อมีการปรับ Period Filter ข้อมูลสรุป (Summary), กราฟ (Charts), และรายการ (Lists) **ทุกส่วนบนหน้าจอจะต้องเปลี่ยนเพื่อสะท้อนข้อมูลในช่วงเวลานั้นๆ เท่านั้น** ห้ามนำยอด All Time มาปะปนโดยไม่ระบุให้ชัดเจน
-2. **Chart Data Type Casting (Frontend):** ตัววาดกราฟเช่น ApexCharts เข้มงวดเรื่อง Data Type มาก ให้ครอบ `Number()` เสมอก่อนนำข้อมูลลง series เพื่อป้องกันกราฟหายหาก Backend ส่งมาเป็น String
+2. **Chart Data Type Casting (Frontend):** ตัววาดกราฟเช่น ApexCharts เข้มงวดเรื่อง Data Type มาก ให้ครอบ `Number()` เสมอก่อนนำข้อมูลลง series เพื่อป้องกันกราฟหายหาก Backend ส่งมาเป็น String     
 3. **Safe Y-Axis Scaling (Frontend):** ตั้งค่าแกน Y ให้ยืดหยุ่น (Dynamic Scaling) แบบปลอดภัย เช่น `min: (val) => (typeof val === 'number' && !isNaN(val) && val > 1000) ? val * 0.98 : 0` เพื่อให้เส้นกราฟไม่แบนราบและป้องกัน Error เมื่อข้อมูลเป็น 0
 4. **Dummy Start Point (Backend):** หากข้อมูลหลังจากการ Query ตามช่วงเวลาได้ผลลัพธ์เพียง 1 จุด (เช่น มีออเดอร์แค่วันเดียว) ให้ Backend แนบ "จุดเริ่มต้นจำลอง" (เช่น `{ date: 'Start', revenue: 0 }`) มาให้ด้วยเสมอ เพื่อให้ไลบรารีกราฟเส้นสามารถตีเส้นเชื่อมจุดได้
 5. **Safe Date Range Generation (Backend):** ห้าม Mutate ตัวแปร Date ต้นฉบับ (เช่น `new Date(now).setDate(...)`) หากมีการทำงานแบบ Async หรือ `Promise.all` หลายเส้นพร้อมกัน เพราะจะทำให้ตัวแปร Date ตีกันมั่ว ให้สร้าง `new Date()` ใหม่เสมอในแต่ละช่วงเวลา
@@ -94,9 +94,38 @@ Frontend ควรสรุป **"Blueprint"** (Models, Controllers, Routes) อ
    - `week` / `month`: จัดกลุ่มตามวัน (`%Y-%m-%d`)
    - `year`: จัดกลุ่มตามเดือน (`%Y-%m`)
 
+---
+
+## 🛠️ 8. Advanced Admin Product Management (Surgical PATCH Protocol)
+**ปัญหา:** การแก้ไขข้อมูลสินค้าในหน้า Admin มักเป็นการอัปเดต "บางส่วน" (Partial Update) หากเขียนโค้ด Backend ไม่รัดกุม จะเจอปัญหา Error 500 หรือติด Validation ของฟิลด์ที่ไม่ได้ถูกแก้ไข (เช่น ติด Validate รูปภาพทั้งที่แก้แค่ราคา)
+
+**✅ Best Practice (Backend - The Best Protocol):**
+
+1. **Surgical Update Logic ($set & $unset):**
+   - ห้ามใช้ `save()` สำหรับการอัปเดตบางส่วน เพราะจะทำให้ Default Values และ Validation ของทั้ง Model ทำงานผิดพลาด
+   - **ต้องใช้:** `findByIdAndUpdate` พร้อมระบุ `$set` สำหรับข้อมูลใหม่ และ `$unset` สำหรับข้อมูลที่ต้องการลบ (เช่น สเปกบางตัวที่ถูกเอาออก)
+
+2. **Partial Validation Guard (The 'context: query' Secret):**
+   - ใน Mongoose เมื่อใช้ `runValidators: true` ต้องพ่วงออปชัน `context: 'query'` เสมอ
+   - **เหตุผล:** เพื่อให้ Mongoose รู้ว่านี่คือการตรวจสอบ "เฉพาะฟิลด์ที่ส่งมา" (Partial) ไม่ใช่การตรวจสอบ "ทั้งก้อน" ของ Model ป้องกันบั๊ก "Missing required field" ของฟิลด์เดิมที่มีอยู่ใน DB อยู่แล้ว
+
+3. **Safe Data Normalization (Handling FormData):**
+   - เนื่องจากข้อมูลจาก `FormData` (ที่มีการอัปโหลดไฟล์) จะส่งค่า Primitive เป็น String เสมอ Backend **ต้อง** ทำการแปลงประเภทข้อมูล (Casting) ให้ถูกต้องก่อนส่งเข้า DB:
+     - `price`: `Number(val)`
+     - `stock`: `Number(val)`
+     - `isFeatured`: `val === 'true' || val === true`
+
+4. **Dynamic Object Patching (Specifications Map):**
+   - สำหรับฟิลด์ประเภท `Map` หรือ `Mixed` ให้ใช้ **Dot-notation** ในการอัปเดต (เช่น `updateData['specifications.RAM'] = '32GB'`)
+   - **ข้อดี:** วิธีนี้จะอัปเดตเฉพาะ Key นั้นๆ โดยไม่ไปเขียนทับ Key อื่นใน Object เดิมที่มีอยู่
+
+5. **Media Lifecycle Management:**
+   - จัดการลบรูปเดิมออกจาก Cloudinary ทันทีเมื่อมีการอัปโหลดรูปใหม่ (Image Replacement)
+   - **Trick:** ให้ครอบคำสั่งลบรูปด้วย `try-catch` แยกต่างหาก เพื่อไม่ให้ Error จากการลบรูปใน Cloudinary (เช่น หาไฟล์ไม่เจอ) มาขวางการบันทึกข้อมูลตัวอักษรลง Database
+
 **❌ สิ่งที่ห้ามทำ (Anti-Patterns):**
-- **ห้ามคิวรี่ข้าม Scope:** ห้ามดึงข้อมูล All Time มาเผื่อไว้คำนวณที่ Frontend เด็ดขาด เพราะจะเปลือง Memory ให้ Backend ส่งมาเฉพาะข้อมูลตาม Range ที่ Filter แล้วเท่านั้น
-- **ห้ามใช้ Key สุ่มสี่สุ่มห้า:** หากข้อมูลกราฟหาย ให้ตรวจเช็ค Network Tab เป็นหลัก อย่าเพิ่งแก้โค้ดกราฟ (เช่น หน้าบ้านรอรับ `revenueData` แต่ Backend ส่ง `revenueChart`)
+- **ห้ามส่ง req.body เข้า DB ตรงๆ:** ป้องกันการโจมตีแบบ **Mass Assignment** (แอบส่งฟิลด์อื่นมาเปลี่ยน เช่น `viewCount`) ให้สกัดเอาเฉพาะฟิลด์ที่อนุญาต (Whitelist Fields) เท่านั้น
+- **ห้ามส่งราคาจากหน้าบ้านมาคำนวณ:** (อ้างอิงบทที่ 12) Backend ต้องยึดราคาจาก Database เป็นหลักเสมอ
 
 ---
 *Generated by Gemini CLI - สำหรับนักพัฒนาที่เน้นคุณภาพและความเสถียร*

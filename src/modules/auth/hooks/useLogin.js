@@ -12,48 +12,59 @@ export const useLogin = () => {
   const { login: setAuthUser } = useAuth();
   const navigate = useNavigate();
 
-  // 📝 Form State (ยังต้องเก็บเองเพราะเป็นข้อมูลฝั่ง UI)
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  // 📝 Form State: ปรับมาใช้ Object เพื่อความสอดคล้องกับ Register และขยายง่าย
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+
   const [showPassword, setShowPassword] = useState(false);
   
-  // 🧹 Status State: ให้ useApi จัดการแทนทั้งหมด!
-  const { loading, error, execute: loginRequest } = useApi(loginApi);
-
-  const toggleShowPassword = () => setShowPassword(!showPassword);
-
-  const handleLoginSubmit = async (e) => {
-    if (e) e.preventDefault();
-
-    // 🛡️ 1. Validation (UI Level)
-    if (!email.trim() || !password.trim()) {
-      return; // Error อื่นๆ useApi จะจัดการให้เอง
-    }
-
-    try {
-      // 🚀 2. ยิง API ผ่านแม่บ้าน (ไม่ต้องเขียน try-catch สำหรับ setLoading/setError เองแล้ว)
-      const res = await loginRequest(email, password);
-      
+  // 🧹 Status State: ใช้ onSuccess option เพื่อลด Logic ใน Submit function
+  const { loading, error, setError, execute: loginRequest } = useApi(loginApi, {
+    onSuccess: (res) => {
       if (res.success) {
         setAuthUser(res.data);
         navigate('/', { replace: true });
       }
+    }
+  });
+
+  const toggleShowPassword = () => setShowPassword(!showPassword);
+
+  /**
+   * จัดการการเปลี่ยนแปลงค่าในฟอร์ม
+   */
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleLoginSubmit = async (e) => {
+    if (e) e.preventDefault();
+
+    // 🛡️ 1. Validation: แจ้งเตือน User ถ้าลืมกรอกข้อมูล
+    if (!formData.email.trim() || !formData.password.trim()) {
+      setError('กรุณากรอกอีเมลและรหัสผ่านให้ครบถ้วน');
+      return;
+    }
+
+    // 🚀 2. ยิง API (Logic ความสำเร็จถูกจัดการใน onSuccess ของ useApi แล้ว)
+    try {
+      await loginRequest(formData.email, formData.password);
     } catch (err) {
-      // ❌ Error ทั่วไปถูกจัดการใน useApi แล้ว 
-      // เราใส่ catch ไว้เผื่ออยากทำ Logic พิเศษเพิ่มเติมที่นี่เท่านั้น
-      console.error('Login implementation error:', err);
+      // Error ทั่วไปถูกจัดการใน useApi (setError) แล้ว
+      console.error('Login flow error:', err);
     }
   };
 
   return {
-    email,
-    setEmail,
-    password,
-    setPassword,
+    formData,
+    handleChange,
     showPassword,
     toggleShowPassword,
-    loading, // มาจาก useApi
-    error,   // มาจาก useApi
+    loading,
+    error,
     handleLoginSubmit
   };
 };

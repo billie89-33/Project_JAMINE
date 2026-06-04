@@ -8,10 +8,8 @@ import { useLogin } from '../hooks/useLogin';
 const LoginForm = () => {
   // 🎣 ดึงสมอง (Logic) มาจาก Hook
   const {
-    email,
-    setEmail,
-    password,
-    setPassword,
+    formData,
+    handleChange,
     showPassword,
     toggleShowPassword,
     loading,
@@ -38,8 +36,9 @@ const LoginForm = () => {
         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Your Email</label>
         <input
           type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
           placeholder="example@mail.com"
           className="w-full bg-slate-50 border border-slate-100 px-3 py-2 text-xs rounded-xl focus:outline-none focus:border-purple-600 transition-colors"
           required
@@ -52,8 +51,9 @@ const LoginForm = () => {
         <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
             placeholder="••••••••"
             className="w-full bg-slate-50 border border-slate-100 px-3 py-2 text-xs rounded-xl focus:outline-none focus:border-purple-600 transition-colors pr-10"
             required

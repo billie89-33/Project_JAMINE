@@ -24,7 +24,7 @@ export const useRegister = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // 🧹 Status State: ให้ useApi จัดการ (เปิดใช้ Toast อัตโนมัติ)
+  // 🧹 Status State: ใช้ useApi จัดการ (เปิดใช้ Toast อัตโนมัติ)
   const { loading, error, setError, execute: registerRequest } = useApi(registerApi, {
     showToast: true,
     successMessage: 'สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ',
@@ -51,11 +51,23 @@ export const useRegister = () => {
   const handleRegisterSubmit = async (e) => {
     if (e) e.preventDefault();
     
-    // 🛡️ 1. Validation (Frontend Level)
+    // 🛡️ 1. Validation (Frontend Level) - ปรับปรุงให้แจ้งเตือนรายฟิลด์เพื่อ Debug บัค
     const { username, email, password, confirmPassword } = formData;
     
-    if (!username.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
-      setError('กรุณากรอกข้อมูลให้ครบทุกช่อง');
+    if (!username || !username.trim()) {
+      setError('กรุณากรอกชื่อผู้ใช้งาน');
+      return;
+    }
+    if (!email || !email.trim()) {
+      setError('กรุณากรอกอีเมล');
+      return;
+    }
+    if (!password || !password.trim()) {
+      setError('กรุณากรอกรหัสผ่าน');
+      return;
+    }
+    if (!confirmPassword || !confirmPassword.trim()) {
+      setError('กรุณายืนยันรหัสผ่าน');
       return;
     }
 
@@ -65,10 +77,13 @@ export const useRegister = () => {
     }
 
     try {
-      // 🚀 2. ยิง API ผ่านแม่บ้าน (useApi จะจัดการ Toast และ Navigate ให้เองตาม options)
-      await registerRequest({ username, email, password });
+      // 🚀 2. ยิง API (ใช้เฉพาะข้อมูลที่ Backend ต้องการ)
+      await registerRequest({ 
+        username: username.trim(), 
+        email: email.trim(), 
+        password: password 
+      });
     } catch (err) {
-      // Error ถูกจัดการโดย useApi แล้ว
       console.error('Registration flow error:', err);
     }
   };
