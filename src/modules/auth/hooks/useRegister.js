@@ -84,6 +84,10 @@ export const useRegister = () => {
         password: password 
       });
     } catch (err) {
+      // 🔍 Debug: พิมพ์ Error ทั้งหมดออกมาดูเพื่อหาสาเหตุ 400 Bad Request
+      if (err.response) {
+        console.error('Registration Backend Error:', err.response.data);
+      }
       console.error('Registration flow error:', err);
     }
   };

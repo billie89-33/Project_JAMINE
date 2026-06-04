@@ -47,8 +47,15 @@ export const useApi = (apiFunc, options = {}) => {
       
       return res;
     } catch (err) {
-      // ❌ Handle Error
-      const msg = errorMessage || err.response?.data?.message || err.message || 'An unexpected error occurred';
+      // ❌ Handle Error: พยายามดึง Message จากหลายๆ Format ที่ Backend อาจส่งมา
+      const responseData = err.response?.data;
+      const msg = errorMessage || 
+                 responseData?.message || 
+                 responseData?.error || 
+                 (typeof responseData === 'string' ? responseData : null) ||
+                 err.message || 
+                 'An unexpected error occurred';
+      
       setError(msg);
       
       if (onError) onError(msg, err);
