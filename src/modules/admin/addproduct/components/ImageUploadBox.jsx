@@ -1,6 +1,6 @@
 
 
-const ImageUploadBox = ({ imagePreview, onFileSelect }) => {
+const ImageUploadBox = ({ imagePreview, onFileSelect, aspectRatio = '1/1' }) => {
     
     const handleFileChange = (e) => {
         const files = e.target.files;
@@ -15,17 +15,17 @@ const ImageUploadBox = ({ imagePreview, onFileSelect }) => {
 
     return (
         <div className="w-full">
-            <span className="block text-center text-gray-800 text-sm font-medium mb-1">
-                เพิ่มรูปภาพ
+            <span className="block text-center text-slate-500 text-[10px] font-black uppercase tracking-widest mb-3">
+                {imagePreview ? 'Change Image' : 'Select Image'}
             </span>
             
-            {/* เปลี่ยนกล่องด้านนอกให้เป็นแท็ก <label> แทน <div> */}
+            {/* 🖼️ Box Container: บังคับสัดส่วนตามที่ส่งมา */}
             <label 
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={handleDrop}
-                className="w-full min-h-[160px] bg-white border-2 border-dashed border-gray-400 rounded-md flex flex-col items-center justify-center p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+                style={{ aspectRatio: aspectRatio.replace('/', ' / ') }}
+                className="w-full bg-white border-2 border-dashed border-slate-200 rounded-[24px] flex flex-col items-center justify-center overflow-hidden cursor-pointer hover:border-purple-400 hover:bg-purple-50/30 transition-all duration-300 shadow-inner group"
             >
-                {/* ซ่อนอินพุตตัวจริงไว้เหมือนเดิม ไม่ต้องมี ref แล้ว */}
                 <input 
                     type="file" 
                     onChange={handleFileChange} 
@@ -34,11 +34,21 @@ const ImageUploadBox = ({ imagePreview, onFileSelect }) => {
                 />
                 
                 {imagePreview ? (
-                    <img src={imagePreview} alt="Preview" className="max-h-36 object-contain rounded" />
+                    <img 
+                        src={imagePreview} 
+                        alt="Preview" 
+                        className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500" 
+                    />
                 ) : (
-                    <p className="text-gray-400 text-sm font-light text-center">
-                        ลากและวางไฟล์หรือเลือกเพิ่มรูปภาพ
-                    </p>
+                    <div className="flex flex-col items-center gap-3 p-8">
+                        <div className="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-400 group-hover:bg-purple-100 group-hover:text-purple-600 transition-colors">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                        </div>
+                        <p className="text-slate-400 text-[11px] font-bold text-center leading-relaxed">
+                            ลากและวางไฟล์ หรือคลิกเพื่อเลือก<br/>
+                            <span className="text-purple-400">สัดส่วนแนะนำ: {aspectRatio}</span>
+                        </p>
+                    </div>
                 )}
             </label>
         </div>

@@ -17,6 +17,14 @@ export const BannerForm = ({ initialData, onSubmit, onCancel, isSubmitting }) =>
   const [imagePreview, setImagePreview] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
 
+  // 🖼️ กำหนด Aspect Ratio ตาม Placement
+  const placementRatios = {
+    'home_hero': '1920/600',
+    'category_hero': '1600/400',
+    'promotion_bar': '3/1',
+    'side_ad': '1/1'
+  };
+
   // Sync state with initialData when editing
   useEffect(() => {
     if (initialData) {
@@ -109,7 +117,11 @@ export const BannerForm = ({ initialData, onSubmit, onCancel, isSubmitting }) =>
             </div>
             
             <div className="bg-slate-50 p-6 rounded-[32px] border-2 border-dashed border-purple-200 hover:border-purple-400 transition-all group shadow-inner">
-              <ImageUploadBox imagePreview={imagePreview} onFileSelect={handleFileSelect} />
+              <ImageUploadBox 
+                imagePreview={imagePreview} 
+                onFileSelect={handleFileSelect} 
+                aspectRatio={placementRatios[formData.placement] || '3/1'} 
+              />
             </div>
             
             <div className="mt-6 p-4 bg-indigo-50/50 rounded-2xl border border-indigo-100 flex items-start gap-3">
