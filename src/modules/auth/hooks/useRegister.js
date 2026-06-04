@@ -76,14 +76,18 @@ export const useRegister = () => {
       return;
     }
 
+    const payload = { 
+      username: username.trim(), 
+      email: email.trim(), 
+      password: password,
+      confirmPassword: confirmPassword 
+    };
+
+    console.log('🚀 Registration Payload being sent:', payload);
+
     try {
       // 🚀 2. ยิง API (ส่งครบทั้ง 4 ฟิลด์ตามที่ Backend Validation ต้องการ)
-      await registerRequest({ 
-        username: username.trim(), 
-        email: email.trim(), 
-        password: password,
-        confirmPassword: confirmPassword // ✅ เพิ่มตัวนี้เข้าไปให้ตรงกับเงื่อนไข Backend
-      });
+      await registerRequest(payload);
     } catch (err) {
       // 🔍 Debug: พิมพ์ Error ทั้งหมดออกมาดูเพื่อหาสาเหตุ 400 Bad Request
       if (err.response) {
