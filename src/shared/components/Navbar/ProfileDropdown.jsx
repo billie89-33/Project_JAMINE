@@ -55,28 +55,33 @@ const ProfileDropdown = () => {
 
           <div className="py-1">
             <p className="px-3.5 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Settings</p>
-            <a href="#profile" className="flex items-center px-3.5 py-1.5 text-xs font-medium hover:bg-purple-50 hover:text-purple-700 transition-colors">
+            <Link 
+              to="/profile?tab=me" 
+              onClick={() => setIsOpen(false)}
+              className="flex items-center px-3.5 py-1.5 text-xs font-medium hover:bg-purple-50 hover:text-purple-700 transition-colors"
+            >
                <span className="mr-2.5 text-sm">👤</span> My Profile
-            </a>
-            <a href="#billing" className="flex items-center px-3.5 py-1.5 text-xs font-medium hover:bg-purple-50 hover:text-purple-700 transition-colors">
-               <span className="mr-2.5 text-sm">💳</span> Billing & Plans
-            </a>
-            <a href="#security" className="flex items-center px-3.5 py-1.5 text-xs font-medium hover:bg-purple-50 hover:text-purple-700 transition-colors">
-               <span className="mr-2.5 text-sm">🛡️</span> Security & Privacy
-            </a>
+            </Link>
+            <Link 
+              to="/profile?tab=orders" 
+              onClick={() => setIsOpen(false)}
+              className="flex items-center px-3.5 py-1.5 text-xs font-medium hover:bg-purple-50 hover:text-purple-700 transition-colors"
+            >
+               <span className="mr-2.5 text-sm">📦</span> Order History
+            </Link>
+            <Link 
+              to="/profile?tab=addresses" 
+              onClick={() => setIsOpen(false)}
+              className="flex items-center px-3.5 py-1.5 text-xs font-medium hover:bg-purple-50 hover:text-purple-700 transition-colors"
+            >
+               <span className="mr-2.5 text-sm">📍</span> Address Book
+            </Link>
             
             {user?.role === 'admin' && (
               <NavLink to="/admin" className="flex items-center px-3.5 py-1.5 text-xs font-bold hover:bg-purple-50 text-purple-600 transition-colors border-t border-slate-100/60 mt-1">
                  <span className="mr-2.5 text-sm">⚙️</span> Admin Panel
               </NavLink>
             )}
-          </div>
-
-          <div className="py-1 border-t border-slate-100 bg-slate-50/30">
-            <p className="px-3.5 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Support</p>
-            <a href="#help" className="flex items-center px-3.5 py-1.5 text-xs font-medium hover:bg-purple-50 hover:text-purple-700 transition-colors">
-               <span className="mr-2.5 text-sm">📖</span> Documentation
-            </a>
           </div>
 
           {user && (
