@@ -52,7 +52,7 @@ const router = createBrowserRouter([
     children: [
       { path: "cart", element: <CartPage /> },
       { path: "checkout", element: <CheckoutPage /> },
-      { path: "payment-gateway", element: <PaymentPage /> },
+      { path: "payment/:orderId", element: <PaymentPage /> },
     ],
   },
 

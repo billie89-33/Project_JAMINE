@@ -44,6 +44,14 @@ export const removeFromCartApi = async (productId) => {
 };
 
 /**
+ * ล้างสินค้าทั้งหมดออกจากตะกร้า (ใช้หลังการชำระเงินสำเร็จ)
+ */
+export const clearCartApi = async () => {
+    const response = await apiClient.delete('/cart/clear');
+    return response.data;
+};
+
+/**
  * ดึงข้อมูลสรุปยอดรวมตะกร้า
  */
 export const getCartSummaryApi = async () => {

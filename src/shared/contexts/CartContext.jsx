@@ -3,7 +3,8 @@ import {
   getCartApi, 
   addToCartApi, 
   updateCartQuantityApi, 
-  removeFromCartApi
+  removeFromCartApi,
+  clearCartApi
 } from '@/modules/cart/services/cartApi';
 import toast from 'react-hot-toast';
 import { useAuth } from '@/shared/contexts/AuthContext';
@@ -12,19 +13,25 @@ const CartContext = createContext();
 
 /**
  * 🛒 CartProvider
- * ศูนย์กลางจัดการข้อมูลตะกร้าสินค้าสำหรับทั้งแอปพลิเคชัน
+ * ศูนย์กลางจัดการข้อมูลตะกร้าสินค้าสำหรับทั้งแอปพลิเคชัน (Standard Compliant)
  */
 export const CartProvider = ({ children }) => {
   const { user } = useAuth();
   const [cartItems, setCartItems] = useState([]);
-  const [summary, setSummary] = useState({ subtotal: 0, total: 0, itemCount: 0, shippingFee: 0 });
+  const [summary, setSummary] = useState({ 
+    subtotal: 0, 
+    shipping: 0, 
+    discount: 0, 
+    total: 0, 
+    itemCount: 0 
+  });
   const [loading, setLoading] = useState(false);
 
   // 1. ดึงข้อมูลตะกร้าจาก API
   const fetchCart = useCallback(async () => {
     if (!user) {
       setCartItems([]);
-      setSummary({ subtotal: 0, total: 0, itemCount: 0, shippingFee: 0 });
+      setSummary({ subtotal: 0, shipping: 0, discount: 0, total: 0, itemCount: 0 });
       return;
     }
     
@@ -33,16 +40,22 @@ export const CartProvider = ({ children }) => {
       const response = await getCartApi();
 
       if (response.success) {
-        // แจ้งเตือนถ้ามีการปรับสต็อกอัตโนมัติจากหลังบ้าน
+        // ⚠️ Doc 11.3: แจ้งเตือนถ้ามีการปรับสต็อกอัตโนมัติจากหลังบ้าน
         if (response.isStockAdjusted) {
           toast('สินค้าบางรายการถูกปรับจำนวนเนื่องจากสต็อกไม่พอ', {
             icon: '⚠️',
-            duration: 4000,
-            style: { borderRadius: '15px', fontWeight: 'bold', background: '#fffbeb', color: '#92400e' }
+            duration: 5000,
+            style: { 
+              borderRadius: '12px', 
+              fontWeight: 'bold', 
+              background: '#FFF4E5', 
+              color: '#663C00',
+              border: '1px solid #FFB077'
+            }
           });
         }
 
-        const { items: rawItems, subtotal, shippingFee, total } = response.data;
+        const { items: rawItems, subtotal, shippingFee, discount = 0, total } = response.data;
         
         const mappedItems = rawItems.map(item => ({
           id: item.product._id || item.product.id,
@@ -55,9 +68,11 @@ export const CartProvider = ({ children }) => {
         }));
 
         setCartItems(mappedItems);
+        // ✨ Doc 12.3: Trust the Backend Summary
         setSummary({
           subtotal,
-          shippingFee,
+          shipping: shippingFee,
+          discount,
           total,
           itemCount: mappedItems.reduce((acc, item) => acc + item.quantity, 0)
         });
@@ -76,21 +91,28 @@ export const CartProvider = ({ children }) => {
       return;
     }
 
+    // 🛡️ Doc 11.4: ป้องกัน Race Condition
+    if (loading) return;
+
+    setLoading(true);
     try {
       const res = await addToCartApi(productId, quantity);
       if (res.success) {
         toast.success("เพิ่มสินค้าลงตะกร้าแล้ว", { icon: '🛒' });
-        await fetchCart(); // ดึงข้อมูลล่าสุดทันที
+        await fetchCart(); 
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "เพิ่มสินค้าไม่สำเร็จ");
+    } finally {
+      setLoading(false);
     }
   };
 
   // 3. อัปเดตจำนวน
   const updateQuantity = async (productId, quantity) => {
-    if (quantity < 1) return;
+    if (quantity < 1 || loading) return;
     
+    setLoading(true);
     try {
       const res = await updateCartQuantityApi(productId, quantity);
       if (res.success) {
@@ -98,11 +120,16 @@ export const CartProvider = ({ children }) => {
       }
     } catch (error) {
       toast.error("อัปเดตจำนวนไม่สำเร็จ");
+    } finally {
+      setLoading(false);
     }
   };
 
   // 4. ลบสินค้า
   const removeItem = async (productId) => {
+    if (loading) return;
+
+    setLoading(true);
     try {
       const res = await removeFromCartApi(productId);
       if (res.success) {
@@ -111,6 +138,19 @@ export const CartProvider = ({ children }) => {
       }
     } catch (error) {
       toast.error("ลบสินค้าไม่สำเร็จ");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 5. ล้างตะกร้า (Double-Lock Step 2)
+  const clearCart = async () => {
+    try {
+      await clearCartApi();
+      setCartItems([]);
+      setSummary({ subtotal: 0, shipping: 0, discount: 0, total: 0, itemCount: 0 });
+    } catch (error) {
+      console.error("Failed to clear cart:", error);
     }
   };
 
@@ -126,6 +166,7 @@ export const CartProvider = ({ children }) => {
     addToCart,
     updateQuantity,
     removeItem,
+    clearCart,
     refreshCart: fetchCart
   };
 

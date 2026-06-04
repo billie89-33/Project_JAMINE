@@ -72,8 +72,8 @@ const PaymentPage = () => {
             <CheckoutItemsList cartItems={order.items || []} />
             
             <OrderSummaryCard 
-              subtotal={order.subtotal || (order.totalAmount - (order.shippingFee || 0))} 
-              shipping={order.shippingFee || 0}
+              subtotal={order.subtotal || (order.totalAmount - (order.shipping || order.shippingFee || 0))} 
+              shipping={order.shipping || order.shippingFee || 0}
               discount={order.discount || 0}
               total={order.totalAmount}
               buttonText="Confirm Payment" 

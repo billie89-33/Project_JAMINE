@@ -71,11 +71,11 @@ export const useCheckout = () => {
 
     setIsSubmitting(true);
     try {
-      // 🛡️ Tampering Prevention: ส่งข้อมูลที่จำเป็น และ clientTotal เพื่อให้ Backend ตรวจสอบความถูกต้อง
+      // 🛡️ Doc 12.2: Tampering Prevention
+      // ส่งเฉพาะข้อมูลที่จำเป็น Backend จะคำนวณยอดเงินเองจาก Database/Cart
       const orderPayload = {
         addressId: selectedAddressId,
-        paymentMethod,
-        clientTotal: priceDetails.total
+        paymentMethod
       };
 
       const res = await createOrderApi(orderPayload);
@@ -83,11 +83,14 @@ export const useCheckout = () => {
       if (res.success) {
         toast.success("สร้างคำสั่งซื้อสำเร็จ! กำลังไปที่หน้าชำระเงิน...");
         
-        // 🚨 Navigation Security: ใช้ยอดเงินจริงที่ Backend ตอบกลับมาเท่านั้น
-        navigate('/payment-gateway', { 
+        // 🚀 Doc 12.4: Navigation Security & Resilience
+        // ใช้ยอดเงินและ ID จริงที่ Backend ตอบกลับมาเท่านั้น
+        const orderId = res.data?._id || res.data?.id;
+        
+        navigate(`/payment/${orderId}`, { 
           state: { 
-            totalAmount: res.data?.totalAmount, 
-            orderId: res.data?.id
+            totalAmount: res.data?.totalAmount,
+            fromCheckout: true 
           } 
         }); 
       }

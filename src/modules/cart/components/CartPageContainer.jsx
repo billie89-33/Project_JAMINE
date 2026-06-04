@@ -120,11 +120,13 @@ export default function CartPageContainer() {
         <div className="w-full lg:w-[400px] lg:sticky lg:top-8">
           <OrderSummaryCard 
             subtotal={summary.subtotal}
-            shipping={summary.shippingFee}
+            shipping={summary.shipping}
+            discount={summary.discount}
             total={summary.total}
             buttonText="Checkout Now"
             onAction={() => navigate('/checkout')}
             isDisabled={products.length === 0}
+            isSubmitting={loading}
           />
           
           <div className="mt-8 p-6 bg-indigo-50/50 rounded-3xl border border-indigo-100 flex items-start gap-4">
