@@ -55,25 +55,32 @@ export const CartProvider = ({ children }) => {
           });
         }
 
-        const { items: rawItems, subtotal, shippingFee, discount = 0, total } = response.data;
+        const { items: rawItems, subtotal, shippingFee, total } = response.data;
         
-        const mappedItems = rawItems.map(item => ({
-          id: item.product._id || item.product.id,
-          name: item.product.modelName || item.product.name,
-          brand: item.product.brand,
-          price: item.product.price,
-          quantity: item.quantity,
-          image: item.product.image?.url || item.product.image,
-          description: item.product.description
-        }));
+        // 🛠️ Fix: เปลี่ยนจาก item.product เป็น item.productId ให้ตรงตาม Backend Schema
+        const mappedItems = rawItems.map(item => {
+          const product = item.productId; // ดึงออบเจกต์สินค้าที่ถูก Populate มาจาก Backend
+          
+          return {
+            id: product?._id || product?.id,
+            cartItemId: item._id, // ไอดีของรายการในตะกร้า (ถ้ามี)
+            name: product?.modelName || product?.name || 'Unknown Product',
+            brand: product?.brand || '',
+            price: product?.price || 0,
+            quantity: item.quantity,
+            image: product?.image?.url || product?.image || 'https://via.placeholder.com/300',
+            description: product?.description || '',
+            stock: product?.stock || 0
+          };
+        });
 
         setCartItems(mappedItems);
-        // ✨ Doc 12.3: Trust the Backend Summary
+        // ✨ Doc 12.3: Trust the Backend Summary (ใช้ชื่อฟิลด์ตาม Schema เป๊ะๆ)
         setSummary({
-          subtotal,
-          shipping: shippingFee,
-          discount,
-          total,
+          subtotal: subtotal || 0,
+          shipping: shippingFee || 0,
+          discount: response.data.discount || 0,
+          total: total || 0,
           itemCount: mappedItems.reduce((acc, item) => acc + item.quantity, 0)
         });
       }
