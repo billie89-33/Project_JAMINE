@@ -51,15 +51,20 @@ export const usePayment = () => {
       const res = await mockPaymentApi(order._id || order.id);
       
       if (res.success) {
-        toast.success("ระบบยืนยันยอดเงินสำเร็จ! กำลังพาท่านกลับหน้าหลัก");
+        toast.success(`ชำระเงินออเดอร์ ${order.orderNumber} สำเร็จ! ✨`);
         
-        // 🔄 Doc 11.7: Double-Lock Cart Clearing (Step 2 - Frontend explicit clear)
-        await clearCart(); 
+        // 🔄 API PLAN Skill 3: Double-Lock Cart Clearing (Lock ชั้นที่ 2)
+        // ยิง API เคลียร์ตะกร้าซ้ำเพื่อความชัวร์ 100% ก่อนไปหน้า Success
+        try {
+          await clearCart(); 
+        } catch (clearErr) {
+          console.warn("Frontend Clear Cart Warning (Optional step):", clearErr);
+        }
         
         // นำทางกลับหน้าแรก (หรือหน้าประวัติคำสั่งซื้อ)
         setTimeout(() => {
           navigate('/', { replace: true });
-        }, 1500);
+        }, 2000);
       }
     } catch (error) {
       console.error("Verify Payment Error:", error);

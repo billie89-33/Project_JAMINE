@@ -81,15 +81,14 @@ export const useCheckout = () => {
       const res = await createOrderApi(orderPayload);
 
       if (res.success) {
-        toast.success("สร้างคำสั่งซื้อสำเร็จ! กำลังไปที่หน้าชำระเงิน...");
+        toast.success("สร้างคำสั่งซื้อสำเร็จ! กรุณาชำระเงินภายในเวลาที่กำหนด");
         
-        // 🚀 Doc 12.4: Navigation Security & Resilience
-        // ใช้ยอดเงินและ ID จริงที่ Backend ตอบกลับมาเท่านั้น
+        // 🚀 Doc 2.4 & API PLAN Flow 5: Navigation Security
+        // ใช้เฉพาะ orderId จาก Success Response เท่านั้น
         const orderId = res.data?._id || res.data?.id;
         
         navigate(`/payment/${orderId}`, { 
           state: { 
-            totalAmount: res.data?.totalAmount,
             fromCheckout: true 
           } 
         }); 
