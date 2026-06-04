@@ -48,21 +48,30 @@ const HeroBanner = ({ placement = 'home_hero' }) => {
   const currentBanner = banners[currentIndex];
 
   return (
-    <div className="relative w-full h-[300px] md:h-[450px] rounded-[40px] overflow-hidden group shadow-2xl shadow-purple-200/50 border-4 border-white">
+    <div className="relative w-full h-[300px] md:h-[450px] rounded-[40px] overflow-hidden group shadow-2xl shadow-purple-200/50 border-4 border-white bg-slate-900">
       
-      {/* 1. รูปภาพแบนเนอร์ปัจจุบัน (สามารถคลิกได้) */}
+      {/* 1. ชั้นหลัง: บรรยากาศฟุ้งกระจาย (Blurred Atmosphere) */}
+      <div className="absolute inset-0 w-full h-full overflow-hidden opacity-40">
+        <img
+          src={currentBanner.image.url}
+          alt=""
+          className="w-full h-full object-cover blur-3xl scale-125"
+        />
+      </div>
+
+      {/* 2. ชั้นหน้า: รูปภาพแบนเนอร์จริง (เห็นครบถ้วน ไม่โดนกิน) */}
       <div 
-        className="w-full h-full cursor-pointer overflow-hidden"
+        className="relative w-full h-full cursor-pointer flex items-center justify-center p-4 md:p-8"
         onClick={() => currentBanner.linkUrl && navigate(currentBanner.linkUrl)}
       >
         <img
           src={currentBanner.image.url}
           alt={currentBanner.title}
-          className="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105"
+          className="w-full h-full object-contain transition-transform duration-[2000ms] group-hover:scale-105 drop-shadow-2xl"
         />
         
-        {/* แถบพาดข้อมูลแบนเนอร์แบบจางๆ เพิ่มความหรูหรา */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent"></div>
+        {/* แถบพาดข้อมูลแบนเนอร์ */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/20 via-transparent to-transparent pointer-events-none"></div>
         <div className="absolute bottom-10 left-10 text-white space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
            <h3 className="text-2xl font-black uppercase tracking-widest drop-shadow-lg">{currentBanner.title}</h3>
            <p className="text-xs font-bold text-purple-100 uppercase tracking-[0.3em] bg-purple-600/50 backdrop-blur-md px-4 py-1.5 rounded-full w-fit">Explore Collection</p>

@@ -49,14 +49,27 @@ const PromotionBanner = () => {
   return (
     <div 
       onClick={() => promo.linkUrl && navigate(promo.linkUrl)}
-      className="w-full h-[150px] sm:h-[200px] overflow-hidden rounded-[32px] shadow-2xl shadow-purple-100/50 border-2 border-white hover:border-purple-200 transition-all duration-500 cursor-pointer group relative"
+      className="w-full h-[150px] sm:h-[200px] overflow-hidden rounded-[32px] shadow-2xl shadow-purple-100/50 border-2 border-white hover:border-purple-200 transition-all duration-500 cursor-pointer group relative bg-slate-900"
     >
-      <img
-        src={promo.image.url}
-        alt={promo.title}
-        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1500ms]"
-      />
-      <div className="absolute inset-0 bg-gradient-to-r from-slate-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center px-10">
+      {/* ชั้นหลัง: พื้นหลังเบลอคุมโทน */}
+      <div className="absolute inset-0 opacity-30">
+        <img
+          src={promo.image.url}
+          alt=""
+          className="w-full h-full object-cover blur-2xl scale-125"
+        />
+      </div>
+
+      {/* ชั้นหน้า: รูปภาพแบนเนอร์จริงแบบ Contain */}
+      <div className="relative w-full h-full flex items-center justify-center p-3 sm:p-5">
+        <img
+          src={promo.image.url}
+          alt={promo.title}
+          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-[1500ms] drop-shadow-xl"
+        />
+      </div>
+
+      <div className="absolute inset-0 bg-gradient-to-r from-slate-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center px-10">
          <span className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl text-[10px] font-black text-purple-600 uppercase tracking-[0.2em] shadow-xl">Get Offer ✨</span>
       </div>
     </div>
