@@ -11,7 +11,23 @@ import * as AdminPages from "@/pages/admin";
 import { useAuth } from "@/shared/contexts/AuthContext";
 import { USER_ROLES } from "@/shared/constants";
 
-// ... (guards remain unchanged)
+// 🔒 Wrapper สำหรับ Admin Routes - guard ให้เฉพาะ admin role
+const AdminRouteGuard = () => {
+  const { user } = useAuth();
+  if (!user || user?.role !== USER_ROLES.ADMIN) {
+    return <Navigate to="/" replace />;
+  }
+  return <AdminLayout />;
+};
+
+// 🔒 Wrapper สำหรับ Auth Routes - ไม่ให้ login user เข้าซ้ำ
+const AuthRouteGuard = () => {
+  const { user } = useAuth();
+  if (user) {
+    return <Navigate to="/" replace />;
+  }
+  return <AuthLayout />;
+};
 
 const router = createBrowserRouter([
   {
