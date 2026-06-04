@@ -1,4 +1,5 @@
 import { Search, X, Filter } from 'lucide-react';
+import { CATEGORIES } from '@/shared/constants';
 
 /**
  * 🔍 FilterBar Component
@@ -11,10 +12,7 @@ const FilterBar = ({
   onCategoryChange, 
   onClear 
 }) => {
-  const categories = [
-    'All', 'Notebook', 'Keyboard', 'CPU', 'Monitor', 
-    'Gaming Mouse', 'Graphics Card', 'RAM', 'Mainboard'
-  ];
+  const categories = ['All', ...CATEGORIES];
 
   return (
     <div className="flex flex-col lg:flex-row items-center gap-4 mb-8">

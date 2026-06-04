@@ -1,6 +1,7 @@
 import ImageUploadBox from './ImageUploadBox';
 import SpecFields from './SpecFields';
 import { useAddProduct } from '../hooks/useAddProduct';
+import { CATEGORIES, PRODUCT_STATUS } from '@/shared/constants';
 
 /**
  * 📦 ProductForm (Dumb/Presentational Component)
@@ -150,7 +151,7 @@ const ProductForm = () => {
                                     onChange={e => setCategory(e.target.value)} 
                                     className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-bold focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none cursor-pointer shadow-sm"
                                 >
-                                    {['Notebook', 'Keyboard', 'Computer', 'Monitor', 'Gaming Mouse', 'Graphics Card', 'RAM', 'CPU', 'Mainboard'].map(cat => (
+                                    {CATEGORIES.map(cat => (
                                         <option key={cat} value={cat}>{cat}</option>
                                     ))}
                                 </select>
@@ -162,9 +163,9 @@ const ProductForm = () => {
                                     onChange={e => setStatus(e.target.value)} 
                                     className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-bold focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none cursor-pointer shadow-sm"
                                 >
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
-                                    <option value="draft">Draft</option>
+                                    <option value={PRODUCT_STATUS.ACTIVE}>Active</option>
+                                    <option value={PRODUCT_STATUS.INACTIVE}>Inactive</option>
+                                    <option value={PRODUCT_STATUS.DRAFT}>Draft</option>
                                 </select>
                             </div>
                         </div>

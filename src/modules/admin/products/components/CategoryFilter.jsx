@@ -1,12 +1,12 @@
+import { CATEGORIES } from '@/shared/constants';
+
 /**
  * 🏷️ CategoryFilter Component
  * แถบเลือกหมวดหมู่สินค้าแบบเม็ดยา (Pills)
  */
 const CategoryFilter = ({ selectedCategory, onCategoryChange }) => {
-  const categories = [
-    'All', 'Notebook', 'Keyboard', 'Computer', 'Monitor', 
-    'Gaming Mouse', 'Graphics Card', 'RAM', 'CPU', 'Mainboard'
-  ];
+  // รวม 'All' เข้ากับหมวดหมู่มาตรฐานจาก Constants
+  const categories = ['All', ...CATEGORIES];
 
   return (
     <div className="flex flex-wrap gap-2 mb-8 bg-white/50 p-2 rounded-2xl backdrop-blur-sm border border-purple-50">

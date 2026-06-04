@@ -1,24 +1,36 @@
 import { useRef } from 'react';
 import { ChevronLeft, ChevronRight, Filter } from 'lucide-react';
-// 🌟 1. นำเข้า useNavigate เพื่อเปิดใช้ระบบนำทางเปลี่ยนหน้า URL
 import { useNavigate } from 'react-router-dom';
+import { CATEGORIES } from '@/shared/constants';
 
-// 🌟 2. อัปเดตข้อมูลจำลอง: ปรับคีย์ 'type' ให้สะกดตัวพิมพ์เล็กตรงกับเงื่อนไข Router และ Switch Case ของคุณ
-const categories = [
-  { id: 1, name: 'Notebook', type: 'Notebook', image: 'https://unsplash.com' },
-  { id: 2, name: 'Keyboard', type: 'Keyboard', image: 'https://unsplash.com' },
-  { id: 3, name: 'Computer', type: 'Computer', image: 'https://unsplash.com' },
-  { id: 4, name: 'Monitor', type: 'Monitor', image: 'https://unsplash.com' },
-  { id: 5, name: 'Gaming Mouse', type: 'Gaming Mouse', image: 'https://Gaming Mouse' },
-  { id: 6, name: 'Graphics Card', type: 'Graphics Card', image: 'https://unsplash.com' },
-  { id: 7, name: 'RAM', type: 'RAM', image: 'https://unsplash.com' },
-  { id: 8, name: 'CPU', type: 'CPU', image: 'https://unsplash.com' },
-  { id: 9, name: 'Mainboard', type: 'Mainboard', image: 'https://unsplash.com' },
-];
-
+/**
+ * 🎡 CategorySlider Component
+ * ดึงรายการหมวดหมู่สินค้ามาจาก Global Constants (ซิงค์กับ Backend)
+ */
 const CategorySlider = () => {
   const navigate = useNavigate();
   const scrollRef = useRef(null);
+
+  // 🖼️ ระบบ Mapping รูปภาพประจำหมวดหมู่ (ถ้าเพิ่มหมวดใหม่ในอนาคตแต่ไม่มีในนี้ จะใช้ Default Image)
+  const categoryImages = {
+    'Notebook': 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=300&auto=format&fit=crop',
+    'Keyboard': 'https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?q=80&w=300&auto=format&fit=crop',
+    'Computer': 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=300&auto=format&fit=crop',
+    'Monitor': 'https://images.unsplash.com/photo-1527443224154-c4a3942d3490?q=80&w=300&auto=format&fit=crop',
+    'Gaming Mouse': 'https://images.unsplash.com/photo-1527443224154-c4a3942d3490?q=80&w=300&auto=format&fit=crop',
+    'Graphics Card': 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?q=80&w=300&auto=format&fit=crop',
+    'RAM': 'https://images.unsplash.com/photo-1562976540-1502c2145186?q=80&w=300&auto=format&fit=crop',
+    'CPU': 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?q=80&w=300&auto=format&fit=crop',
+    'Mainboard': 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=300&auto=format&fit=crop'
+  };
+
+  // สร้างออบเจกต์หมวดหมู่จาก Constants
+  const categories = CATEGORIES.map((name, index) => ({
+    id: index + 1,
+    name: name,
+    type: name,
+    image: categoryImages[name] || 'https://images.unsplash.com/photo-1588702547919-26089e690ecc?q=80&w=300&auto=format&fit=crop'
+  }));
 
   // ฟังก์ชันควบคุมการเลื่อนสไลด์ซ้าย-ขวา
   const handleScroll = (direction) => {

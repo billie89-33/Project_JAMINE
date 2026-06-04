@@ -1,5 +1,6 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import { getMeApi, logoutApi } from '@/modules/auth/services/authApi';
+import { USER_ROLES } from '@/shared/constants';
 
 /**
  * 🔐 Global Auth Context
@@ -31,7 +32,7 @@ export const AuthProvider = ({ children }) => {
                         _id: 'dev-mock-admin-id',
                         username: 'Dev_Admin',
                         email: 'admin@test.com',
-                        role: 'admin'
+                        role: USER_ROLES.ADMIN
                     });
                 } else {
                     setUser(null);

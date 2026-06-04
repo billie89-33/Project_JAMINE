@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 
 /**
  * 🎣 useBanners Hook
- * จัดการสถานะและ Logic สำหรับการจัดการ Banner
+ * จัดการสถานะและ Logic สำหรับการจัดการ Banner (Standard Centralized Logic)
  */
 export const useBanners = () => {
   const [banners, setBanners] = useState([]);
@@ -17,22 +17,12 @@ export const useBanners = () => {
     try {
       const res = await getAdminBannersApi();
       if (res.success) {
-        setBanners(res.data);
+        setBanners(res.data || []);
       }
     } catch (error) {
-      // toast.error('ไม่สามารถโหลดข้อมูลแบนเนอร์ได้');
-      // Mock data for initial dev if API not ready
-      setBanners([
-        { 
-          _id: 'mock1', 
-          title: 'Summer Sale', 
-          placement: 'home_hero', 
-          isActive: true, 
-          image: { url: 'https://via.placeholder.com/1920x600' },
-          linkUrl: '/category/Notebook',
-          order: 1
-        }
-      ]);
+      console.error('Fetch Banners Error:', error);
+      // Fallback empty list if error
+      setBanners([]);
     } finally {
       setIsLoading(false);
     }
@@ -42,7 +32,25 @@ export const useBanners = () => {
     fetchBanners();
   }, [fetchBanners]);
 
-  // 2. จัดการการอัปเดต
+  // 2. จัดการการสร้างใหม่
+  const handleCreate = async (formData) => {
+    setIsSubmitting(true);
+    try {
+      const res = await createBannerApi(formData);
+      if (res.success) {
+        toast.success('สร้างแบนเนอร์ใหม่สำเร็จ! ✨');
+        fetchBanners();
+        return true;
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'สร้างแบนเนอร์ไม่สำเร็จ');
+      return false;
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // 3. จัดการการอัปเดต
   const handleUpdate = async (id, formData) => {
     setIsSubmitting(true);
     try {
@@ -53,14 +61,14 @@ export const useBanners = () => {
         return true;
       }
     } catch (error) {
-      toast.error('อัปเดตไม่สำเร็จ');
+      toast.error(error.response?.data?.message || 'อัปเดตไม่สำเร็จ');
       return false;
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // 3. จัดการการลบ
+  // 4. จัดการการลบ
   const handleDelete = async (id) => {
     if (!window.confirm('คุณแน่ใจหรือไม่ว่าต้องการลบแบนเนอร์นี้?')) return;
     
@@ -79,7 +87,8 @@ export const useBanners = () => {
     banners,
     isLoading,
     isSubmitting,
-    setIsSubmitting,
+    handleCreate,
+    handleUpdate,
     handleDelete,
     refreshBanners: fetchBanners
   };

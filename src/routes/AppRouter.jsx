@@ -9,6 +9,7 @@ import { RegisterPage, LoginPage } from "@/pages/auth";
 import { HomePage, CategoryPage, ProductDetailPage, CheckoutPage, PaymentPage, CartPage } from "@/pages/user";
 import * as AdminPages from "@/pages/admin";
 import { useAuth } from "@/shared/contexts/AuthContext";
+import { USER_ROLES } from "@/shared/constants";
 
 // โครงสร้างหน้าเว็บจำลอง
 const TempPage = ({ name }) => (
@@ -20,7 +21,7 @@ const TempPage = ({ name }) => (
 // 🔒 Wrapper สำหรับ Admin Routes - guard ให้เฉพาะ admin role
 const AdminRouteGuard = () => {
   const { user } = useAuth();
-  if (!user || user?.role !== "admin") {
+  if (!user || user?.role !== USER_ROLES.ADMIN) {
     return <Navigate to="/" replace />;
   }
   return <AdminLayout />;

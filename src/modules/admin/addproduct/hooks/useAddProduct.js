@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useProductActions } from './useProductActions';
+import { CATEGORIES, PRODUCT_STATUS } from '@/shared/constants';
 
 /**
  * 🎣 useAddProduct Hook (Smart Logic)
@@ -15,8 +16,8 @@ export const useAddProduct = () => {
     const [tags, setTags] = useState(''); // 🏷️ Tag Processing Pattern: เตรียมไว้เป็น String เพื่อแยกด้วยคอมม่า
     const [stock, setStock] = useState(1); 
     const [price, setPrice] = useState(''); // เปลี่ยนจาก regularPrice เป็น price ให้ตรง Backend
-    const [category, setCategory] = useState('Keyboard');
-    const [status, setStatus] = useState('active'); // 🆕 เพิ่มสถานะสินค้า
+    const [category, setCategory] = useState(CATEGORIES[1]); // Default: Keyboard
+    const [status, setStatus] = useState(PRODUCT_STATUS.ACTIVE); // 🆕 เพิ่มสถานะสินค้า
     const [isFeatured, setIsFeatured] = useState(false); // 🆕 เพิ่มสินค้าแนะนำ
 
     // 💾 2. State คุมข้อมูลไฟล์ภาพ
@@ -58,8 +59,8 @@ export const useAddProduct = () => {
         setPrice('');
         setSelectedFile(null); 
         setImagePreview(null); 
-        setCategory('Keyboard');
-        setStatus('active');
+        setCategory(CATEGORIES[1]);
+        setStatus(PRODUCT_STATUS.ACTIVE);
         setIsFeatured(false);
         setSpecifications({});
     };

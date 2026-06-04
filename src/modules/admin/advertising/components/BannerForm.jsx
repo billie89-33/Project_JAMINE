@@ -44,19 +44,43 @@ export const BannerForm = ({ initialData, onSubmit, onCancel, isSubmitting }) =>
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // 🛡️ 1. Validation: ถ้าสร้างใหม่ ต้องมีรูป!
+    if (!initialData && !selectedFile) {
+      toast.error('กรุณาเลือกรูปภาพแบนเนอร์ก่อนกดบันทึก');
+      return;
+    }
+
     const submitData = new FormData();
+    let hasChanges = false;
     
-    // Append fields
+    // 🛡️ 2. Surgical Update (Dirty Checking): ส่งเฉพาะฟิลด์ที่เปลี่ยน
     Object.entries(formData).forEach(([key, value]) => {
-      submitData.append(key, value);
+      // สำหรับโหมดแก้ไข ตรวจสอบว่าค่าต่างจากเดิมไหม
+      if (initialData) {
+        if (value !== initialData[key]) {
+          submitData.append(key, value);
+          hasChanges = true;
+        }
+      } else {
+        // โหมดสร้างใหม่ ส่งทั้งหมด
+        submitData.append(key, value);
+        hasChanges = true;
+      }
     });
     
-    // Append image if new one selected
+    // 3. ตรวจสอบรูปภาพใหม่
     if (selectedFile) {
       submitData.append('image', selectedFile);
+      hasChanges = true;
+    }
+
+    if (initialData && !hasChanges) {
+      toast('ข้อมูลไม่มีการเปลี่ยนแปลง', { icon: 'ℹ️' });
+      return onCancel(); 
     }
     
-    // Pass ID if editing
+    // 🚀 ส่งข้อมูลไปที่ Handler (หน้า Page)
     onSubmit(submitData, initialData?._id);
   };
 

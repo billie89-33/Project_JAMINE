@@ -1,4 +1,5 @@
 import { ImageUploadBox } from '@/modules/admin/addproduct';
+import { CATEGORIES, PRODUCT_STATUS } from '@/shared/constants';
 
 /**
  * 📝 EditableMainInfo
@@ -112,7 +113,7 @@ export const EditableMainInfo = ({ formData, setFormData, imagePreview, onFileSe
                 onChange={e => setFormData({...formData, category: e.target.value})} 
                 className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-bold focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none cursor-pointer shadow-sm"
               >
-                {['Notebook', 'Keyboard', 'Computer', 'Monitor', 'Gaming Mouse', 'Graphics Card', 'RAM', 'CPU', 'Mainboard'].map(cat => (
+                {CATEGORIES.map(cat => (
                   <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>
@@ -124,9 +125,9 @@ export const EditableMainInfo = ({ formData, setFormData, imagePreview, onFileSe
                 onChange={e => setFormData({...formData, status: e.target.value})} 
                 className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-bold focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none cursor-pointer shadow-sm"
               >
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="draft">Draft</option>
+                <option value={PRODUCT_STATUS.ACTIVE}>Active</option>
+                <option value={PRODUCT_STATUS.INACTIVE}>Inactive</option>
+                <option value={PRODUCT_STATUS.DRAFT}>Draft</option>
               </select>
             </div>
           </div>

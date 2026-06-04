@@ -19,7 +19,7 @@ const AdvertisingPage = () => {
     banners, 
     isLoading, 
     isSubmitting, 
-    setIsSubmitting,
+    handleCreate,
     handleUpdate,
     handleDelete, 
     refreshBanners 
@@ -27,29 +27,18 @@ const AdvertisingPage = () => {
 
   // จัดการการส่งข้อมูลฟอร์ม (ทั้งสร้างใหม่และแก้ไข)
   const handleFormSubmit = async (formData, id) => {
-    setIsSubmitting(true);
-    try {
-      let res;
-      if (id) {
-        // โหมดแก้ไข
-        res = await handleUpdate(id, formData);
-        if (res) {
-          setEditingBanner(null);
-          setIsAdding(false);
-        }
-      } else {
-        // โหมดสร้างใหม่
-        res = await createBannerApi(formData);
-        if (res.success) {
-          toast.success('สร้างแบนเนอร์ใหม่สำเร็จ! ✨');
-          setIsAdding(false);
-          refreshBanners();
-        }
-      }
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'ดำเนินการไม่สำเร็จ');
-    } finally {
-      setIsSubmitting(false);
+    let success = false;
+    if (id) {
+      // โหมดแก้ไข (Surgical Patch)
+      success = await handleUpdate(id, formData);
+    } else {
+      // โหมดสร้างใหม่ (POST)
+      success = await handleCreate(formData);
+    }
+
+    if (success) {
+      setEditingBanner(null);
+      setIsAdding(false);
     }
   };
 

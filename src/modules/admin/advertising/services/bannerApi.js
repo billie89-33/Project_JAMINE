@@ -9,7 +9,8 @@ import { apiClient } from '@/shared/api';
  * ดึงรายการ Banner ทั้งหมดสำหรับ Admin
  */
 export const getAdminBannersApi = async () => {
-    const response = await apiClient.get('/banners/admin');
+    // 🛡️ ตาม Spec v2: GET /admin/banners
+    const response = await apiClient.get('/admin/banners');
     return response.data;
 };
 
@@ -18,9 +19,8 @@ export const getAdminBannersApi = async () => {
  * @param {FormData} formData - ข้อมูล banner พร้อมไฟล์รูปภาพ
  */
 export const createBannerApi = async (formData) => {
-    const response = await apiClient.post('/banners', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-    });
+    // 🛡️ ตาม Spec v2: POST /admin/banners (ปล่อยให้ Axios จัดการ Boundary อัตโนมัติ)
+    const response = await apiClient.post('/admin/banners', formData);
     return response.data;
 };
 
@@ -30,9 +30,8 @@ export const createBannerApi = async (formData) => {
  * @param {FormData} formData - ข้อมูลที่ต้องการแก้ไข
  */
 export const updateBannerApi = async (id, formData) => {
-    const response = await apiClient.patch(`/banners/${id}`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-    });
+    // 🛡️ ตาม Spec v2: PATCH /admin/banners/:id
+    const response = await apiClient.patch(`/admin/banners/${id}`, formData);
     return response.data;
 };
 
@@ -41,6 +40,7 @@ export const updateBannerApi = async (id, formData) => {
  * @param {string} id - ไอดี banner
  */
 export const deleteBannerApi = async (id) => {
-    const response = await apiClient.delete(`/banners/${id}`);
+    // 🛡️ ตาม Spec v2: DELETE /admin/banners/:id
+    const response = await apiClient.delete(`/admin/banners/${id}`);
     return response.data;
 };

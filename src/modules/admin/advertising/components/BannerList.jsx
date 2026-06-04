@@ -20,23 +20,35 @@ export const BannerList = ({ banners, onEdit, onDelete }) => {
           </thead>
           <tbody className="divide-y divide-slate-50">
             {banners.map((banner) => (
-              <tr key={banner._id} className="group hover:bg-purple-50/30 transition-colors">
+              <tr key={banner._id || banner.id} className="group hover:bg-purple-50/30 transition-colors">
                 {/* 1. Preview Image */}
                 <td className="px-8 py-6">
-                  <div className="relative w-40 h-16 bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 group-hover:border-purple-200 transition-all">
-                    <img 
-                      src={banner.image.url} 
-                      alt={banner.title} 
-                      className="w-full h-full object-cover"
-                    />
+                  <div className="relative w-40 h-16 bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 group-hover:border-purple-200 transition-all flex items-center justify-center">
+                    {banner?.image?.url ? (
+                      <img 
+                        src={banner.image.url} 
+                        alt={banner.title || 'Banner'} 
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
+                    <div className={`${banner?.image?.url ? 'hidden' : 'flex'} items-center gap-2 text-slate-300`}>
+                      <ImageIcon size={16} />
+                      <span className="text-[8px] font-black uppercase">No Image</span>
+                    </div>
                   </div>
                 </td>
 
                 {/* 2. Title & Link */}
                 <td className="px-8 py-6">
                   <div className="space-y-1">
-                    <h4 className="text-sm font-black text-slate-800 group-hover:text-purple-600 transition-colors">{banner.title}</h4>
-                    {banner.linkUrl && (
+                    <h4 className="text-sm font-black text-slate-800 group-hover:text-purple-600 transition-colors">
+                      {banner?.title || 'Untitled Banner'}
+                    </h4>
+                    {banner?.linkUrl && (
                       <div className="flex items-center gap-1.5 text-slate-400">
                         <ExternalLink size={10} />
                         <span className="text-[10px] font-bold truncate max-w-[150px]">{banner.linkUrl}</span>
@@ -48,7 +60,7 @@ export const BannerList = ({ banners, onEdit, onDelete }) => {
                 {/* 3. Placement */}
                 <td className="px-8 py-6">
                   <span className="px-3 py-1 bg-slate-100 text-slate-500 rounded-full text-[9px] font-black uppercase tracking-widest border border-slate-200">
-                    {banner.placement.replace('_', ' ')}
+                    {(banner?.placement || 'unknown').replace('_', ' ')}
                   </span>
                 </td>
 

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getProductById, updateProduct } from '@/modules/admin/services';
 import toast from 'react-hot-toast';
+import { PRODUCT_STATUS } from '@/shared/constants';
 
 /**
  * 🎣 useEditProduct Hook (Surgical Logic)
@@ -21,7 +22,7 @@ export const useEditProduct = () => {
     stock: 0,
     category: '',
     tags: '', // 🏷️ เก็บเป็น String เพื่อให้ UI แก้ไขได้ง่าย
-    status: 'active',
+    status: PRODUCT_STATUS.ACTIVE,
     isFeatured: false,
     specifications: {}
   });
@@ -52,7 +53,7 @@ export const useEditProduct = () => {
           category: product.category || '',
           sku: product.sku || '',
           tags: Array.isArray(product.tags) ? product.tags.join(', ') : (product.tags || ''), 
-          status: product.status || 'active',
+          status: product.status || PRODUCT_STATUS.ACTIVE,
           isFeatured: !!product.isFeatured,
           specifications: product.specifications || {}
         });
