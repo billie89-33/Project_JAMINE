@@ -2,66 +2,47 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '@/shared/contexts/AuthContext';
-import { getCheckoutSummaryApi, createOrderApi, addAddressApi, deleteAddressApi } from '../services/checkoutApi';
+import { useCart } from '@/modules/cart'; // 🛒 ดึงข้อมูลจาก Context แทน
+import { createOrderApi, addAddressApi, deleteAddressApi } from '../services/checkoutApi';
 
 /**
  * 🎣 useCheckout Hook
- * จัดการ Business Logic สำหรับกระบวนการสั่งซื้อ
- * ทำหน้าที่ประสานงานระหว่าง UI และ API Service
  */
 export const useCheckout = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { cartItems, summary: cartSummary, loading: cartLoading } = useCart();
 
-  const [cartItems, setCartItems] = useState([]);
   const [addresses, setAddresses] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
   const [paymentMethod] = useState('promptpay');
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [priceDetails, setPriceDetails] = useState({
-    subtotal: 0,
-    shipping: 0,
-    discount: 0,
-    total: 0
-  });
+  // ✨ เชื่อมต่อยอดเงินจาก Cart Summary
+  const priceDetails = {
+    subtotal: cartSummary.subtotal,
+    shipping: cartSummary.shipping,
+    discount: cartSummary.discount,
+    total: cartSummary.total
+  };
 
   useEffect(() => {
-    const initCheckout = async () => {
-      try {
-        if (!user) {
-          toast.error("กรุณาเข้าสู่ระบบก่อนทำการเช็คเอาต์");
-          return navigate('/login');
-        }
-
-        const res = await getCheckoutSummaryApi();
-        
-        if (res.success) {
-          const { items, addresses, priceDetails: apiPriceDetails } = res.data;
-          
-          setCartItems(items);
-          setAddresses(addresses);
-          if (addresses.length > 0) setSelectedAddressId(addresses[0].id);
-
-          // ✨ Trust the Backend: ใช้ยอดเงินสรุปจาก API โดยตรง ไม่คำนวณเองที่หน้าบ้าน
-          setPriceDetails({
-            subtotal: apiPriceDetails.subtotal,
-            shipping: apiPriceDetails.shipping,
-            discount: apiPriceDetails.discount,
-            total: apiPriceDetails.total
-          });
-        }
-      } catch (error) {
-        console.error("Checkout Summary Error:", error);
-        toast.error(error.response?.data?.message || "ดึงข้อมูลเช็คเอาต์ล้มเหลว");
-      } finally {
-        setLoading(false);
+    // ดึงที่อยู่จาก Profile ของ User (ดึงจาก AuthContext ที่ Backend Populate มาให้แล้ว)
+    if (user) {
+      const userAddresses = user.addresses || [];
+      setAddresses(userAddresses);
+      
+      // เลือกที่อยู่ Default อัตโนมัติ
+      const defaultAddr = userAddresses.find(a => a.isDefault) || userAddresses[0];
+      if (defaultAddr) {
+        setSelectedAddressId(defaultAddr._id || defaultAddr.id);
       }
-    };
-
-    initCheckout();
-  }, [user, navigate]);
+      setLoading(false);
+    } else {
+      setLoading(cartLoading);
+    }
+  }, [user, cartLoading]);
 
   const submitOrder = async () => {
     if (!selectedAddressId) {
@@ -72,7 +53,6 @@ export const useCheckout = () => {
     setIsSubmitting(true);
     try {
       // 🛡️ Doc 12.2: Tampering Prevention
-      // ส่งเฉพาะข้อมูลที่จำเป็น Backend จะคำนวณยอดเงินเองจาก Database/Cart
       const orderPayload = {
         addressId: selectedAddressId,
         paymentMethod
@@ -81,10 +61,9 @@ export const useCheckout = () => {
       const res = await createOrderApi(orderPayload);
 
       if (res.success) {
-        toast.success("สร้างคำสั่งซื้อสำเร็จ! กรุณาชำระเงินภายในเวลาที่กำหนด");
+        toast.success(res.message || "สร้างคำสั่งซื้อสำเร็จ!");
         
         // 🚀 Doc 2.4 & API PLAN Flow 5: Navigation Security
-        // ใช้เฉพาะ orderId จาก Success Response เท่านั้น
         const orderId = res.data?._id || res.data?.id;
         
         navigate(`/payment/${orderId}`, { 
