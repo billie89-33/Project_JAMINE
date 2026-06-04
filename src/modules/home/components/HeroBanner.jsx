@@ -48,17 +48,17 @@ const HeroBanner = ({ placement = 'home_hero' }) => {
   const currentBanner = banners[currentIndex];
 
   return (
-    <div className="relative w-full aspect-[2/1] md:aspect-[1920/600] min-h-[250px] rounded-[40px] overflow-hidden group shadow-2xl shadow-purple-200/50 border-4 border-white">
+    <div className="relative w-full h-[300px] md:h-[450px] rounded-[40px] overflow-hidden group shadow-2xl shadow-purple-200/50 border-4 border-white">
       
       {/* 1. รูปภาพแบนเนอร์ปัจจุบัน (สามารถคลิกได้) */}
       <div 
-        className="w-full h-full cursor-pointer overflow-hidden bg-slate-50"
+        className="w-full h-full cursor-pointer overflow-hidden"
         onClick={() => currentBanner.linkUrl && navigate(currentBanner.linkUrl)}
       >
         <img
           src={currentBanner.image.url}
           alt={currentBanner.title}
-          className="w-full h-full object-contain object-center transition-transform duration-[2000ms] group-hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105"
         />
         
         {/* แถบพาดข้อมูลแบนเนอร์แบบจางๆ เพิ่มความหรูหรา */}

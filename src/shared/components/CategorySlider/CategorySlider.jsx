@@ -115,7 +115,7 @@ const CategorySlider = () => {
                   <img
                     src={cat.image}
                     alt={cat.name}
-                    className="w-full h-full object-contain rounded-full group-hover/item:scale-110 transition-transform duration-700 p-1"
+                    className="w-full h-full object-cover rounded-full group-hover/item:scale-110 transition-transform duration-700"
                     onError={(e) => {
                       // fallback icon style if image fails
                       e.target.style.display = 'none';

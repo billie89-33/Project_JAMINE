@@ -49,12 +49,12 @@ const PromotionBanner = () => {
   return (
     <div 
       onClick={() => promo.linkUrl && navigate(promo.linkUrl)}
-      className="w-full aspect-[3/1] min-h-[120px] overflow-hidden rounded-[32px] shadow-2xl shadow-purple-100/50 border-2 border-white hover:border-purple-200 transition-all duration-500 cursor-pointer group relative bg-slate-50"
+      className="w-full h-[150px] sm:h-[200px] overflow-hidden rounded-[32px] shadow-2xl shadow-purple-100/50 border-2 border-white hover:border-purple-200 transition-all duration-500 cursor-pointer group relative"
     >
       <img
         src={promo.image.url}
         alt={promo.title}
-        className="w-full h-full object-contain object-center group-hover:scale-105 transition-transform duration-[1500ms]"
+        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1500ms]"
       />
       <div className="absolute inset-0 bg-gradient-to-r from-slate-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center px-10">
          <span className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl text-[10px] font-black text-purple-600 uppercase tracking-[0.2em] shadow-xl">Get Offer ✨</span>
