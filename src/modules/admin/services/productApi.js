@@ -29,11 +29,8 @@ export const getProductById = async (id) => {
  * @param {FormData} formData - ข้อมูลสินค้าพร้อมไฟล์ภาพ
  */
 export const createProductApi = async (formData) => {
-    const response = await apiClient.post('/admin/products', formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        }
-    });
+    // 🛡️ ปล่อยให้ Axios จัดการ Boundary อัตโนมัติ (ห้ามเซ็ต Header เอง)
+    const response = await apiClient.post('/admin/products', formData);
     return response.data;
 };
 

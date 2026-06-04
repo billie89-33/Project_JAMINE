@@ -80,6 +80,16 @@ export const BannerForm = ({ initialData, onSubmit, onCancel, isSubmitting }) =>
       return onCancel(); 
     }
     
+    // 🔍 Debug: ตรวจสอบข้อมูลใน FormData ก่อนส่งจริง
+    console.log('🚀 Final Banner Payload (FormData):');
+    for (let [key, value] of submitData.entries()) {
+      if (key === 'image') {
+        console.log(`- ${key}:`, value instanceof File ? `File [${value.name}]` : 'Not a File!');
+      } else {
+        console.log(`- ${key}: ${value}`);
+      }
+    }
+
     // 🚀 ส่งข้อมูลไปที่ Handler (หน้า Page)
     onSubmit(submitData, initialData?._id);
   };
