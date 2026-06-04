@@ -10,7 +10,7 @@ import { createOrderApi, addAddressApi, deleteAddressApi } from '../services/che
  */
 export const useCheckout = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth(); // 🔄 เพิ่ม refreshUser เข้ามา
   const { cartItems, summary: cartSummary, loading: cartLoading } = useCart();
 
   const [addresses, setAddresses] = useState([]);
@@ -27,22 +27,22 @@ export const useCheckout = () => {
     total: cartSummary.total
   };
 
+  // 🔄 ซิงค์ที่อยู่จาก User Profile เมื่อมีการเปลี่ยนแปลง
   useEffect(() => {
-    // ดึงที่อยู่จาก Profile ของ User (ดึงจาก AuthContext ที่ Backend Populate มาให้แล้ว)
     if (user) {
       const userAddresses = user.addresses || [];
       setAddresses(userAddresses);
       
-      // เลือกที่อยู่ Default อัตโนมัติ
-      const defaultAddr = userAddresses.find(a => a.isDefault) || userAddresses[0];
-      if (defaultAddr) {
+      // ถ้ายังไม่ได้เลือกที่อยู่ ให้เลือกที่อยู่ Default หรือที่อยู่อันแรก
+      if (!selectedAddressId && userAddresses.length > 0) {
+        const defaultAddr = userAddresses.find(a => a.isDefault) || userAddresses[0];
         setSelectedAddressId(defaultAddr._id || defaultAddr.id);
       }
       setLoading(false);
     } else {
       setLoading(cartLoading);
     }
-  }, [user, cartLoading]);
+  }, [user, cartLoading, selectedAddressId]);
 
   const submitOrder = async () => {
     if (!selectedAddressId) {
@@ -80,13 +80,21 @@ export const useCheckout = () => {
     }
   };
 
-  // ➕ ฟังก์ชันเพิ่มที่อยู่ใหม่
+  // ➕ ฟังก์ชันเพิ่มที่อยู่ใหม่ (พร้อม Sync Global State)
   const addAddress = async (newAddressData) => {
     try {
       const res = await addAddressApi(newAddressData);
       if (res.success) {
-        setAddresses(prev => [...prev, res.data]);
-        setSelectedAddressId(res.data.id);
+        // 🔄 ดึงข้อมูลผู้ใช้ใหม่เพื่อให้ที่อยู่ใหม่ปรากฏใน Global State
+        const updatedUser = await refreshUser();
+        
+        // พยายามหา ID ของที่อยู่ที่เพิ่งเพิ่มเข้าไปเพื่อเลือกให้อัตโนมัติ
+        if (updatedUser && updatedUser.addresses) {
+           // ปกติที่อยู่ใหม่จะอยู่ท้ายสุด หรือหาตามข้อมูลที่ส่งไป
+           const newAddr = updatedUser.addresses[updatedUser.addresses.length - 1];
+           if (newAddr) setSelectedAddressId(newAddr._id || newAddr.id);
+        }
+        
         toast.success("เพิ่มที่อยู่สำเร็จ");
       }
     } catch (error) {
@@ -94,12 +102,12 @@ export const useCheckout = () => {
     }
   };
 
-  // 🗑️ ฟังก์ชันลบที่อยู่
+  // 🗑️ ฟังก์ชันลบที่อยู่ (พร้อม Sync Global State)
   const deleteAddress = async (addressId) => {
     try {
       const res = await deleteAddressApi(addressId);
       if (res.success) {
-        setAddresses(prev => prev.filter(addr => addr.id !== addressId));
+        await refreshUser(); // 🔄 Sync ใหม่
         if (selectedAddressId === addressId) setSelectedAddressId(null);
         toast.success("ลบที่อยู่เรียบร้อย");
       }

@@ -12,27 +12,37 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    // 🔄 ฟังก์ชันดึงข้อมูลผู้ใช้ใหม่ (Sync Global State)
+    const refreshUser = async () => {
+        try {
+            const res = await getMeApi();
+            if (res.success) {
+                setUser(res.data);
+                return res.data;
+            }
+        } catch (error) {
+            console.error('Failed to refresh user data:', error);
+            return null;
+        }
+    };
+
     // ตรวจสอบสถานะการล็อกอินเมื่อเปิดแอป (Check Auth Me)
     useEffect(() => {
         const checkAuthStatus = async () => {
             try {
-                // 🛡️ Single Source of Truth: ดึงข้อมูลจาก Server เสมอ
-                const res = await getMeApi();
-                if (res.success) {
-                    setUser(res.data);
-                }
+                await refreshUser();
             } catch (error) {
                 console.warn('User not authenticated (Initial check)');
 
-                // 🧪 Safe Dev Mock: จะทำงานเฉพาะตอนรัน npm run dev ในเครื่องตัวเองเท่านั้น
-                // และต้องเปิด VITE_DEV_MOCK_ADMIN=true ในไฟล์ .env.local
+                // 🧪 Safe Dev Mock
                 if (import.meta.env.DEV && import.meta.env.VITE_DEV_MOCK_ADMIN === 'true') {
                     console.log('🛠️ [Dev Mode] Mocking Admin session for testing...');
                     setUser({
                         _id: 'dev-mock-admin-id',
                         username: 'Dev_Admin',
                         email: 'admin@test.com',
-                        role: USER_ROLES.ADMIN
+                        role: USER_ROLES.ADMIN,
+                        addresses: []
                     });
                 } else {
                     setUser(null);
@@ -46,7 +56,6 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = (userData) => {
-        // ✅ เก็บแค่ใน State (ความปลอดภัยสูง)
         setUser(userData);
     };
 
@@ -56,7 +65,6 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             console.error('Logout error:', error);
         } finally {
-            // 🧹 ล้าง State ทุกกรณี
             setUser(null);
             localStorage.clear();
             sessionStorage.clear();
@@ -64,7 +72,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, loading, login, logout }}>
+        <AuthContext.Provider value={{ user, loading, login, logout, refreshUser }}>
             {!loading && children}
         </AuthContext.Provider>
     );
