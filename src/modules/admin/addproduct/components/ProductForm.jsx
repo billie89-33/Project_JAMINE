@@ -26,7 +26,9 @@ const ProductForm = () => {
         categoriesList,
         brandsList,
         handleFileSelect,
+        handleAddSpecRow,
         handleSpecChange,
+        handleRemoveSpec,
         handleSubmit
     } = useAddProduct();
 
@@ -49,6 +51,7 @@ const ProductForm = () => {
                             <SpecFields 
                                 category={category} 
                                 specifications={specifications} 
+                                onAddRow={handleAddSpecRow}
                                 onSpecChange={handleSpecChange} 
                                 onRemoveSpec={handleRemoveSpec}
                             />
