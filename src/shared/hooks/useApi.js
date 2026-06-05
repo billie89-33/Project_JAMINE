@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 
 /**
@@ -20,8 +20,17 @@ export const useApi = (apiFunc, options = {}) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // 🛡️ ป้องกัน Infinite Loop: เก็บค่า options และ apiFunc ไว้ใน Ref เพื่อให้ execute เป็นฟังก์ชันที่มี Reference คงที่เสมอ
+  const optionsRef = useRef(options);
+  const apiFuncRef = useRef(apiFunc);
+
+  useEffect(() => {
+    optionsRef.current = options;
+    apiFuncRef.current = apiFunc;
+  });
+
   const execute = useCallback(async (...args) => {
-    // 🛡️ ดึงค่าจาก options มาใช้ (ทำในฟังก์ชันเพื่อให้สดใหม่เสมอ)
+    // 🛡️ ดึงค่าจาก Ref มาใช้ เพื่อให้ได้ค่าล่าสุดเสมอโดยไม่ต้องเอา options ไปใส่ใน Dependency Array
     const {
       onSuccess,
       onError,
@@ -30,13 +39,13 @@ export const useApi = (apiFunc, options = {}) => {
       successMessage,
       errorMessage,
       transform = (res) => res?.data ?? res
-    } = options;
+    } = optionsRef.current;
 
     try {
       setLoading(true);
       setError(null);
       
-      const res = await apiFunc(...args);
+      const res = await apiFuncRef.current(...args);
       const transformedData = transform(res);
       
       setData(transformedData);
@@ -66,7 +75,7 @@ export const useApi = (apiFunc, options = {}) => {
       setLoading(false);
       if (onFinally) onFinally();
     }
-  }, [apiFunc, options]); // Note: options ควรเป็นเมมโมไรซ์ หรือส่งค่าที่จำเป็นเข้ามา
+  }, []); // ⚡ Dependency ว่างเปล่า = execute จะไม่มีวันเปลี่ยน Reference!
 
   return {
     data,
