@@ -26,8 +26,8 @@ export const useAddProduct = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
     
-    // 💾 3. State คุม Specs ย่อยเฉพาะหมวดหมู่
-    const [specifications, setSpecifications] = useState({});
+    // 💾 3. State คุม Specs เป็น Array ของ Object เพื่อการ Render UI ที่เสถียร (ป้องกัน Input เสีย Focus)
+    const [specifications, setSpecifications] = useState([]);
 
     // 🚀 4. เรียกใช้ Action Hook สำหรับการส่ง API
     const { handleAddProduct, isSubmitting } = useProductActions();
@@ -39,11 +39,14 @@ export const useAddProduct = () => {
         onSuccess: (keys) => {
             // Smart Auto-fill: สร้างช่องรอไว้ให้เลยถ้าดึง keys มาได้
             if (keys && keys.length > 0) {
-                const initialSpecs = {};
-                keys.forEach(k => initialSpecs[k.key || k] = ''); // รองรับทั้ง array of string หรือ array of objects
+                const initialSpecs = keys.map((k, index) => ({
+                    id: `spec_auto_${Date.now()}_${index}`, // Unique ID สำหรับ React Key
+                    key: k.key || k,
+                    value: ''
+                }));
                 setSpecifications(initialSpecs);
             } else {
-                setSpecifications({});
+                setSpecifications([]);
             }
         }
     });
@@ -54,12 +57,13 @@ export const useAddProduct = () => {
     }, [fetchCategories]);
 
     // ดึงแบรนด์และ Template Spec ใหม่ทุกครั้งที่หมวดหมู่เปลี่ยน
+    // (หมายเหตุ: ในอนาคตอาจปรับให้ดึงเมื่อ OnBlur เพื่อลดการยิง API ตอนพิมพ์ทีละตัวอักษร)
     useEffect(() => {
         fetchBrands(category || undefined);
         if (category) {
             fetchSpecKeys(category);
         } else {
-            setSpecifications({});
+            setSpecifications([]);
         }
     }, [category, fetchBrands, fetchSpecKeys]);
 
@@ -70,15 +74,21 @@ export const useAddProduct = () => {
         setImagePreview(URL.createObjectURL(file)); 
     };
 
-    const handleSpecChange = (key, value) => {
-        setSpecifications(prev => {
-            const newSpecs = { ...prev, [key]: value };
-            return newSpecs;
-        });
+    const handleAddSpecRow = () => {
+        setSpecifications(prev => [
+            ...prev, 
+            { id: `spec_manual_${Date.now()}`, key: '', value: '' }
+        ]);
     };
 
-    const handleRemoveSpec = (key) => {
-        setSpecifications(prev => ({ ...prev, [key]: null }));
+    const handleSpecChange = (id, field, newValue) => {
+        setSpecifications(prev => prev.map(spec => 
+            spec.id === id ? { ...spec, [field]: newValue } : spec
+        ));
+    };
+
+    const handleRemoveSpec = (id) => {
+        setSpecifications(prev => prev.filter(spec => spec.id !== id));
     };
 
     /**
@@ -97,7 +107,7 @@ export const useAddProduct = () => {
         setCategory('');
         setStatus(PRODUCT_STATUS.ACTIVE);
         setIsFeatured(false);
-        setSpecifications({});
+        setSpecifications([]);
     };
 
     /**
@@ -109,10 +119,19 @@ export const useAddProduct = () => {
         if (!selectedFile) {
             return alert('กรุณาเลือกรูปภาพสินค้าก่อนกดบันทึกครับ');
         }
+
+        // แปลง Array กลับเป็น Object ก่อนส่งให้ Backend (ทิ้งแถวที่ไม่มี Key)
+        const specsObject = {};
+        specifications.forEach(spec => {
+            const trimmedKey = spec.key.trim();
+            if (trimmedKey) {
+                specsObject[trimmedKey] = spec.value;
+            }
+        });
         
         const rawData = {
             modelName, brand, description, sku, tags, stock, price, category, status, isFeatured, selectedFile, 
-            specifications: JSON.stringify(specifications) // ส่งเป็น JSON String ตาม Blueprint
+            specifications: JSON.stringify(specsObject) // ส่งเป็น JSON String ตาม Blueprint
         };
 
         const result = await handleAddProduct(rawData);
@@ -144,6 +163,7 @@ export const useAddProduct = () => {
         
         // Handlers
         handleFileSelect,
+        handleAddSpecRow,
         handleSpecChange,
         handleRemoveSpec,
         handleSubmit
