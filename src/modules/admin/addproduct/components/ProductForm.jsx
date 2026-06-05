@@ -1,7 +1,7 @@
 import ImageUploadBox from './ImageUploadBox';
 import SpecFields from './SpecFields';
 import { useAddProduct } from '../hooks/useAddProduct';
-import { CATEGORIES, PRODUCT_STATUS } from '@/shared/constants';
+import { PRODUCT_STATUS } from '@/shared/constants';
 
 /**
  * 📦 ProductForm (Dumb/Presentational Component)
@@ -23,6 +23,8 @@ const ProductForm = () => {
         imagePreview,
         specifications,
         isSubmitting,
+        categoriesList,
+        brandsList,
         handleFileSelect,
         handleSpecChange,
         handleSubmit
@@ -61,12 +63,18 @@ const ProductForm = () => {
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Brand</label>
                                 <input 
                                     type="text" 
+                                    list="brands-list"
                                     placeholder="เช่น Corsair, Razer..." 
                                     value={brand} 
                                     onChange={e => setBrand(e.target.value)} 
                                     required 
                                     className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-bold focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none transition-all shadow-sm" 
                                 />
+                                <datalist id="brands-list">
+                                    {(brandsList || []).map(b => (
+                                        <option key={b} value={b} />
+                                    ))}
+                                </datalist>
                             </div>
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Model Name</label>
@@ -146,15 +154,20 @@ const ProductForm = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Category</label>
-                                <select 
+                                <input 
+                                    type="text"
+                                    list="categories-list"
+                                    placeholder="พิมพ์หรือเลือกหมวดหมู่..."
                                     value={category} 
                                     onChange={e => setCategory(e.target.value)} 
-                                    className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-bold focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none cursor-pointer shadow-sm"
-                                >
-                                    {CATEGORIES.map(cat => (
-                                        <option key={cat} value={cat}>{cat}</option>
+                                    required
+                                    className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-bold focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none shadow-sm"
+                                />
+                                <datalist id="categories-list">
+                                    {(categoriesList || []).map(cat => (
+                                        <option key={cat} value={cat} />
                                     ))}
-                                </select>
+                                </datalist>
                             </div>
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Status</label>

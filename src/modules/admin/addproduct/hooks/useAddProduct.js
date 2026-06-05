@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useProductActions } from './useProductActions';
-import { CATEGORIES, PRODUCT_STATUS } from '@/shared/constants';
+import { PRODUCT_STATUS } from '@/shared/constants';
+import { useApi } from '@/shared/hooks/useApi';
+import { getCategoriesApi, getBrandsApi } from '@/modules/products/services/productApi';
 
 /**
  * 🎣 useAddProduct Hook (Smart Logic)
@@ -10,15 +12,15 @@ import { CATEGORIES, PRODUCT_STATUS } from '@/shared/constants';
 export const useAddProduct = () => {
     // 💾 1. State ข้อมูลทั่วไป
     const [modelName, setModelName] = useState('');
-    const [brand, setBrand] = useState(''); // 🆕 เพิ่มฟิลด์แบรนด์
+    const [brand, setBrand] = useState(''); 
     const [description, setDescription] = useState(''); 
     const [sku, setSku] = useState('');
-    const [tags, setTags] = useState(''); // 🏷️ Tag Processing Pattern: เตรียมไว้เป็น String เพื่อแยกด้วยคอมม่า
+    const [tags, setTags] = useState(''); 
     const [stock, setStock] = useState(1); 
-    const [price, setPrice] = useState(''); // เปลี่ยนจาก regularPrice เป็น price ให้ตรง Backend
-    const [category, setCategory] = useState(CATEGORIES[1]); // Default: Keyboard
-    const [status, setStatus] = useState(PRODUCT_STATUS.ACTIVE); // 🆕 เพิ่มสถานะสินค้า
-    const [isFeatured, setIsFeatured] = useState(false); // 🆕 เพิ่มสินค้าแนะนำ
+    const [price, setPrice] = useState(''); 
+    const [category, setCategory] = useState(''); // เริ่มต้นเป็นค่าว่าง ให้พิมพ์หรือเลือกเอง
+    const [status, setStatus] = useState(PRODUCT_STATUS.ACTIVE); 
+    const [isFeatured, setIsFeatured] = useState(false); 
 
     // 💾 2. State คุมข้อมูลไฟล์ภาพ
     const [selectedFile, setSelectedFile] = useState(null);
@@ -29,6 +31,20 @@ export const useAddProduct = () => {
 
     // 🚀 4. เรียกใช้ Action Hook สำหรับการส่ง API
     const { handleAddProduct, isSubmitting } = useProductActions();
+
+    // 🌐 5. ดึงข้อมูล Master Data สำหรับ Auto-suggest (Datalist)
+    const { data: categoriesList, execute: fetchCategories } = useApi(getCategoriesApi);
+    const { data: brandsList, execute: fetchBrands } = useApi(getBrandsApi);
+
+    // ดึงหมวดหมู่ทั้งหมดครั้งแรกที่โหลดหน้า
+    useEffect(() => {
+        fetchCategories();
+    }, [fetchCategories]);
+
+    // ดึงแบรนด์ใหม่ทุกครั้งที่หมวดหมู่เปลี่ยน (เพื่อทำ Smart Suggestion)
+    useEffect(() => {
+        fetchBrands(category || undefined);
+    }, [category, fetchBrands]);
 
     // 🔄 รีเซ็ตช่องกรอก Specs เมื่อมีการเปลี่ยนหมวดหมู่
     useEffect(() => {
@@ -59,7 +75,7 @@ export const useAddProduct = () => {
         setPrice('');
         setSelectedFile(null); 
         setImagePreview(null); 
-        setCategory(CATEGORIES[1]);
+        setCategory('');
         setStatus(PRODUCT_STATUS.ACTIVE);
         setIsFeatured(false);
         setSpecifications({});
@@ -103,6 +119,8 @@ export const useAddProduct = () => {
         imagePreview,
         specifications,
         isSubmitting,
+        categoriesList,
+        brandsList,
         
         // Handlers
         handleFileSelect,
