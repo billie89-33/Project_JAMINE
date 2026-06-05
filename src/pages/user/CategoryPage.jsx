@@ -124,6 +124,7 @@ const CategoryPage = () => {
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
+                loading={loading}
               />
             </div>
 

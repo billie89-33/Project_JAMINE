@@ -69,6 +69,7 @@ const ProductsPage = () => {
             currentPage={currentPage} 
             totalPages={totalPages} 
             onPageChange={setCurrentPage} 
+            loading={isLoading}
           />
         </div>
 
