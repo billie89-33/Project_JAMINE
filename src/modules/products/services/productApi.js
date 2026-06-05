@@ -18,7 +18,7 @@ export const getProductsApi = async (params) => {
  * ดึงรายการหมวดหมู่ (Categories) ทั้งหมดที่มีในระบบ
  */
 export const getCategoriesApi = async () => {
-    const response = await apiClient.get('/categories');
+    const response = await apiClient.get('/products/categories');
     return response.data;
 };
 
@@ -27,7 +27,7 @@ export const getCategoriesApi = async () => {
  */
 export const getBrandsApi = async (category) => {
     const params = category ? { category } : {};
-    const response = await apiClient.get('/brands', { params });
+    const response = await apiClient.get('/products/brands', { params });
     return response.data;
 };
 
