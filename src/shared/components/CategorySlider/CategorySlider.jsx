@@ -1,15 +1,23 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Filter } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { CATEGORIES } from '@/shared/constants';
+import { getCategoriesApi } from '@/modules/products/services/productApi';
+import { useApi } from '@/shared/hooks/useApi';
 
 /**
  * 🎡 CategorySlider Component
- * ดึงรายการหมวดหมู่สินค้ามาจาก Global Constants (ซิงค์กับ Backend)
+ * ดึงรายการหมวดหมู่สินค้ามาจาก API แบบ Dynamic
  */
 const CategorySlider = () => {
   const navigate = useNavigate();
   const scrollRef = useRef(null);
+
+  // 🎣 ดึงข้อมูลหมวดหมู่จาก API
+  const { data: apiCategories, loading, execute: fetchCategories } = useApi(getCategoriesApi);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
   // 🖼️ ระบบ Mapping รูปภาพประจำหมวดหมู่ (ถ้าเพิ่มหมวดใหม่ในอนาคตแต่ไม่มีในนี้ จะใช้ Default Image)
   const categoryImages = {
@@ -24,8 +32,8 @@ const CategorySlider = () => {
     'Mainboard': 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=300&auto=format&fit=crop'
   };
 
-  // สร้างออบเจกต์หมวดหมู่จาก Constants
-  const categories = CATEGORIES.map((name, index) => ({
+  // สร้างออบเจกต์หมวดหมู่จาก API
+  const categories = (apiCategories || []).map((name, index) => ({
     id: index + 1,
     name: name,
     type: name,
@@ -62,7 +70,10 @@ const CategorySlider = () => {
               Explore by <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">Category</span>
             </h2>
           </div>
-          <button className="group/btn flex items-center gap-2 px-6 py-3 bg-purple-50 hover:bg-purple-600 text-purple-600 hover:text-white rounded-2xl text-xs font-black uppercase tracking-widest transition-all duration-300 shadow-sm hover:shadow-purple-200">
+          <button 
+            onClick={() => navigate('/category/All')}
+            className="group/btn flex items-center gap-2 px-6 py-3 bg-purple-50 hover:bg-purple-600 text-purple-600 hover:text-white rounded-2xl text-xs font-black uppercase tracking-widest transition-all duration-300 shadow-sm hover:shadow-purple-200"
+          >
             View All 
             <ChevronRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
           </button>
@@ -93,53 +104,65 @@ const CategorySlider = () => {
           className="flex gap-6 sm:gap-8 overflow-x-auto scrollbar-none py-4 px-2 scroll-smooth"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          {categories.map((cat) => (
-            <div
-              key={cat.id}
-              onClick={() => navigate(`/category/${cat.type}`)}
-              className="flex flex-col items-center gap-5 cursor-pointer flex-shrink-0 w-28 sm:w-32 group/item"
-            >
-              {/* 🌈 วงกลมล้อมรอบรูปภาพที่มีลูกเล่นไล่เฉด */}
-              <div className="relative">
-                {/* Outer Glow Ring */}
-                <div className="absolute -inset-2 bg-gradient-to-br from-purple-400 to-indigo-600 rounded-full opacity-0 group-hover/item:opacity-20 blur-md transition-opacity duration-500"></div>
-                
-                {/* Main Circle Container */}
-                <div className="relative w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-br from-slate-50 to-white rounded-full border-2 border-white shadow-xl group-hover/item:shadow-purple-200/50 flex items-center justify-center p-3 transition-all duration-500 group-hover/item:-translate-y-3 group-hover/item:scale-105 overflow-hidden">
+          {loading ? (
+            /* Skeleton Loading State */
+            [...Array(6)].map((_, i) => (
+              <div key={`skel-${i}`} className="flex flex-col items-center gap-5 flex-shrink-0 w-28 sm:w-32 animate-pulse">
+                <div className="w-24 h-24 sm:w-28 sm:h-28 bg-purple-50 rounded-full"></div>
+                <div className="w-16 h-4 bg-purple-50 rounded-full"></div>
+              </div>
+            ))
+          ) : categories.length > 0 ? (
+            categories.map((cat) => (
+              <div
+                key={cat.id}
+                onClick={() => navigate(`/category/${cat.type}`)}
+                className="flex flex-col items-center gap-5 cursor-pointer flex-shrink-0 w-28 sm:w-32 group/item"
+              >
+                {/* 🌈 วงกลมล้อมรอบรูปภาพที่มีลูกเล่นไล่เฉด */}
+                <div className="relative">
+                  {/* Outer Glow Ring */}
+                  <div className="absolute -inset-2 bg-gradient-to-br from-purple-400 to-indigo-600 rounded-full opacity-0 group-hover/item:opacity-20 blur-md transition-opacity duration-500"></div>
                   
-                  {/* Subtle Background Pattern in circle */}
-                  <div className="absolute inset-0 opacity-[0.03] group-hover/item:opacity-[0.07] transition-opacity">
-                    <svg width="100%" height="100%"><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" strokeWidth="0.5"/></pattern><rect width="100%" height="100%" fill="url(#grid)"/></svg>
-                  </div>
+                  {/* Main Circle Container */}
+                  <div className="relative w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-br from-slate-50 to-white rounded-full border-2 border-white shadow-xl group-hover/item:shadow-purple-200/50 flex items-center justify-center p-3 transition-all duration-500 group-hover/item:-translate-y-3 group-hover/item:scale-105 overflow-hidden">
+                    
+                    {/* Subtle Background Pattern in circle */}
+                    <div className="absolute inset-0 opacity-[0.03] group-hover/item:opacity-[0.07] transition-opacity">
+                      <svg width="100%" height="100%"><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" strokeWidth="0.5"/></pattern><rect width="100%" height="100%" fill="url(#grid)"/></svg>
+                    </div>
 
-                  <img
-                    src={cat.image}
-                    alt={cat.name}
-                    className="w-full h-full object-cover rounded-full group-hover/item:scale-110 transition-transform duration-700"
-                    onError={(e) => {
-                      // fallback icon style if image fails
-                      e.target.style.display = 'none';
-                      e.target.nextSibling.style.display = 'flex';
-                    }}
-                  />
-                  <div className="hidden absolute inset-0 bg-purple-50 items-center justify-center text-purple-300">
-                    <Filter size={32} strokeWidth={1.5} />
-                  </div>
+                    <img
+                      src={cat.image}
+                      alt={cat.name}
+                      className="w-full h-full object-cover rounded-full group-hover/item:scale-110 transition-transform duration-700"
+                      onError={(e) => {
+                        // fallback icon style if image fails
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                    <div className="hidden absolute inset-0 bg-purple-50 items-center justify-center text-purple-300">
+                      <Filter size={32} strokeWidth={1.5} />
+                    </div>
 
-                  {/* Glass Shine Effect */}
-                  <div className="absolute top-[-100%] left-[-100%] w-1/2 h-[200%] bg-white/20 rotate-[35deg] group-hover/item:top-[100%] group-hover/item:left-[100%] transition-all duration-1000 ease-in-out"></div>
+                    {/* Glass Shine Effect */}
+                    <div className="absolute top-[-100%] left-[-100%] w-1/2 h-[200%] bg-white/20 rotate-[35deg] group-hover/item:top-[100%] group-hover/item:left-[100%] transition-all duration-1000 ease-in-out"></div>
+                  </div>
+                </div>
+
+                {/* 🏷️ ชื่อหมวดหมู่สินค้าที่มีสไตล์ */}
+                <div className="flex flex-col items-center space-y-1">
+                  <span className="text-sm sm:text-base text-slate-600 font-black tracking-tight group-hover/item:text-purple-600 transition-colors duration-300">
+                    {cat.name}
+                  </span>
+                  <div className="w-0 h-[3px] bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full group-hover/item:w-8 transition-all duration-500"></div>
                 </div>
               </div>
-
-              {/* 🏷️ ชื่อหมวดหมู่สินค้าที่มีสไตล์ */}
-              <div className="flex flex-col items-center space-y-1">
-                <span className="text-sm sm:text-base text-slate-600 font-black tracking-tight group-hover/item:text-purple-600 transition-colors duration-300">
-                  {cat.name}
-                </span>
-                <div className="w-0 h-[3px] bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full group-hover/item:w-8 transition-all duration-500"></div>
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <div className="w-full text-center py-8 text-slate-400 font-medium">ไม่พบหมวดหมู่สินค้า</div>
+          )}
         </div>
       </div>
     </div>
