@@ -22,11 +22,17 @@ export const useLogin = () => {
   
   // 🧹 Status State: ใช้ onSuccess option เพื่อลด Logic ใน Submit function
   const { loading, error, setError, execute: loginRequest } = useApi(loginApi, {
-    onSuccess: (res) => {
+    onSuccess: (userData, res) => {
+      console.log('✅ Login successful:', { userData, res });
       if (res.success) {
-        setAuthUser(res.data);
+        setAuthUser(userData);
         navigate('/', { replace: true });
+      } else {
+        setError(res.message || 'Login failed');
       }
+    },
+    onError: (msg) => {
+      console.error('❌ Login error:', msg);
     }
   });
 

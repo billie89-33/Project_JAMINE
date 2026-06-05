@@ -28,7 +28,17 @@ export const useRegister = () => {
   const { loading, error, setError, execute: registerRequest } = useApi(registerApi, {
     showToast: true,
     successMessage: 'สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ',
-    onSuccess: () => navigate('/login')
+    onSuccess: (data, res) => {
+      console.log('✅ Registration successful:', { data, res });
+      if (res.success) {
+        navigate('/login');
+      } else {
+        setError(res.message || 'Registration failed');
+      }
+    },
+    onError: (msg) => {
+      console.error('❌ Registration error:', msg);
+    }
   });
 
   /**

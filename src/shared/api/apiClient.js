@@ -9,15 +9,30 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
     (config) => {
+        // ⏱️ Start timer
+        config.metadata = { startTime: new Date() };
+        console.log(`🚀 [API Request] ${config.method.toUpperCase()} ${config.url}`);
         return config;
     },
     (error) => Promise.reject(error)
 );
 
 apiClient.interceptors.response.use(
-    (response) => response,
+    (response) => {
+        // ⏱️ End timer
+        const startTime = response.config.metadata.startTime;
+        const duration = new Date() - startTime;
+        console.log(`✅ [API Response] ${response.config.method.toUpperCase()} ${response.config.url} - ${duration}ms`);
+        return response;
+    },
     (error) => {
-        const { response } = error;
+        const { response, config } = error;
+        
+        // ⏱️ End timer even on error
+        if (config && config.metadata) {
+            const duration = new Date() - config.metadata.startTime;
+            console.error(`❌ [API Error] ${config.method.toUpperCase()} ${config.url} - ${duration}ms`);
+        }
 
         if (response && response.status === 401) {
             console.error('Session expired or Unauthorized. Cleaning up and redirecting...');
