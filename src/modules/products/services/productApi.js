@@ -32,6 +32,15 @@ export const getBrandsApi = async (category) => {
 };
 
 /**
+ * ดึงโครงสร้างสเปคเดิมมาใช้ซ้ำ (Smart Spec Template)
+ */
+export const getSpecKeysApi = async (category) => {
+    if (!category) return [];
+    const response = await apiClient.get('/products/spec-keys', { params: { category } });
+    return response.data;
+};
+
+/**
  * ดึงข้อมูลสินค้าชิ้นเดียวตาม ID
  * @param {string} id - ID ของสินค้า
  */

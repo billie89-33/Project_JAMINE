@@ -50,6 +50,7 @@ const ProductForm = () => {
                                 category={category} 
                                 specifications={specifications} 
                                 onSpecChange={handleSpecChange} 
+                                onRemoveSpec={handleRemoveSpec}
                             />
                         </div>
                     </div>

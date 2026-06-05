@@ -1,206 +1,98 @@
-const CATEGORY_TEMPLATES = {
-    'Keyboard': [
-        'Brand',
-        'Switch Name', 
-        'Connectivity', 
-        'Localization', 
-        'Materiel', 
-        'Dimensions', 
-        'Weight', 
-        'Type', 
-        'Lighting', 
-        'Color', 
-        'WIRED/WIRELESS', 
-        'USB Port', 
-        'Wireless Frequency', 
-        'Battery Type and Quantity', 
-        'Warranty'
-    ],
-    'CPU': [
-        'Brand',
-        'Series',
-        'Processor Number',
-        'Socket Type',
-        'Cores/Threads',
-        'Base Frequency',
-        'Max Turbo Frequency',
-        'L2 Cache',
-        'L3 Cache',
-        'Graphics Models',
-        '64Bit Support',
-        'CPU Cooler',
-        'Default TDP',
-        'Maximum Turbo Power',
-        'Warranty'
-    ],
-    'Monitor': [
-        'Brand', 
-        'Display Size (in.)', 
-        'Panel Size (in.)', 
-        'Resolution', 
-        'Resolution Type', 
-        'Display color', 
-        'Brightness', 
-        'Display color', 
-        'Contrast ratio', 
-        'Response Time', 
-        'Aspect Ratio', 
-        'Refresh Rate', 
-        'Aspect Ratio', 
-        'Refresh Rate', 
-        'Screen Curvature', 
-        'Pixel Pitch (H x V)', 
-        'Viewing Angle (CR≧10)', 
-        'Display Surface', 
-        'Flicker free', 
-        'Low Blue Light', 
-        'Connectivity', 
-        'Optimum Resolution', 
-        'Power Consumption', 
-        'Dimension (W x H x D)', 
-        'Weight (Esti.)', 
-        'Color', 
-        'HDR Support', 
-        'Adaptive Sync', 
-        'Accessory in box', 
-        'Mechanical', 
-        'Color Gamuts', 
-        'Built-in Speaker', 
-        'Warranty'
-    ],
-    'Notebook': [
-        'Brand',
-        'Model',
-        'Processors',
-        'Processor Speed',
-        'AI Engine',
-        'Video Graphics',
-        'Screen Size',
-        'Display',
-        'Memory',
-        'Memory Slots',
-        'Max Memory',
-        'Storage',
-        'Storage Slots',
-        'Operating System',
-        'Camera',
-        'Connection port',
-        'Wi-Fi/ Bluetooth',
-        'Battery',
-        'Color',
-        'Dimensions',
-        'Weight',
-        'Warranty'
-    ],
-    'Gaming Mouse': [
-        'Brand', 
-        'Scroll Whell', 
-        'Macro Keys', 
-        'Interface', 
-        'Number of buttons', 
-        'Sensor Resolution', 
-        'Dimensions', 
-        'Color', 
-        'Battery Life ', 
-        'Battery Type', 
-        'Sensor technology', 
-        'Wireless technology', 
-        'Click life span', 
-        'Sensor technology', 
-        'Warranty'
-    ],
-    'Graphics Card': [
-        'Brand',
-        'GPU Series',
-        'GPU Model',
-        'Memory Size',
-        'Bus Standards',
-        'OpenGL',
-        'CUDA® Cores',
-        'Memory Interface',
-        'Boost Clock',
-        'Base Clock',
-        'Memory Clock',
-        'Max Digital Resolution',
-        'HDMI Port',
-        'Display Port',
-        'Power Connector',
-        'Power Requirement',
-        'Dimension',
-        'Warranty'
-    ],
-    'RAM': [
-        'Brand',
-        'Memory Series',
-        'Memory Capacity',
-        'Speed',
-        'Memory Type',
-        'Cas Latency',
-        'Tested Latency',
-        'SPD Voltage',
-        'Memory Color',
-        'Warranty'
-    ],
-    'Mainboard': [
-        'Brand', 
-        'Series', 
-        'Socket', 
-        'Chipset', 
-        'Form Factor', 
-        'Memory Slots', 
-        'Max Memory Support', 
-        'Memory Channel', 
-        'Storage (SATA/M.2)', 
-        'Expansion Slots', 
-        'Rear I/O Ports', 
-        'Onboard Audio', 
-        'Onboard LAN/WiFi', 
-        'Warranty'
-    ]
-}; 
+import { Plus, X } from 'lucide-react';
 
 /**
- * 🛠️ SpecFields Component
- * แสดงผลช่องกรอกคุณสมบัติสินค้าตามหมวดหมู่ที่เลือก
- * 💡 แก้ไขบั๊ก Focus Jumping โดยการใช้ uniqueId ผสมชื่อ Category
+ * 🛠️ SpecFields Component (Dynamic Builder)
+ * ระบบเพิ่ม/ลดคุณสมบัติสินค้าแบบ Key-Value อย่างอิสระ
  */
-const SpecFields = ({ category, specifications, onSpecChange }) => {
-    const fields = CATEGORY_TEMPLATES[category] || [];                 
-  
-    return (
-        <div className="bg-white p-4 rounded-md border border-gray-200 shadow-inner">
-            <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 pb-2 border-b border-gray-100">
-                รายละเอียดคุณสมบัติสินค้า ({category})
-            </h4>
-            
-            <div className="space-y-3">
-                {fields.map((key) => {
-                    // 🌟 1. สร้าง Unique ID: ป้องกันเบราว์เซอร์สับสนเมื่อสลับหมวดหมู่
-                    // เช่น "Keyboard-Brand" จะแยกขาดจาก "CPU-Brand"
-                    const uniqueId = `${category}-${key}`.replace(/\s+/g, '-');
+const SpecFields = ({ category, specifications, onSpecChange, onRemoveSpec }) => {
+    // แปลง Object ให้เป็น Array เพื่อใช้วาด UI
+    const specEntries = Object.entries(specifications);
 
-                    return (
-                        <div key={uniqueId} className="flex flex-col sm:flex-row sm:items-center border-b border-gray-50 pb-2 last:border-none">
-                            {/* 🌟 2. ใช้ <label> พร้อม htmlFor: ช่วยเรื่อง Accessibility และแก้บั๊กจิ้มไม่ติด */}
-                            <label 
-                                htmlFor={uniqueId}
-                                className="w-full sm:w-40 text-xs font-bold text-gray-600 mb-1 sm:mb-0 cursor-pointer"
-                            >
-                                {key}
-                            </label>
-                            
-                            <input 
-                                id={uniqueId} // 🌟 3. ผูก id ให้ตรงกับ label
-                                type="text" 
-                                placeholder={`กรอกข้อมูล ${key}`} 
-                                value={specifications[key] || ''} 
-                                onChange={(e) => onSpecChange(key, e.target.value)}
-                                required={key === 'Brand'} 
-                                className="flex-1 p-2 bg-gray-50 border border-gray-200 rounded text-xs text-gray-800 focus:outline-none focus:bg-white focus:ring-1 focus:ring-gray-500"
-                            />
-                        </div>
-                    );
-                })}
+    const handleAddRow = () => {
+        // สร้าง Key ใหม่แบบชั่วคราว (กันซ้ำ)
+        const newKey = `New_Spec_${Date.now()}`;
+        onSpecChange(newKey, '');
+    };
+
+    const handleKeyChange = (oldKey, newKey) => {
+        if (oldKey === newKey || !newKey.trim()) return;
+        
+        // ถ้าคีย์ใหม่ซ้ำกับคีย์ที่มีอยู่แล้ว ให้แจ้งเตือน (หรือคุณอาจจะปล่อยผ่านไปรวมกันก็ได้)
+        if (specifications[newKey] !== undefined) {
+            alert('ชื่อคุณสมบัตินี้มีอยู่แล้ว กรุณาใช้ชื่ออื่นครับ');
+            return;
+        }
+
+        // คัดลอกค่าเดิมมาใส่คีย์ใหม่
+        const value = specifications[oldKey];
+        onSpecChange(newKey, value);
+        // สั่งลบคีย์เก่า (ลบออกจาก UI โดยการส่ง null)
+        onRemoveSpec(oldKey);
+    };
+
+    return (
+        <div className="bg-white p-6 rounded-[24px] border border-slate-100 shadow-sm">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-50">
+                <div>
+                    <h4 className="text-xs font-black text-slate-800 uppercase tracking-widest">
+                        Specifications <span className="text-purple-600 ml-2">{category ? `(${category})` : ''}</span>
+                    </h4>
+                    <p className="text-[10px] font-bold text-slate-400 mt-1">เพิ่มหรือลดคุณสมบัติได้ตามต้องการ</p>
+                </div>
+                <button 
+                    type="button"
+                    onClick={handleAddRow}
+                    className="flex items-center gap-1.5 px-4 py-2 bg-purple-50 text-purple-600 hover:bg-purple-600 hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95"
+                >
+                    <Plus size={14} strokeWidth={3} /> เพิ่มคุณสมบัติ
+                </button>
+            </div>
+            
+            <div className="space-y-4">
+                {specEntries.length === 0 ? (
+                    <div className="text-center py-8 text-slate-400 text-xs font-medium border-2 border-dashed border-slate-100 rounded-2xl">
+                        ยังไม่มีคุณสมบัติสำหรับสินค้านี้<br/>คลิก "เพิ่มคุณสมบัติ" เพื่อเริ่มต้น
+                    </div>
+                ) : (
+                    specEntries.map(([key, value]) => {
+                        // ซ่อนฟิลด์ที่โดนสั่งลบ (มีค่าเป็น null) ออกจาก UI แต่ยังเก็บไว้ส่งให้ Backend ทำ $unset
+                        if (value === null) return null;
+
+                        return (
+                            <div key={key} className="flex flex-col sm:flex-row items-center gap-3 p-3 bg-slate-50/50 rounded-2xl border border-slate-100 group transition-all hover:border-purple-200">
+                                <div className="flex-1 w-full relative">
+                                    <label className="absolute -top-2 left-3 bg-white px-1 text-[8px] font-black text-purple-600 uppercase tracking-widest rounded">Key (หัวข้อ)</label>
+                                    <input 
+                                        type="text" 
+                                        defaultValue={key}
+                                        onBlur={(e) => handleKeyChange(key, e.target.value)}
+                                        placeholder="เช่น Switch, Color" 
+                                        className="w-full p-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-xs font-bold focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all shadow-sm"
+                                    />
+                                </div>
+                                <div className="hidden sm:block text-slate-300 font-bold">:</div>
+                                <div className="flex-[2] w-full flex items-center gap-2 relative">
+                                    <label className="absolute -top-2 left-3 bg-white px-1 text-[8px] font-black text-emerald-600 uppercase tracking-widest rounded">Value (รายละเอียด)</label>
+                                    <input 
+                                        type="text" 
+                                        value={value} 
+                                        onChange={(e) => onSpecChange(key, e.target.value)}
+                                        placeholder="เช่น Cherry MX Red, Black" 
+                                        className="w-full p-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-xs font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all shadow-sm"
+                                    />
+                                    <button 
+                                        type="button"
+                                        onClick={() => onRemoveSpec(key)}
+                                        className="p-3 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all active:scale-90"
+                                        title="ลบคุณสมบัตินี้"
+                                    >
+                                        <X size={16} strokeWidth={3} />
+                                    </button>
+                                </div>
+                            </div>
+                        );
+                    })
+                )}
             </div>
         </div>
     );

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useProductActions } from './useProductActions';
 import { PRODUCT_STATUS } from '@/shared/constants';
 import { useApi } from '@/shared/hooks/useApi';
-import { getCategoriesApi, getBrandsApi } from '@/modules/products/services/productApi';
+import { getCategoriesApi, getBrandsApi, getSpecKeysApi } from '@/modules/products/services/productApi';
 
 /**
  * 🎣 useAddProduct Hook (Smart Logic)
@@ -35,21 +35,33 @@ export const useAddProduct = () => {
     // 🌐 5. ดึงข้อมูล Master Data สำหรับ Auto-suggest (Datalist)
     const { data: categoriesList, execute: fetchCategories } = useApi(getCategoriesApi);
     const { data: brandsList, execute: fetchBrands } = useApi(getBrandsApi);
+    const { execute: fetchSpecKeys } = useApi(getSpecKeysApi, {
+        onSuccess: (keys) => {
+            // Smart Auto-fill: สร้างช่องรอไว้ให้เลยถ้าดึง keys มาได้
+            if (keys && keys.length > 0) {
+                const initialSpecs = {};
+                keys.forEach(k => initialSpecs[k.key || k] = ''); // รองรับทั้ง array of string หรือ array of objects
+                setSpecifications(initialSpecs);
+            } else {
+                setSpecifications({});
+            }
+        }
+    });
 
     // ดึงหมวดหมู่ทั้งหมดครั้งแรกที่โหลดหน้า
     useEffect(() => {
         fetchCategories();
     }, [fetchCategories]);
 
-    // ดึงแบรนด์ใหม่ทุกครั้งที่หมวดหมู่เปลี่ยน (เพื่อทำ Smart Suggestion)
+    // ดึงแบรนด์และ Template Spec ใหม่ทุกครั้งที่หมวดหมู่เปลี่ยน
     useEffect(() => {
         fetchBrands(category || undefined);
-    }, [category, fetchBrands]);
-
-    // 🔄 รีเซ็ตช่องกรอก Specs เมื่อมีการเปลี่ยนหมวดหมู่
-    useEffect(() => {
-        setSpecifications({});
-    }, [category]);
+        if (category) {
+            fetchSpecKeys(category);
+        } else {
+            setSpecifications({});
+        }
+    }, [category, fetchBrands, fetchSpecKeys]);
 
     // --- Handlers ---
 
@@ -59,7 +71,14 @@ export const useAddProduct = () => {
     };
 
     const handleSpecChange = (key, value) => {
-        setSpecifications(prev => ({ ...prev, [key]: value }));
+        setSpecifications(prev => {
+            const newSpecs = { ...prev, [key]: value };
+            return newSpecs;
+        });
+    };
+
+    const handleRemoveSpec = (key) => {
+        setSpecifications(prev => ({ ...prev, [key]: null }));
     };
 
     /**
@@ -92,7 +111,8 @@ export const useAddProduct = () => {
         }
         
         const rawData = {
-            modelName, brand, description, sku, tags, stock, price, category, status, isFeatured, selectedFile, specifications
+            modelName, brand, description, sku, tags, stock, price, category, status, isFeatured, selectedFile, 
+            specifications: JSON.stringify(specifications) // ส่งเป็น JSON String ตาม Blueprint
         };
 
         const result = await handleAddProduct(rawData);
@@ -125,6 +145,7 @@ export const useAddProduct = () => {
         // Handlers
         handleFileSelect,
         handleSpecChange,
+        handleRemoveSpec,
         handleSubmit
     };
 };
