@@ -33,6 +33,8 @@
     - *ใช้อ่านเมื่อ:* ต้องการป้องกันหน้าจอขาว (Crash), จัดการ API พร้อมกันหลายเส้น, หรือเลือกใช้ Library ให้เสถียรกับ React 19+
 14. **การวัดประสิทธิภาพและการ Debug (Instrumentation & Monitoring):** [docs/14-instrumentation-monitoring.md](./docs/14-instrumentation-monitoring.md)
     - *ใช้อ่านเมื่อ:* ระบบทำงานช้า, เกิดบัคค้างที่หาสาเหตุไม่ได้, หรือต้องการวางระบบตรวจสอบเวลาการทำงานของ API
+16. **บทเรียนการทำ Dynamic Architecture (Refactoring Lessons):** [docs/16-dynamic-refactor-lessons.md](./docs/16-dynamic-refactor-lessons.md)
+    - *ใช้อ่านเมื่อ:* ต้องการดูตัวอย่างการเปลี่ยนระบบ Hardcode เป็น Dynamic, วิธีสร้าง Key-Value Builder, และเทคนิคแก้บัค Infinite Loop ของ `useApi`
 
 ---
 *หมายเหตุ: ไฟล์นี้ถูกออกแบบมาให้เป็น Portable Brain เมื่อคุณย้ายโฟลเดอร์โปรเจกต์ไปเครื่องอื่น Gemini จะยังคงจำกฎเหล่านี้ได้ผ่านไฟล์นี้*
