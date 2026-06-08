@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '@/shared/contexts/AuthContext';
 import { useCart } from '@/modules/cart'; // 🛒 ดึงข้อมูลจาก Context แทน
-import { createOrderApi, addAddressApi, deleteAddressApi } from '../services/checkoutApi';
+import { createOrderApi, addAddressApi, deleteAddressApi, updateAddressApi, setDefaultAddressApi } from '../services/checkoutApi';
 
 /**
  * 🎣 useCheckout Hook
@@ -85,20 +85,41 @@ export const useCheckout = () => {
     try {
       const res = await addAddressApi(newAddressData);
       if (res.success) {
-        // 🔄 ดึงข้อมูลผู้ใช้ใหม่เพื่อให้ที่อยู่ใหม่ปรากฏใน Global State
         const updatedUser = await refreshUser();
-        
-        // พยายามหา ID ของที่อยู่ที่เพิ่งเพิ่มเข้าไปเพื่อเลือกให้อัตโนมัติ
         if (updatedUser && updatedUser.addresses) {
-           // ปกติที่อยู่ใหม่จะอยู่ท้ายสุด หรือหาตามข้อมูลที่ส่งไป
            const newAddr = updatedUser.addresses[updatedUser.addresses.length - 1];
            if (newAddr) setSelectedAddressId(newAddr._id || newAddr.id);
         }
-        
         toast.success("เพิ่มที่อยู่สำเร็จ");
       }
     } catch (error) {
       toast.error("ไม่สามารถเพิ่มที่อยู่ได้");
+    }
+  };
+
+  // 📝 ฟังก์ชันอัปเดตที่อยู่
+  const updateAddress = async (addressId, updatedData) => {
+    try {
+      const res = await updateAddressApi(addressId, updatedData);
+      if (res.success) {
+        await refreshUser();
+        toast.success("อัปเดตที่อยู่สำเร็จ");
+      }
+    } catch (error) {
+      toast.error("ไม่สามารถอัปเดตที่อยู่ได้");
+    }
+  };
+
+  // ⭐ ฟังก์ชันตั้งเป็นที่อยู่หลัก
+  const setDefaultAddress = async (addressId) => {
+    try {
+      const res = await setDefaultAddressApi(addressId);
+      if (res.success) {
+        await refreshUser();
+        toast.success("ตั้งเป็นที่อยู่หลักเรียบร้อย");
+      }
+    } catch (error) {
+      toast.error("ไม่สามารถตั้งที่อยู่หลักได้");
     }
   };
 
@@ -107,7 +128,7 @@ export const useCheckout = () => {
     try {
       const res = await deleteAddressApi(addressId);
       if (res.success) {
-        await refreshUser(); // 🔄 Sync ใหม่
+        await refreshUser();
         if (selectedAddressId === addressId) setSelectedAddressId(null);
         toast.success("ลบที่อยู่เรียบร้อย");
       }
@@ -127,6 +148,8 @@ export const useCheckout = () => {
     isSubmitting,
     submitOrder,
     addAddress,
+    updateAddress,
+    setDefaultAddress,
     deleteAddress
   };
 };

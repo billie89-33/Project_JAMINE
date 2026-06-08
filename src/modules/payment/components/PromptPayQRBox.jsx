@@ -5,7 +5,7 @@ import QRCodeComp from 'react-qr-code';
 // 🛡️ Fix for potential CJS/ESM interop issues with react-qr-code
 const QRCode = QRCodeComp.default || QRCodeComp;
 
-const PromptPayQRBox = ({ totalAmount = 2000 }) => {
+const PromptPayQRBox = ({ totalAmount = 0 }) => {
   const [timeLeft, setTimeLeft] = useState(15 * 60);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const PromptPayQRBox = ({ totalAmount = 2000 }) => {
       <div className="text-center flex flex-col gap-1">
         <span className="text-[10px] text-gray-400 font-extrabold uppercase tracking-widest">Total Payable</span>
         <h2 className="text-2xl font-black text-purple-600">
-          ฿{totalAmount.toLocaleString()}.00
+          ฿{totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
         </h2>
       </div>
 

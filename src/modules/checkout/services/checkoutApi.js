@@ -32,9 +32,17 @@ export const addAddressApi = async (newAddress) => {
 };
 
 /**
- * ลบที่อยู่จัดส่ง
+ * อัปเดตที่อยู่จัดส่งเดิม
  */
-export const deleteAddressApi = async (addressId) => {
-    const response = await apiClient.delete(`/users/addresses/${addressId}`);
+export const updateAddressApi = async (addressId, updatedData) => {
+    const response = await apiClient.put(`/users/addresses/${addressId}`, updatedData);
+    return response.data;
+};
+
+/**
+ * ตั้งค่าที่อยู่เป็นที่อยู่หลัก (Default)
+ */
+export const setDefaultAddressApi = async (addressId) => {
+    const response = await apiClient.patch(`/users/addresses/${addressId}/default`);
     return response.data;
 };

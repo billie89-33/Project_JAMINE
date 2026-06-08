@@ -22,6 +22,8 @@ const CheckoutPage = () => {
     isSubmitting,
     submitOrder,
     addAddress,
+    updateAddress,
+    setDefaultAddress,
     deleteAddress
   } = useCheckout();
 
@@ -52,6 +54,8 @@ const CheckoutPage = () => {
               selectedAddressId={selectedAddressId} 
               onSelectAddress={setSelectedAddressId}
               onAddAddress={addAddress}
+              onUpdateAddress={updateAddress}
+              onSetDefaultAddress={setDefaultAddress}
               onDeleteAddress={deleteAddress}
             />
             <PaymentMethodSelector paymentMethod={paymentMethod} />

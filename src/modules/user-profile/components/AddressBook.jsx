@@ -10,6 +10,8 @@ const AddressBook = () => {
     selectedAddressId,
     setSelectedAddressId,
     addAddress,
+    updateAddress,
+    setDefaultAddress,
     deleteAddress
   } = useCheckout();
 
@@ -31,6 +33,8 @@ const AddressBook = () => {
           selectedAddressId={selectedAddressId}
           onSelectAddress={setSelectedAddressId}
           onAddAddress={addAddress}
+          onUpdateAddress={updateAddress}
+          onSetDefaultAddress={setDefaultAddress}
           onDeleteAddress={deleteAddress}
         />
       </div>

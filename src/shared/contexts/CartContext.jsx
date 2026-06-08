@@ -55,7 +55,7 @@ export const CartProvider = ({ children }) => {
           });
         }
 
-        const { items: rawItems, subtotal, shippingFee, total } = response.data;
+        const { items: rawItems, subtotal, shippingFee, shipping, total, totalAmount } = response.data;
         
         // 🛠️ Fix: เปลี่ยนจาก item.product เป็น item.productId ให้ตรงตาม Backend Schema
         const mappedItems = rawItems.map(item => {
@@ -75,12 +75,12 @@ export const CartProvider = ({ children }) => {
         });
 
         setCartItems(mappedItems);
-        // ✨ Doc 12.3: Trust the Backend Summary (ใช้ชื่อฟิลด์ตาม Schema เป๊ะๆ)
+        // ✨ Doc 12.3 & V2 Spec: Trust the Backend Summary (Resilient Aliasing)
         setSummary({
           subtotal: subtotal || 0,
-          shipping: shippingFee || 0,
+          shipping: shippingFee !== undefined ? shippingFee : (shipping || 0),
           discount: response.data.discount || 0,
-          total: total || 0,
+          total: total || totalAmount || 0,
           itemCount: mappedItems.reduce((acc, item) => acc + item.quantity, 0)
         });
       }

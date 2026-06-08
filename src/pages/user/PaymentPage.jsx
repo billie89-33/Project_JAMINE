@@ -65,17 +65,19 @@ const PaymentPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start mt-2">
           
           <div className="md:col-span-2">
-            <PromptPayQRBox totalAmount={order.totalAmount} />
+            {/* 🎯 Doc 12.3: Use totalAmount alias from Backend V2 Spec */}
+            <PromptPayQRBox totalAmount={order.totalAmount || order.total} />
           </div>
 
           <div className="flex flex-col gap-6 sticky top-6">
             <CheckoutItemsList cartItems={order.items || []} />
             
+            {/* ✨ Doc 12.3: Trust the Backend Snapshot (No client-side calculation) */}
             <OrderSummaryCard 
-              subtotal={order.subtotal || (order.totalAmount - (order.shipping || order.shippingFee || 0))} 
-              shipping={order.shipping || order.shippingFee || 0}
+              subtotal={order.subtotal} 
+              shipping={order.shippingFee || order.shipping || 0}
               discount={order.discount || 0}
-              total={order.totalAmount}
+              total={order.totalAmount || order.total}
               buttonText="Confirm Payment" 
               onAction={verifyPayment} 
               isSubmitting={isVerifying}
