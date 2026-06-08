@@ -6,7 +6,10 @@ import { toast } from 'react-hot-toast';
  * 🎣 useProducts Hook (User Side Logic)
  * จัดการสถานะสินค้า ตัวกรอง และการแบ่งหน้าสำหรับหน้าบ้าน
  */
-export const useProducts = (initialCategory = '') => {
+export const useProducts = (rawInitialCategory = '') => {
+  // Decode URL Parameter เพื่อความชัวร์ (เผื่อมี %20 หรืออักขระพิเศษ)
+  const initialCategory = rawInitialCategory ? decodeURIComponent(rawInitialCategory) : 'All';
+
   // 1. Product Data State
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,33 +25,34 @@ export const useProducts = (initialCategory = '') => {
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [priceRange, setPriceRange] = useState({ min: 0, max: 100000 });
-  const [selectedSpecs, setSelectedSpecs] = useState({}); // 🆕 สิ่งที่ User ติ๊กเลือก (e.g., { "Switch": ["Blue"], "Layout": ["TKL"] })
+  const [selectedSpecs, setSelectedSpecs] = useState({}); // 🆕 สิ่งที่ User ติ๊กเลือก
   const [sort, setSort] = useState('newest');
 
   // 🔄 Sync: เมื่อ URL Parameter (initialCategory) เปลี่ยน ให้รีเซ็ต State ภายใน
   useEffect(() => {
-    if (initialCategory) {
+    if (initialCategory && initialCategory !== selectedCategory) {
       setSelectedCategory(initialCategory);
       // รีเซ็ตตัวกรองอื่นเมื่อเปลี่ยนหมวดหมู่ผ่าน URL เพื่อความไม่งงของ User
       setSelectedBrands([]);
       setSelectedSpecs({});
       setCurrentPage(1);
     }
-  }, [initialCategory]);
+  }, [initialCategory, selectedCategory]);
 
   // --- 🛰️ API Calls ---
 
   // ดึงข้อมูล Master Data (Categories & Brands & SpecFilters)
   const fetchMasterData = useCallback(async () => {
     try {
-      const [catRes, brandRes, specRes] = await Promise.all([
-        getCategoriesApi(),
-        getBrandsApi(selectedCategory !== 'All' ? selectedCategory : undefined),
-        getSpecFiltersApi(selectedCategory) // 🆕 ดึง Advance Filter ตามหมวดหมู่
-      ]);
+      // 🛡️ Safe Fetch: แยกดัก Error แต่ละตัว ป้องกัน Promise.all พังทั้งยวงถ้า API ตัวใดตัวนึงล่ม
+      const fetchCategories = getCategoriesApi().catch(e => { console.error("Cat API Error", e); return { success: false }; });
+      const fetchBrands = getBrandsApi(selectedCategory !== 'All' ? selectedCategory : undefined).catch(e => { console.error("Brand API Error", e); return { success: false }; });
+      const fetchSpecs = getSpecFiltersApi(selectedCategory).catch(e => { console.error("Spec API Error", e); return { success: false }; });
+
+      const [catRes, brandRes, specRes] = await Promise.all([fetchCategories, fetchBrands, fetchSpecs]);
       
-      if (catRes.success) setCategories(catRes.data);
-      if (brandRes.success) setBrands(brandRes.data);
+      if (catRes && catRes.success) setCategories(catRes.data || []);
+      if (brandRes && brandRes.success) setBrands(brandRes.data || []);
       if (specRes && specRes.success) setSpecFilters(specRes.data || {});
     } catch (error) {
       console.error("Failed to fetch master data", error);
