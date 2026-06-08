@@ -57,9 +57,8 @@ const ProductTabs = ({ product }) => {
             {/* เช็กโครงสร้าง: ถ้าใน Object สเปกมีข้อมูลอยู่จริง ให้กางตารางวนลูปออกมาโชว์ */}
             {Object.keys(productSpecs).length > 0 ? (
               <div className="border border-gray-100 rounded-xl overflow-hidden shadow-sm">
-                {/* 🌟 เปลี่ยนมาแตกลูปจากตัวแปร productSpecs ที่เราเซ็ตค่าความปลอดภัยไว้ด้านบนเรียบร้อยแล้ว พร้อมเรียงลำดับ A-Z */}
+                {/* 🌟 เปลี่ยนมาแตกลูปจากตัวแปร productSpecs ที่เราเซ็ตค่าความปลอดภัยไว้ด้านบนเรียบร้อยแล้ว */}
                 {Object.entries(productSpecs)
-                  .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
                   .map(([key, value], idx) => (
                   <div 
                     key={key} 

@@ -59,9 +59,8 @@ export const useEditProduct = () => {
         product.specifications = parsedSpecs;
         setOriginalProduct(product);
         
-        // แปลง Specs Object เป็น Array สำหรับ UI พร้อมเรียงลำดับ A-Z
+        // แปลง Specs Object เป็น Array สำหรับ UI
         const specsArray = Object.entries(parsedSpecs)
-          .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
           .map(([key, value], index) => ({
             id: `spec_${Date.now()}_${index}`,
             key,
