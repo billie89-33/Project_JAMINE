@@ -6,7 +6,7 @@ import {
   removeFromCartApi,
   clearCartApi
 } from '@/modules/cart/services/cartApi';
-import toast from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { useAuth } from '@/shared/contexts/AuthContext';
 
 const CartContext = createContext();

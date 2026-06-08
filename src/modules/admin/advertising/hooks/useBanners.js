@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getAdminBannersApi, createBannerApi, updateBannerApi, deleteBannerApi } from '../services/bannerApi';
-import toast from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 
 /**
  * 🎣 useBanners Hook

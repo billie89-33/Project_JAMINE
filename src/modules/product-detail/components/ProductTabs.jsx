@@ -7,8 +7,19 @@ const ProductTabs = ({ product }) => {
   if (!product) return null;
 
   // 2. โค้ดกำหนดโครงสร้างดัก API: บังคับว่าถ้า product.specifications ไม่มีอยู่จริงจากหลังบ้าน ให้ดักแปลงเป็น Object ว่าง {} ทันที
-  // วิธีนี้จะทำให้คำสั่ง Object.entries() ด้านล่างทำงานได้ตลอดเวลา โดยหน้าจอจะไม่ระเบิดเป็นสีแดง
-  const productSpecs = product.specifications || {};
+  // 🛡️ Safe Parse Specifications: รองรับทั้งกรณีที่เป็น Object อยู่แล้ว หรือเป็น JSON String จากหลังบ้าน
+  let productSpecs = {};
+  if (typeof product.specifications === 'string') {
+    try {
+      productSpecs = JSON.parse(product.specifications);
+      // รองรับเคส double stringify
+      if (typeof productSpecs === 'string') productSpecs = JSON.parse(productSpecs);
+    } catch (e) {
+      productSpecs = {};
+    }
+  } else if (product.specifications && typeof product.specifications === 'object') {
+    productSpecs = product.specifications;
+  }
 
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">

@@ -3,6 +3,7 @@ import { useProductActions } from './useProductActions';
 import { PRODUCT_STATUS } from '@/shared/constants';
 import { useApi } from '@/shared/hooks/useApi';
 import { getCategoriesApi, getBrandsApi, getSpecKeysApi } from '@/modules/products/services/productApi';
+import { toast } from 'react-hot-toast';
 
 /**
  * 🎣 useAddProduct Hook (Smart Logic)
@@ -59,12 +60,12 @@ export const useAddProduct = () => {
     // ดึงแบรนด์และ Template Spec ใหม่ทุกครั้งที่หมวดหมู่เปลี่ยน
     // (หมายเหตุ: ในอนาคตอาจปรับให้ดึงเมื่อ OnBlur เพื่อลดการยิง API ตอนพิมพ์ทีละตัวอักษร)
     useEffect(() => {
-        fetchBrands(category || undefined);
-        if (category) {
-            fetchSpecKeys(category);
-        } else {
+        if (!category) {
             setSpecifications([]);
+            return;
         }
+        fetchBrands(category);
+        fetchSpecKeys(category);
     }, [category, fetchBrands, fetchSpecKeys]);
 
     // --- Handlers ---
@@ -117,10 +118,10 @@ export const useAddProduct = () => {
         if (e) e.preventDefault();
         
         if (!selectedFile) {
-            return alert('กรุณาเลือกรูปภาพสินค้าก่อนกดบันทึกครับ');
+            return toast.error('กรุณาเลือกรูปภาพสินค้าก่อนกดบันทึกครับ');
         }
 
-        // แปลง Array กลับเป็น Object ก่อนส่งให้ Backend (ทิ้งแถวที่ไม่มี Key)
+        // แปลง Array เป็น Object เพื่อส่งให้ Action Hook (ตัดแถวที่ไม่มี Key ทิ้ง)
         const specsObject = {};
         specifications.forEach(spec => {
             const trimmedKey = spec.key.trim();
@@ -131,7 +132,7 @@ export const useAddProduct = () => {
         
         const rawData = {
             modelName, brand, description, sku, tags, stock, price, category, status, isFeatured, selectedFile, 
-            specifications: JSON.stringify(specsObject) // ส่งเป็น JSON String ตาม Blueprint
+            specifications: specsObject // ส่งเป็น Object เพื่อให้ useProductActions นำไป Clean และ Stringify ต่อ
         };
 
         const result = await handleAddProduct(rawData);

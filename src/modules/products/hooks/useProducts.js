@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getProductsApi, getCategoriesApi, getBrandsApi } from '../services/productApi';
-import toast from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 
 /**
  * 🎣 useProducts Hook (User Side Logic)

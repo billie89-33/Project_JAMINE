@@ -1,10 +1,10 @@
-import { SpecFields } from '@/modules/admin/addproduct';
+import SpecFields from '@/modules/admin/addproduct/components/SpecFields';
 
 /**
  * 🛠️ EditableSpecs
  * ส่วนจัดการคุณสมบัติสินค้าแบบ Dynamic ตามหมวดหมู่
  */
-export const EditableSpecs = ({ category, specifications, onSpecChange }) => {
+export const EditableSpecs = ({ category, specifications, onSpecChange, onAddRow, onRemoveSpec }) => {
   return (
     <div className="bg-white p-8 rounded-[40px] shadow-2xl shadow-purple-100/50 border border-purple-50">
       <div className="flex items-center gap-3 mb-8">
@@ -20,8 +20,10 @@ export const EditableSpecs = ({ category, specifications, onSpecChange }) => {
       <div className="bg-slate-50/50 p-6 rounded-[32px] border border-slate-100">
         <SpecFields 
           category={category} 
-          specifications={specifications} 
+          specifications={Array.isArray(specifications) ? specifications : []} 
           onSpecChange={onSpecChange} 
+          onAddRow={onAddRow}
+          onRemoveSpec={onRemoveSpec}
         />
       </div>
 

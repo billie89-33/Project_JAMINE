@@ -15,8 +15,8 @@ export const useProductActions = () => {
         showToast: true,
         successMessage: 'เพิ่มสินค้าใหม่ลงระบบสำเร็จเรียบร้อยแล้ว!',
         onSuccess: () => {
-            // คุณสามารถเพิ่ม Logic เพิ่มเติมเมื่อสำเร็จที่นี่ได้ เช่นการ Redirect
-            // navigate('/admin/products'); 
+            // ย้ายไปหน้ารายการสินค้าเมื่อสร้างสำเร็จ
+            navigate('/admin/products'); 
         }
     });
 

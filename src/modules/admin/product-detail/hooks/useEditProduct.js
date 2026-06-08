@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getProductById, updateProduct } from '@/modules/admin/services';
-import toast from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { PRODUCT_STATUS } from '@/shared/constants';
 
 /**
@@ -24,7 +24,7 @@ export const useEditProduct = () => {
     tags: '', // 🏷️ เก็บเป็น String เพื่อให้ UI แก้ไขได้ง่าย
     status: PRODUCT_STATUS.ACTIVE,
     isFeatured: false,
-    specifications: {}
+    specifications: [] // เปลี่ยนเป็น Array เพื่อใช้กับ SpecFields
   });
 
   const [imagePreview, setImagePreview] = useState(null);
@@ -41,8 +41,31 @@ export const useEditProduct = () => {
         // 🛡️ Defensive Check: ป้องกันกรณี Backend ส่งมาเป็น { product: {...} } แทนที่จะเป็น {...}
         const product = response.data?.product || response.data || {};
         
+        // 🛡️ Safe Parse Specifications: ดักกรณี Backend ส่งมาเป็น JSON String
+        let parsedSpecs = {};
+        if (typeof product.specifications === 'string') {
+          try {
+            parsedSpecs = JSON.parse(product.specifications);
+            // เคส double stringify
+            if (typeof parsedSpecs === 'string') parsedSpecs = JSON.parse(parsedSpecs);
+          } catch (e) {
+            console.error("Parse specifications error:", e);
+          }
+        } else if (product.specifications && typeof product.specifications === 'object') {
+          parsedSpecs = product.specifications;
+        }
+
+        // อัปเดตข้อมูลในออบเจกต์ต้นฉบับให้เป็น Object จริงๆ เพื่อใช้ทำ Dirty Check (JSON.stringify เทียบกัน)
+        product.specifications = parsedSpecs;
         setOriginalProduct(product);
         
+        // แปลง Specs Object เป็น Array สำหรับ UI
+        const specsArray = Object.entries(parsedSpecs).map(([key, value], index) => ({
+          id: `spec_${Date.now()}_${index}`,
+          key,
+          value
+        }));
+
         // เซ็ตข้อมูลลงฟอร์ม พร้อม Fallback กันพัง
         setFormData({
           brand: product.brand || '',
@@ -55,7 +78,7 @@ export const useEditProduct = () => {
           tags: Array.isArray(product.tags) ? product.tags.join(', ') : (product.tags || ''), 
           status: product.status || PRODUCT_STATUS.ACTIVE,
           isFeatured: !!product.isFeatured,
-          specifications: product.specifications || {}
+          specifications: specsArray
         });
         
         if (product.image?.url) {
@@ -84,14 +107,30 @@ export const useEditProduct = () => {
     reader.readAsDataURL(file);
   };
 
-  // 3. จัดการการเปลี่ยน Specifications
-  const handleSpecChange = (key, value) => {
+  // 3. จัดการการเปลี่ยน Specifications (ใช้ pattern เดียวกับ addproduct)
+  const handleSpecChange = (id, field, value) => {
     setFormData(prev => ({
       ...prev,
-      specifications: {
+      specifications: prev.specifications.map(spec => 
+        spec.id === id ? { ...spec, [field]: value } : spec
+      )
+    }));
+  };
+
+  const handleAddSpecRow = () => {
+    setFormData(prev => ({
+      ...prev,
+      specifications: [
         ...prev.specifications,
-        [key]: value
-      }
+        { id: `spec_manual_${Date.now()}`, key: '', value: '' }
+      ]
+    }));
+  };
+
+  const handleRemoveSpec = (id) => {
+    setFormData(prev => ({
+      ...prev,
+      specifications: prev.specifications.filter(spec => spec.id !== id)
     }));
   };
 
@@ -129,9 +168,16 @@ export const useEditProduct = () => {
         hasChanges = true;
       }
 
-      // ตรวจสอบ Specifications
-      if (JSON.stringify(formData.specifications) !== JSON.stringify(originalProduct.specifications)) {
-        patchData.append('specifications', JSON.stringify(formData.specifications));
+      // แปลง Specs Array กลับเป็น Object เพื่อเช็คการเปลี่ยนแปลง
+      const currentSpecsObj = formData.specifications.reduce((acc, spec) => {
+        if (spec.key.trim()) {
+          acc[spec.key.trim()] = spec.value;
+        }
+        return acc;
+      }, {});
+
+      if (JSON.stringify(currentSpecsObj) !== JSON.stringify(originalProduct.specifications)) {
+        patchData.append('specifications', JSON.stringify(currentSpecsObj));
         hasChanges = true;
       }
 
@@ -151,8 +197,9 @@ export const useEditProduct = () => {
       
       if (response.success) {
         toast.success('อัปเดตสินค้าเรียบร้อยแล้ว');
-        setOriginalProduct(response.data); // อัปเดตค่าเดิมให้ตรงกับที่เซฟล่าสุด
-        setSelectedFile(null); // ล้างไฟล์ที่ค้างอยู่
+        // รีเฟรชข้อมูลเพื่ออัปเดต originalProduct
+        await fetchProduct();
+        setSelectedFile(null); 
       }
     } catch (error) {
       console.error("Update Product Error:", error);
@@ -170,6 +217,8 @@ export const useEditProduct = () => {
     isSubmitting,
     handleFileSelect,
     handleSpecChange,
+    handleAddSpecRow,
+    handleRemoveSpec,
     handleSubmit,
     refreshProduct: fetchProduct
   };

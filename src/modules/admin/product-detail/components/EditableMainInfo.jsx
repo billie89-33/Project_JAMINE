@@ -1,4 +1,4 @@
-import { ImageUploadBox } from '@/modules/admin/addproduct';
+import ImageUploadBox from '@/modules/admin/addproduct/components/ImageUploadBox';
 import { CATEGORIES, PRODUCT_STATUS } from '@/shared/constants';
 
 /**

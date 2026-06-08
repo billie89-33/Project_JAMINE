@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import toast from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { ShoppingCart, Zap, ShieldCheck, Truck, Package } from 'lucide-react';
 import { useCart } from '@/modules/cart';
 

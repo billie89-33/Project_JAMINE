@@ -6,7 +6,7 @@ import {
   createBannerApi 
 } from '@/modules/admin/advertising';
 import { Megaphone, Plus, ArrowLeft } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 
 /**
  * 🚀 AdvertisingPage (Admin)

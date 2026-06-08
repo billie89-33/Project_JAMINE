@@ -20,6 +20,8 @@ const ProductDetailPage = () => {
     isSubmitting,
     handleFileSelect,
     handleSpecChange,
+    handleAddSpecRow,
+    handleRemoveSpec,
     handleSubmit
   } = useEditProduct();
 
@@ -58,7 +60,7 @@ const ProductDetailPage = () => {
                 </h1>
               </div>
               <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1 ml-1">
-                Product ID: <span className="text-purple-400">#{formData.modelName.toLowerCase().replace(/\s+/g, '-')}</span>
+                Product ID: <span className="text-purple-400">#{String(formData?.modelName || '').toLowerCase().replace(/\s+/g, '-')}</span>
               </p>
             </div>
           </div>
@@ -115,6 +117,8 @@ const ProductDetailPage = () => {
           category={formData.category}
           specifications={formData.specifications}
           onSpecChange={handleSpecChange}
+          onAddRow={handleAddSpecRow}
+          onRemoveSpec={handleRemoveSpec}
         />
 
         {/* Delete Warning (Optional UI Element) */}
