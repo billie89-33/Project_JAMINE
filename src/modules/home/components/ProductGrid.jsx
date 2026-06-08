@@ -15,8 +15,8 @@ const ProductGrid = () => {
     const fetchLatestProducts = async () => {
       try {
         setLoading(true);
-        // ดึงสินค้าล่าสุด 8 ชิ้นมาโชว์หน้าแรก
-        const res = await getProductsApi({ limit: 8, sort: '-createdAt' });
+        // ดึงสินค้าขายดีที่สุด 8 ชิ้นมาโชว์หน้าแรก
+        const res = await getProductsApi({ limit: 8, sort: 'best_seller' });
         if (res.success) {
           setProducts(res.data);
         }
@@ -61,10 +61,10 @@ const ProductGrid = () => {
         <div className="space-y-1">
           <div className="flex items-center gap-2 mb-1">
             <span className="w-8 h-[2px] bg-gradient-to-r from-purple-600 to-transparent rounded-full"></span>
-            <span className="text-[10px] font-black text-purple-600 uppercase tracking-[0.3em]">Fresh Arrivals</span>
+            <span className="text-[10px] font-black text-purple-600 uppercase tracking-[0.3em]">Top Trending</span>
           </div>
           <h2 className="text-3xl font-black text-slate-800 tracking-tight flex items-center gap-3">
-            Newest <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">Gadgets</span>
+            Best <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">Sellers</span>
             <Sparkles className="text-amber-400 fill-amber-400" size={24} />
           </h2>
         </div>
