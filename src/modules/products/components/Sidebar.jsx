@@ -6,12 +6,12 @@ import { useState } from 'react';
  * ส่วนควบคุมการกรองสินค้าด้านซ้าย (User Side)
  */
 const Sidebar = ({ 
-  categories, 
-  brands, 
+  categories = [], 
+  brands = [], 
   specFilters = {}, // 🆕 รับข้อมูลโครงสร้าง Filter
   selectedCategory, 
   setSelectedCategory,
-  selectedBrands, 
+  selectedBrands = [], 
   onBrandToggle, 
   selectedSpecs = {}, // 🆕 รับข้อมูลที่ User ติ๊ก
   onSpecToggle,       // 🆕 รับ Handler สำหรับติ๊ก
