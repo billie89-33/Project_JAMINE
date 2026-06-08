@@ -58,7 +58,8 @@ export const useProducts = (initialCategory = '') => {
         page: currentPage,
         limit: 12,
         category: selectedCategory === 'All' || !selectedCategory ? undefined : selectedCategory,
-        brand: selectedBrands.length > 0 ? selectedBrands : undefined,
+        // แปลง Array ของ Brand เป็น String คั่นด้วยจุลภาค เพื่อให้ Backend นำไป `$in` หรือ `$or` ได้ง่าย
+        brand: selectedBrands.length > 0 ? selectedBrands.join(',') : undefined,
         minPrice: priceRange.min || undefined,
         maxPrice: priceRange.max || undefined,
         sort: sort
