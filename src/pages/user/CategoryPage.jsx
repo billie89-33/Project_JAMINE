@@ -20,16 +20,19 @@ const CategoryPage = () => {
     loading,
     categories,
     brands,
+    specFilters, // 🆕 รับข้อมูลตัวกรองสเปค
     totalPages,
     currentPage,
     selectedCategory,
     selectedBrands,
     priceRange,
+    selectedSpecs, // 🆕 รับสถานะที่เลือก
     sort,
     setCurrentPage,
     setSelectedCategory,
     handleBrandToggle,
     handlePriceChange,
+    handleSpecToggle, // 🆕 รับฟังก์ชันจัดการคลิก
     setSort,
     clearAllFilters
   } = useProducts(type);
@@ -64,10 +67,13 @@ const CategoryPage = () => {
             <Sidebar 
               categories={categories}
               brands={brands}
+              specFilters={specFilters} // 🆕 ส่งต่อ Props
               selectedCategory={selectedCategory}
               setSelectedCategory={setSelectedCategory}
               selectedBrands={selectedBrands}
               onBrandToggle={handleBrandToggle}
+              selectedSpecs={selectedSpecs} // 🆕 ส่งต่อ Props
+              onSpecToggle={handleSpecToggle} // 🆕 ส่งต่อ Props
               priceRange={priceRange}
               onPriceChange={handlePriceChange}
               onClearAll={clearAllFilters}
