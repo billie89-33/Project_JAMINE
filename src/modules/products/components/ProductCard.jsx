@@ -21,7 +21,10 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div className={`group bg-white rounded-[32px] border border-purple-50 shadow-sm transition-all duration-500 overflow-hidden flex flex-col h-full relative ${isOutOfStock ? 'opacity-80 grayscale-[20%]' : 'hover:shadow-[0_20px_50px_rgba(124,58,237,0.15)]'}`}>
+    <div 
+      onClick={() => navigate(`/product/${product._id || product.id}`)}
+      className={`group bg-white rounded-[32px] border border-purple-50 shadow-sm transition-all duration-500 overflow-hidden flex flex-col h-full relative cursor-pointer ${isOutOfStock ? 'opacity-80 grayscale-[20%]' : 'hover:shadow-[0_20px_50px_rgba(124,58,237,0.15)] hover:-translate-y-1'}`}
+    >
       
       {/* 🌟 Decorative Corner Glow */}
       {!isOutOfStock && <div className="absolute top-0 right-0 w-24 h-24 bg-purple-100/20 blur-3xl rounded-full -mr-10 -mt-10 group-hover:bg-purple-300/30 transition-colors duration-700"></div>}
@@ -37,7 +40,6 @@ const ProductCard = ({ product }) => {
         {/* Quick Actions Overlay */}
         <div className="absolute inset-0 bg-purple-900/10 opacity-0 group-hover:opacity-100 transition-opacity z-20 flex items-center justify-center gap-2 backdrop-blur-[2px]">
           <button 
-            onClick={() => navigate(`/product/${product._id}`)}
             className="p-4 bg-white text-purple-600 rounded-[20px] shadow-2xl hover:bg-purple-600 hover:text-white transition-all transform translate-y-6 group-hover:translate-y-0 duration-500 flex items-center gap-2 font-black text-xs uppercase tracking-widest"
           >
             <Eye size={18} strokeWidth={3} />
@@ -61,14 +63,39 @@ const ProductCard = ({ product }) => {
       {/* 2. Content Section */}
       <div className="p-6 flex flex-col flex-grow relative z-10">
         <div className="flex-grow space-y-2">
-          <h3 className="text-sm font-black text-slate-700 line-clamp-2 leading-relaxed transition-colors duration-300">
+          <h3 className="text-sm font-black text-slate-700 line-clamp-2 leading-relaxed transition-colors duration-300 group-hover:text-purple-600">
             {product.modelName}
           </h3>
-          <div className="flex items-center gap-2">
-            <span className={`w-4 h-[1.5px] ${isOutOfStock ? 'bg-slate-200' : 'bg-purple-200'}`}></span>
-            <p className={`text-[9px] font-black uppercase tracking-[0.2em] ${isOutOfStock ? 'text-slate-400' : 'text-purple-400'}`}>
-              {product.category}
-            </p>
+          
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-2">
+              <span className={`w-4 h-[1.5px] ${isOutOfStock ? 'bg-slate-200' : 'bg-purple-200'}`}></span>
+              <p className={`text-[9px] font-black uppercase tracking-[0.2em] ${isOutOfStock ? 'text-slate-400' : 'text-purple-400'}`}>
+                {product.category}
+              </p>
+            </div>
+            
+            {/* 📊 Dynamic Stock Indicator */}
+            {!isOutOfStock && product.stock > 0 && product.stock <= 5 && (
+              <div className="flex items-center gap-1.5 mt-1">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+                </span>
+                <span className="text-[10px] font-bold text-orange-500 animate-pulse">
+                  🔥 สินค้าใกล้หมด! (เหลือ {product.stock} ชิ้น)
+                </span>
+              </div>
+            )}
+            
+            {!isOutOfStock && product.stock > 5 && (
+              <div className="flex items-center gap-1.5 mt-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                <span className="text-[10px] font-bold text-emerald-600">
+                  ✓ มีสินค้า ({product.stock} ชิ้น)
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
