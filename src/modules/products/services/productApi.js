@@ -41,6 +41,15 @@ export const getSpecKeysApi = async (category) => {
 };
 
 /**
+ * ดึงข้อมูลตัวเลือกสเปคสำหรับทำ Advance Filter
+ */
+export const getSpecFiltersApi = async (category) => {
+    if (!category || category === 'All') return {};
+    const response = await apiClient.get('/products/spec-filters', { params: { category } });
+    return response.data;
+};
+
+/**
  * ดึงข้อมูลสินค้าชิ้นเดียวตาม ID
  * @param {string} id - ID ของสินค้า
  */

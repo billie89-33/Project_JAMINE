@@ -8,10 +8,13 @@ import { useState } from 'react';
 const Sidebar = ({ 
   categories, 
   brands, 
+  specFilters = {}, // 🆕 รับข้อมูลโครงสร้าง Filter
   selectedCategory, 
   setSelectedCategory,
   selectedBrands, 
   onBrandToggle, 
+  selectedSpecs = {}, // 🆕 รับข้อมูลที่ User ติ๊ก
+  onSpecToggle,       // 🆕 รับ Handler สำหรับติ๊ก
   priceRange, 
   onPriceChange,
   onClearAll 
@@ -19,6 +22,12 @@ const Sidebar = ({
   const [isCategoryOpen, setIsCategoryOpen] = useState(true);
   const [isBrandOpen, setIsBrandOpen] = useState(true);
   const [isPriceOpen, setIsPriceOpen] = useState(true);
+  // 🆕 State คุมการเปิด/ปิด Accordion ของ Spec แต่ละอัน
+  const [openSpecs, setOpenSpecs] = useState({});
+
+  const toggleSpecAccordion = (key) => {
+    setOpenSpecs(prev => ({ ...prev, [key]: !prev[key] }));
+  };
 
   return (
     <div className="w-full lg:w-72 flex flex-col gap-6 select-none relative">
@@ -132,6 +141,64 @@ const Sidebar = ({
           </div>
         )}
       </div>
+
+      {/* 🆕 3.5 Dynamic Spec Filters (แสดงเฉพาะเมื่อมีข้อมูลของ Category นั้น) */}
+      {Object.keys(specFilters).map(specKey => {
+        // ให้ค่าเริ่มต้นเป็น เปิด (true) หากยังไม่มีการตั้งค่า
+        const isOpen = openSpecs[specKey] !== false; 
+        
+        return (
+          <div key={specKey} className="bg-purple-50/40 backdrop-blur-sm rounded-[32px] border border-purple-100/50 shadow-sm overflow-hidden animate-in fade-in duration-300">
+            <button 
+              onClick={() => toggleSpecAccordion(specKey)}
+              className="w-full flex items-center justify-between p-6 hover:bg-white transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <div className={`w-1.5 h-1.5 rounded-full ${isOpen ? 'bg-purple-500 animate-pulse' : 'bg-slate-300'}`}></div>
+                <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] truncate max-w-[120px] text-left">
+                  {specKey}
+                </h3>
+              </div>
+              <span className="text-slate-300 flex-shrink-0">
+                {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+              </span>
+            </button>
+            
+            {isOpen && (
+              <div className="px-5 pb-6 pt-1 grid grid-cols-1 gap-1.5 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-purple-200">
+                {specFilters[specKey].map(val => (
+                  <label 
+                    key={val}
+                    className={`group flex items-center gap-3 p-3 rounded-2xl cursor-pointer transition-all border ${
+                      (selectedSpecs[specKey] || []).includes(val)
+                        ? 'bg-white border-purple-100 shadow-sm'
+                        : 'bg-white/30 border-transparent hover:bg-white hover:border-purple-50'
+                    }`}
+                  >
+                    <div className="relative flex items-center justify-center">
+                      <input 
+                        type="checkbox"
+                        checked={(selectedSpecs[specKey] || []).includes(val)}
+                        onChange={() => onSpecToggle(specKey, val)}
+                        className="sr-only peer"
+                      />
+                      <div className="w-5 h-5 border-2 border-slate-200 rounded-lg bg-white peer-checked:bg-purple-600 peer-checked:border-purple-600 transition-all duration-300 group-hover:border-purple-300 shadow-sm"></div>
+                      <div className="absolute opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none">
+                        <svg className="w-3 h-3 text-white fill-current" viewBox="0 0 20 20"><path d="M0 11l2-2 5 5L18 3l2 2L7 18z"/></svg>
+                      </div>
+                    </div>
+                    <span className={`text-[11px] font-black uppercase tracking-widest transition-colors break-words line-clamp-2 ${
+                      (selectedSpecs[specKey] || []).includes(val) ? 'text-purple-600' : 'text-slate-500'
+                    }`}>
+                      {val}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      })}
 
       {/* 4. Price Filter */}
       <div className="bg-purple-50/40 backdrop-blur-sm rounded-[32px] border border-purple-100/50 shadow-sm overflow-hidden">

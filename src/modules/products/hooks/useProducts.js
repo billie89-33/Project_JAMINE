@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getProductsApi, getCategoriesApi, getBrandsApi } from '../services/productApi';
+import { getProductsApi, getCategoriesApi, getBrandsApi, getSpecFiltersApi } from '../services/productApi';
 import { toast } from 'react-hot-toast';
 
 /**
@@ -16,11 +16,13 @@ export const useProducts = (initialCategory = '') => {
   // 2. Filter Master Data (จาก DB)
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
+  const [specFilters, setSpecFilters] = useState({}); // 🆕 โครงสร้าง Advance Filter
 
   // 3. User Selected Filters
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [priceRange, setPriceRange] = useState({ min: 0, max: 100000 });
+  const [selectedSpecs, setSelectedSpecs] = useState({}); // 🆕 สิ่งที่ User ติ๊กเลือก (e.g., { "Switch": ["Blue"], "Layout": ["TKL"] })
   const [sort, setSort] = useState('newest');
 
   // 🔄 Sync: เมื่อ URL Parameter (initialCategory) เปลี่ยน ให้รีเซ็ต State ภายใน
@@ -29,22 +31,25 @@ export const useProducts = (initialCategory = '') => {
       setSelectedCategory(initialCategory);
       // รีเซ็ตตัวกรองอื่นเมื่อเปลี่ยนหมวดหมู่ผ่าน URL เพื่อความไม่งงของ User
       setSelectedBrands([]);
+      setSelectedSpecs({});
       setCurrentPage(1);
     }
   }, [initialCategory]);
 
   // --- 🛰️ API Calls ---
 
-  // ดึงข้อมูล Master Data (Categories & Brands)
+  // ดึงข้อมูล Master Data (Categories & Brands & SpecFilters)
   const fetchMasterData = useCallback(async () => {
     try {
-      const [catRes, brandRes] = await Promise.all([
+      const [catRes, brandRes, specRes] = await Promise.all([
         getCategoriesApi(),
-        getBrandsApi(selectedCategory !== 'All' ? selectedCategory : undefined)
+        getBrandsApi(selectedCategory !== 'All' ? selectedCategory : undefined),
+        getSpecFiltersApi(selectedCategory) // 🆕 ดึง Advance Filter ตามหมวดหมู่
       ]);
       
       if (catRes.success) setCategories(catRes.data);
       if (brandRes.success) setBrands(brandRes.data);
+      if (specRes && specRes.success) setSpecFilters(specRes.data || {});
     } catch (error) {
       console.error("Failed to fetch master data", error);
     }
@@ -65,6 +70,14 @@ export const useProducts = (initialCategory = '') => {
         sort: sort
       };
 
+      // 🆕 แนบ Dynamic Specs เข้าไปใน params
+      Object.keys(selectedSpecs).forEach(key => {
+        if (selectedSpecs[key] && selectedSpecs[key].length > 0) {
+          // ใช้ format spec_Key=Value1,Value2
+          params[`spec_${key}`] = selectedSpecs[key].join(',');
+        }
+      });
+
       const response = await getProductsApi(params);
       if (response.success) {
         setProducts(response.data);
@@ -75,7 +88,7 @@ export const useProducts = (initialCategory = '') => {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, selectedCategory, selectedBrands, priceRange, sort]);
+  }, [currentPage, selectedCategory, selectedBrands, priceRange, selectedSpecs, sort]);
 
   // --- 🔄 Effects ---
 
@@ -105,9 +118,23 @@ export const useProducts = (initialCategory = '') => {
     setCurrentPage(1);
   };
 
+  // 🆕 Handler สำหรับการติ๊กเลือก Advance Filter
+  const handleSpecToggle = (specKey, value) => {
+    setSelectedSpecs(prev => {
+      const currentValues = prev[specKey] || [];
+      const newValues = currentValues.includes(value)
+        ? currentValues.filter(v => v !== value) // เอาออกถ้าติ๊กซ้ำ
+        : [...currentValues, value];             // เพิ่มถ้ายังไม่ได้ติ๊ก
+      
+      return { ...prev, [specKey]: newValues };
+    });
+    setCurrentPage(1);
+  };
+
   const clearAllFilters = () => {
     setSelectedBrands([]);
     setPriceRange({ min: 0, max: 100000 });
+    setSelectedSpecs({}); // 🆕 ล้าง Advance Filter
     setSort('newest');
     setCurrentPage(1);
   };
@@ -118,6 +145,7 @@ export const useProducts = (initialCategory = '') => {
     loading,
     categories,
     brands,
+    specFilters, // 🆕 ส่งออกข้อมูลตัวกรอง
     totalPages,
     currentPage,
     
@@ -125,6 +153,7 @@ export const useProducts = (initialCategory = '') => {
     selectedCategory,
     selectedBrands,
     priceRange,
+    selectedSpecs, // 🆕 ส่งออกสถานะการเลือก
     sort,
 
     // Setters/Handlers
@@ -132,6 +161,7 @@ export const useProducts = (initialCategory = '') => {
     setSelectedCategory,
     handleBrandToggle,
     handlePriceChange,
+    handleSpecToggle, // 🆕 ส่งออก Handler
     setSort,
     clearAllFilters,
     refreshProducts: fetchProducts
