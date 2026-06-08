@@ -59,12 +59,14 @@ export const useEditProduct = () => {
         product.specifications = parsedSpecs;
         setOriginalProduct(product);
         
-        // แปลง Specs Object เป็น Array สำหรับ UI
-        const specsArray = Object.entries(parsedSpecs).map(([key, value], index) => ({
-          id: `spec_${Date.now()}_${index}`,
-          key,
-          value
-        }));
+        // แปลง Specs Object เป็น Array สำหรับ UI พร้อมเรียงลำดับ A-Z
+        const specsArray = Object.entries(parsedSpecs)
+          .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+          .map(([key, value], index) => ({
+            id: `spec_${Date.now()}_${index}`,
+            key,
+            value
+          }));
 
         // เซ็ตข้อมูลลงฟอร์ม พร้อม Fallback กันพัง
         setFormData({
