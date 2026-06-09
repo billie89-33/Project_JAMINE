@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { ShoppingBag, Search, ExternalLink, Clock, CheckCircle2, XCircle, Package } from 'lucide-react';
 import { getMyOrdersApi } from '../services/profileApi';
 import { useApi } from '@/shared/hooks/useApi';
+import OrderDetailsModal from './OrderDetailsModal';
 
 const OrderHistoryList = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedOrder, setSelectedOrder] = useState(null);
   const { data: orders = [], loading, execute: fetchOrders } = useApi(getMyOrdersApi);
 
   useEffect(() => {
@@ -78,7 +80,7 @@ const OrderHistoryList = () => {
                     </div>
                     <div className="space-y-1">
                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Order Number</p>
-                       <h4 className="text-sm font-black text-slate-800 uppercase tracking-tighter">{order.orderNumber}</h4>
+                       <h4 className="text-sm font-black text-slate-800 uppercase tracking-tighter">{order.orderNumber || order._id}</h4>
                        <p className="text-[10px] text-slate-400 font-bold">Placed on {new Date(order.createdAt).toLocaleDateString()}</p>
                     </div>
                  </div>
@@ -86,11 +88,14 @@ const OrderHistoryList = () => {
                  <div className="flex items-center gap-10">
                     <div className="text-right hidden md:block">
                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Amount</p>
-                       <p className="text-sm font-black text-purple-600">฿{order.total?.toLocaleString() || order.totalAmount?.toLocaleString()}</p>
+                       <p className="text-sm font-black text-purple-600">฿{(order.total || order.totalAmount || 0).toLocaleString()}</p>
                     </div>
                     <div className="flex flex-col items-end gap-3">
                        {getStatusBadge(order.status)}
-                       <button className="flex items-center gap-1.5 text-[10px] font-black text-purple-600 uppercase tracking-widest hover:underline">
+                       <button 
+                          onClick={() => setSelectedOrder(order)}
+                          className="flex items-center gap-1.5 text-[10px] font-black text-purple-600 uppercase tracking-widest hover:underline"
+                       >
                          View Details <ExternalLink size={10} />
                        </button>
                     </div>
@@ -117,6 +122,14 @@ const OrderHistoryList = () => {
           </div>
         )}
       </div>
+
+      {/* 🔮 Order Details Modal */}
+      {selectedOrder && (
+        <OrderDetailsModal 
+          order={selectedOrder} 
+          onClose={() => setSelectedOrder(null)} 
+        />
+      )}
     </div>
   );
 };
