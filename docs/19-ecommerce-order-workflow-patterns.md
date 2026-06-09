@@ -34,7 +34,21 @@ if (status === 'Shipped') {
 **สถานการณ์:** ผู้ใช้ต้องการดูรายละเอียดคำสั่งซื้อในหน้า Profile ที่มีหลายรายการ
 **วิธีแก้:** แทนที่จะเปลี่ยนหน้า (`navigate('/order/:id')`) ซึ่งทำให้ผู้ใช้สูญเสียตำแหน่งเดิม ให้ใช้ **Modal (Popup)** แทน สิ่งนี้ช่วยให้ UX ลื่นไหล และผู้ใช้สามารถกดดูออเดอร์หลายๆ อันสลับกันได้ง่ายขึ้น
 
-### 4. Single Source of Truth for Enums
+### 4. UI Resilience for External Data (ความอึดถึกทนของ UI ต่อการเปลี่ยนแปลง)
+**สถานการณ์:** ใน Component ที่แสดงผลข้อมูลจาก Backend (เช่น หน้า Top Seller/Best Seller) บางครั้ง Backend อาจมีการเปลี่ยนชื่อฟิลด์ (เช่น จาก `name` เป็น `modelName` หรือ จาก `sold` เป็น `sales`) หรือส่งรูปภาพมาไม่ครบ
+**วิธีแก้ (Fallback Pattern):**
+ห้ามเขียน Component ให้ผูกติดกับชื่อฟิลด์เดียวแบบตายตัว ต้องทำ Fallback เสมอ เพื่อให้ UI สามารถเอาตัวรอดและแสดงผลต่อไปได้แม้โครงสร้างข้อมูลจะคลาดเคลื่อนเล็กน้อย
+```javascript
+// ✅ GOOD: Fallback สำหรับชื่อฟิลด์ที่อาจเปลี่ยนไปมา
+const productName = product.modelName || product.name || 'Unknown Product';
+const salesCount = product.sold || product.sales || 0;
+
+// ✅ GOOD: Fallback สำหรับรูปภาพ (ป้องกันภาพแตก/ขอบเบี้ยว)
+const imageUrl = product.image?.url || 'https://via.placeholder.com/150';
+<img src={imageUrl} alt={productName} />
+```
+
+### 5. Single Source of Truth for Enums
 **สถานการณ์:** Status ของออเดอร์มีหลายแบบ (Pending, Paid, Shipped)
 **วิธีแก้:** สร้าง Object/Array ในฝั่ง `shared/constants/` ของ Frontend และฝั่ง Backend ให้ตรงกันเป๊ะ 100% ห้ามพิมพ์ String สดๆ (Hardcode) เด็ดขาด เพื่อป้องกัน `Mongoose ValidationError` เมื่อ Backend เพิ่มสถานะใหม่
 
