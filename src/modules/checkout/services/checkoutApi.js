@@ -46,3 +46,11 @@ export const setDefaultAddressApi = async (addressId) => {
     const response = await apiClient.patch(`/users/addresses/${addressId}/default`);
     return response.data;
 };
+
+/**
+ * ลบที่อยู่จัดส่ง
+ */
+export const deleteAddressApi = async (addressId) => {
+    const response = await apiClient.delete(`/users/addresses/${addressId}`);
+    return response.data;
+};
