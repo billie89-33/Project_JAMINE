@@ -8,7 +8,8 @@ import apiClient from '@/shared/api/apiClient';
 // 1. ดึงรายการคำสั่งซื้อของ User
 export const getMyOrdersApi = async () => {
     const response = await apiClient.get('/orders/me');
-    return response.data;
+    // Backend ส่งมาเป็น { success: true, data: [...] }
+    return response.data.data;
 };
 
 // 2. อัปเดตข้อมูล Profile (เช่น ชื่อ)
