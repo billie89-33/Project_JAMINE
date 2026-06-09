@@ -15,12 +15,22 @@ export const getAllOrders = async (params = {}) => {
 };
 
 /**
- * อัปเดตสถานะออเดอร์
+ * ดึงรายละเอียดออเดอร์เดียว
  * @param {string} orderId 
- * @param {string} status - ['Awaiting Payment', 'Paid', 'Cancelled', 'Processing', 'Shipped', 'Delivered']
  */
-export const updateOrderStatus = async (orderId, status) => {
-    const response = await apiClient.patch(`/admin/orders/${orderId}/status`, { status });
+export const getOrderByIdApi = async (orderId) => {
+    const response = await apiClient.get(`/admin/orders/${orderId}`);
+    return response.data;
+};
+
+/**
+ * อัปเดตสถานะออเดอร์ (รองรับการใส่ Tracking Number)
+ * @param {string} orderId 
+ * @param {Object} payload - { status: string, trackingNumber?: string }
+ */
+export const updateOrderStatus = async (orderId, payload) => {
+    // payload ต้องมีโครงสร้าง { status: 'Shipped', trackingNumber: '...' }
+    const response = await apiClient.patch(`/admin/orders/${orderId}/status`, payload);
     return response.data;
 };
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Clock, CheckCircle2, XCircle, Truck, Package, Trash2, ExternalLink, User, ShoppingBag } from 'lucide-react';
 import { ORDER_STATUS } from '@/shared/constants';
 
@@ -7,6 +8,7 @@ import { ORDER_STATUS } from '@/shared/constants';
  * ตารางแสดงรายการออเดอร์สำหรับ Admin พร้อมระบบเปลี่ยนสถานะ
  */
 const OrdersTable = ({ orders, onUpdateStatus, onDelete, isLoading }) => {
+  const navigate = useNavigate();
 
   const getStatusStyle = (status) => {
     switch (status) {
