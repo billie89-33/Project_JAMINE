@@ -11,7 +11,10 @@ const OrderHistoryList = () => {
     fetchOrders();
   }, [fetchOrders]);
 
-  const filteredOrders = orders.filter(order => 
+  // ป้องกันบั๊ก Cannot read properties of null (reading 'filter')
+  // เมื่อ data เริ่มต้นเป็น null จาก useApi
+  const safeOrders = orders || [];
+  const filteredOrders = safeOrders.filter(order => 
     order.orderNumber?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
