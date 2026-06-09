@@ -77,12 +77,15 @@ const DashboardContainer = () => {
                     trend={summary.balance.trend}
                     icon={<Wallet size={24} strokeWidth={2.5} />}
                 />
-                <StatCard 
-                    title="Total Orders"
-                    value={summary.orders.value}
-                    trend={summary.orders.trend}
-                    icon={<ShoppingCart size={24} strokeWidth={2.5} />}
-                />
+                <div onClick={() => navigate('/admin/order')} className="cursor-pointer group">
+                    <StatCard 
+                        title="Total Orders"
+                        value={summary.orders.value}
+                        trend={summary.orders.trend}
+                        icon={<ShoppingCart size={24} strokeWidth={2.5} />}
+                        className="group-hover:border-purple-200 transition-all"
+                    />
+                </div>
                 <StatCard 
                     title="Total Customers"
                     value={summary.customers.value}
@@ -106,7 +109,7 @@ const DashboardContainer = () => {
                     />
                 </div>
                 <div 
-                    onClick={() => navigate('/admin/orders')} // ไปหน้าออเดอร์เพื่อจัดการสถานะ
+                    onClick={() => navigate('/admin/order', { state: { filterStatus: 'Awaiting Payment' } })} // ไปหน้าออเดอร์เพื่อจัดการสถานะ
                     className="cursor-pointer group"
                 >
                     <StatCard 

@@ -1,2 +1,3 @@
-// Centralized export for Admin Orders Module
-export {};
+// 📦 Orders Module Barrel File
+export { default } from './components/OrdersContainer';
+export * from './hooks/useOrders';

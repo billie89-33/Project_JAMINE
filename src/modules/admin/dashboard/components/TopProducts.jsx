@@ -29,17 +29,26 @@ const TopProducts = ({ products }) => {
             </div>
 
             <div className="w-20 h-20 rounded-2xl bg-slate-50 overflow-hidden border border-slate-100 flex-shrink-0 group-hover:border-purple-200 transition-all shadow-sm">
-                <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                <img 
+                  src={product.image?.url || 'https://via.placeholder.com/150'} 
+                  alt={product.modelName} 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                />
             </div>
             
             <div className="flex-1 min-w-0">
-                <p className="text-xs font-black text-purple-500 uppercase tracking-widest mb-1">Rank #{index + 1}</p>
-                <p className="text-sm font-bold text-slate-700 truncate mb-2">{product.name}</p>
+                <div className="flex items-center justify-between mb-1">
+                  <p className="text-[10px] font-black text-purple-600 uppercase tracking-widest">{product.brand || 'Premium Brand'}</p>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Rank #{index + 1}</p>
+                </div>
+                <p className="text-sm font-bold text-slate-700 truncate mb-2 leading-tight">{product.modelName || product.name}</p>
                 <div className="flex items-center gap-4">
-                    <span className="text-sm font-black text-slate-800">฿{product.price?.toLocaleString() || 0}</span>
+                    <span className="text-sm font-black text-slate-800">฿{(product.price || 0).toLocaleString()}</span>
                     <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 rounded-lg">
                         <Package size={12} className="text-slate-400"/>
-                        <span className="text-[10px] font-black text-slate-500 uppercase tracking-tighter">{product.sold} <span className="text-slate-300 font-medium">Sold</span></span>
+                        <span className="text-[10px] font-black text-slate-500 uppercase tracking-tighter">
+                          {product.sold || product.sales || 0} <span className="text-slate-300 font-medium">Sold</span>
+                        </span>
                     </div>
                 </div>
             </div>

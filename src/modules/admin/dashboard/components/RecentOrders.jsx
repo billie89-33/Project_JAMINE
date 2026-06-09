@@ -1,15 +1,19 @@
 import { ShoppingBag, Clock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * 📋 RecentOrders Component
  * แสดงรายการออเดอร์ล่าสุดใน Dashboard
  */
 const RecentOrders = ({ orders }) => {
+  const navigate = useNavigate();
+  
   const getStatusColor = (status) => {
     switch(status) {
         case 'Delivered': return 'text-emerald-600 bg-emerald-50 border-emerald-100';
         case 'Shipped': return 'text-blue-600 bg-blue-50 border-blue-100';
         case 'Processing': return 'text-amber-600 bg-amber-50 border-amber-100';
+        case 'Awaiting Payment': return 'text-indigo-600 bg-indigo-50 border-indigo-100';
         default: return 'text-slate-600 bg-slate-50 border-slate-200';
     }
   };
@@ -24,14 +28,21 @@ const RecentOrders = ({ orders }) => {
           </h3>
           <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">ออเดอร์ล่าสุด</p>
         </div>
-        <button className="text-[10px] font-black text-purple-600 bg-purple-50 px-4 py-2 rounded-xl hover:bg-purple-100 transition-colors uppercase tracking-widest">
+        <button 
+          onClick={() => navigate('/admin/order')}
+          className="text-[10px] font-black text-purple-600 bg-purple-50 px-4 py-2 rounded-xl hover:bg-purple-100 transition-colors uppercase tracking-widest"
+        >
             ดูทั้งหมด
         </button>
       </div>
 
       <div className="space-y-4">
         {orders?.map((order) => (
-          <div key={order._id} className="flex items-center justify-between p-5 rounded-[24px] hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100 group">
+          <div 
+            key={order._id} 
+            onClick={() => navigate('/admin/order')} // ในอนาคตอาจชี้ไปที่ /admin/order-details พร้อม ID
+            className="flex items-center justify-between p-5 rounded-[24px] hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100 group cursor-pointer"
+          >
             <div className="flex items-center gap-4">
                 <div className="w-11 h-11 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 font-black text-sm shadow-sm group-hover:bg-white transition-colors">
                     {order.customerName.charAt(0)}
