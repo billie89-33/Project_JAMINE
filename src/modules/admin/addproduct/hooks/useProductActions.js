@@ -32,8 +32,8 @@ export const useProductActions = () => {
         } = rawData;
 
         // 🧼 1. กรองข้อมูล Specifications: ตัดช่องที่ไม่ได้กรอก หรือมีแค่ช่องว่างทิ้ง
-        const cleanSpecs = Object.entries(specifications)
-            .filter(([_, value]) => value && value.toString().trim() !== "")
+        const cleanSpecs = Object.entries(specifications || {})
+            .filter(([key, value]) => key.trim() !== "" && value !== undefined && value !== null && value.toString().trim() !== "")
             .reduce((acc, [key, value]) => ({ 
                 ...acc, 
                 [key]: value.toString().trim() 
@@ -41,32 +41,43 @@ export const useProductActions = () => {
 
         // 💡 2. บรรจุของลง FormData (สำหรับส่งไฟล์ภาพ)
         const formData = new FormData();
-        formData.append('image', selectedFile);
-        formData.append('brand', brand); // ดึงจาก State โดยตรง ไม่ใช้ Mock
-        formData.append('modelName', modelName);
-        formData.append('description', description);
         
-        // 🧼 2.1 จัดการ Price: ลบคอมม่าออกก่อนแปลงเป็น Number
-        const cleanPrice = price.toString().replace(/,/g, '');
-        formData.append('price', Number(cleanPrice));
+        // บังคับว่าต้องมีรูปภาพ
+        if (selectedFile) {
+            formData.append('image', selectedFile);
+        }
+
+        formData.append('brand', brand || '');
+        formData.append('modelName', modelName || '');
+        formData.append('description', description || '');
         
-        formData.append('sku', sku);
-        formData.append('category', category);
-        formData.append('stock', Number(stock));
-        formData.append('status', status);
-        formData.append('isFeatured', isFeatured);
+        // 🧼 2.1 จัดการ Price & Stock: ทำให้มั่นใจว่าเป็นตัวเลข
+        const cleanPrice = String(price || '0').replace(/,/g, '');
+        formData.append('price', Number(cleanPrice) || 0);
+        formData.append('stock', Number(stock) || 0);
         
-        // 🧼 3. จัดการ Tags: ตัดแบ่งด้วยคอมม่า, ตัดช่องว่าง, และเอาค่าว่างออก
-        const tagsArray = tags
-            ? tags.split(',').map(tag => tag.trim()).filter(tag => tag !== "")
-            : [];
+        formData.append('sku', sku || '');
+        formData.append('category', category || '');
+        formData.append('status', status || 'active');
+        formData.append('isFeatured', String(isFeatured) === 'true');
         
-        // ส่ง tags เป็น JSON string เนื่องจาก FormData รับ Array ตรงๆ ไม่ได้
-        // Backend จะต้องใช้ JSON.parse() หรือจัดการรับเป็น Array
+        // 🧼 3. จัดการ Tags
+        const tagsArray = typeof tags === 'string'
+            ? tags.split(',').map(tag => tag.trim()).filter(Boolean)
+            : (Array.isArray(tags) ? tags : []);
+        
         formData.append('tags', JSON.stringify(tagsArray));
         
         // แปลง Object specifications เป็น JSON string
+        // ถ้าเป็น Object ว่าง ให้ส่งเป็น string ว่าง หรือ {} ตามที่ Backend คาดหวัง
         formData.append('specifications', JSON.stringify(cleanSpecs));
+
+        // 🔍 Debug: ดูข้อมูลที่จะส่งไป (ช่วยแก้บัค 500)
+        console.log("🚀 Sending Product Data:", {
+            modelName, category, price: Number(cleanPrice), 
+            specsCount: Object.keys(cleanSpecs).length,
+            tagsCount: tagsArray.length
+        });
 
         // 🚀 4. ยิง API ผ่าน execute ของ useApi
         return await productCreate.execute(formData);
