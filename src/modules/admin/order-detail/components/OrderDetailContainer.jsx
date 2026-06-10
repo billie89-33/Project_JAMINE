@@ -241,7 +241,7 @@ const OrderDetailContainer = () => {
                         <div className="space-y-3 text-sm font-medium text-slate-500 border-b border-slate-100 pb-4 mb-4">
                             <div className="flex justify-between">
                                 <span>Subtotal</span>
-                                <span>฿{(order.totalAmount || order.total || 0).toLocaleString()}</span>
+                                <span>฿{(order.totalAmount || order.total || order.total_amount || 0).toLocaleString()}</span>
                             </div>
                             <div className="flex justify-between">
                                 <span>Shipping Fee</span>
@@ -254,7 +254,7 @@ const OrderDetailContainer = () => {
                         </div>
                         <div className="flex justify-between items-center text-slate-800">
                             <span className="text-xs font-black uppercase tracking-widest">Total</span>
-                            <span className="text-2xl font-black text-purple-600">฿{(order.totalAmount || order.total || 0).toLocaleString()}</span>
+                            <span className="text-2xl font-black text-purple-600">฿{(order.totalAmount || order.total || order.total_amount || 0).toLocaleString()}</span>
                         </div>
                     </div>
 

@@ -67,7 +67,7 @@ export const useOrders = () => {
 
     return {
         // Data States
-        orders: orderData?.data || [],
+        orders: orderData?.data || (Array.isArray(orderData) ? orderData : []),
         total: orderData?.total || 0,
         totalPages: orderData?.totalPages || 1,
         page,

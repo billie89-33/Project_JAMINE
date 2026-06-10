@@ -101,7 +101,7 @@ const OrderDetailsModal = ({ order, onClose }) => {
                     <div className="flex flex-col gap-2 mb-4 text-xs font-bold text-slate-500">
                         <div className="flex justify-between">
                             <span>Subtotal</span>
-                            <span>฿{(order.totalAmount || order.total || 0).toLocaleString()}</span>
+                            <span>฿{(order.totalAmount || order.total || order.total_amount || 0).toLocaleString()}</span>
                         </div>
                         <div className="flex justify-between">
                             <span>Shipping</span>
@@ -116,7 +116,7 @@ const OrderDetailsModal = ({ order, onClose }) => {
                     </div>
                     <div className="flex justify-between items-center pt-4 border-t border-slate-200">
                         <span className="text-sm font-black text-slate-800 uppercase tracking-widest">Total Paid</span>
-                        <span className="text-2xl font-black text-purple-600">฿{(order.totalAmount || order.total || 0).toLocaleString()}</span>
+                        <span className="text-2xl font-black text-purple-600">฿{(order.totalAmount || order.total || order.total_amount || 0).toLocaleString()}</span>
                     </div>
                 </div>
 

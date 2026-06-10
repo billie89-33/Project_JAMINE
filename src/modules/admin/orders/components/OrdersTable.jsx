@@ -92,7 +92,9 @@ const OrdersTable = ({ orders, onUpdateStatus, onDelete, isLoading }) => {
 
                   {/* 3. Amount */}
                   <td className="px-6 py-4 text-center">
-                    <span className="text-sm font-black text-slate-800">฿{(order.total || 0).toLocaleString()}</span>
+                    <span className="text-sm font-black text-slate-800">
+                      ฿{(order.total || order.totalAmount || order.total_amount || 0).toLocaleString()}
+                    </span>
                   </td>
 
                   {/* 4. Status (with Dropdown) */}

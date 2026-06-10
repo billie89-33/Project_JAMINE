@@ -68,7 +68,7 @@ export const useOrderDetail = () => {
     };
 
     return {
-        order: orderData?.data || null,
+        order: orderData?.data || orderData || null,
         isLoading,
         isUpdating,
         trackingNumber,
