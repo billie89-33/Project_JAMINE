@@ -21,7 +21,9 @@ export const useOrders = () => {
         loading: isLoading, 
         data: orderData, 
         execute: fetchOrders 
-    } = useApi(getAllOrders);
+    } = useApi(getAllOrders, {
+        transform: (res) => res // 🛡️ identity transform เพื่อเอา metadata (total, totalPages) มาด้วย
+    });
 
     // 🔄 3. ฟังก์ชันดึงข้อมูลใหม่
     const refreshOrders = useCallback(() => {

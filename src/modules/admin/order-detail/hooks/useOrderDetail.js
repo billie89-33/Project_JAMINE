@@ -53,14 +53,16 @@ export const useOrderDetail = () => {
     });
 
     const handleUpdateStatus = async (newStatus) => {
-        // Validation: ถ้ากดเปลี่ยนเป็น Shipped แต่ยังไม่ใส่เลขพัสดุ
+        // ✅ Validation: ถ้าจะเปลี่ยนเป็น Shipped ต้องมีเลขพัสดุ
         if (newStatus === ORDER_STATUS.SHIPPED && !trackingNumber.trim()) {
             toast.error('กรุณาระบุเลขพัสดุก่อนทำการจัดส่งสินค้า');
-            return; // หยุดการส่ง API (ป้องกันการ Error 400 จาก Backend)
+            return; 
         }
 
         const payload = { status: newStatus };
-        if (newStatus === ORDER_STATUS.SHIPPED) {
+        
+        // แนบเลขพัสดุไปถ้ามีการระบุไว้ (ไม่ว่าสถานะใด แต่สำคัญที่สุดคือ Shipped)
+        if (trackingNumber.trim()) {
             payload.trackingNumber = trackingNumber.trim();
         }
 

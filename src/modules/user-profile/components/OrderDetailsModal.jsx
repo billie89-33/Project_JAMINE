@@ -66,12 +66,12 @@ const OrderDetailsModal = ({ order, onClose }) => {
                                         <p className="text-[10px] font-black text-purple-600 uppercase tracking-widest">{item.brand}</p>
                                         <p className="text-sm font-bold text-slate-700 truncate">{item.modelName}</p>
                                         <div className="flex items-center gap-3 mt-1">
-                                            <span className="text-xs font-black text-slate-800">฿{(item.price || 0).toLocaleString()}</span>
+                                            <span className="text-xs font-black text-slate-800">฿{(item.priceAtPurchase || item.price || 0).toLocaleString()}</span>
                                             <span className="text-[10px] font-bold text-slate-400 bg-white px-2 py-0.5 rounded-md border border-slate-100">Qty: {item.quantity}</span>
                                         </div>
                                     </div>
                                     <div className="text-right shrink-0">
-                                        <p className="text-sm font-black text-purple-600">฿{((item.price || 0) * item.quantity).toLocaleString()}</p>
+                                        <p className="text-sm font-black text-purple-600">฿{((item.priceAtPurchase || item.price || 0) * item.quantity).toLocaleString()}</p>
                                     </div>
                                 </div>
                             ))}

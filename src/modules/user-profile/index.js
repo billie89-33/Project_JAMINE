@@ -10,4 +10,5 @@ export { default as AddressBook } from './components/AddressBook';
 export { default as OrderHistoryList } from './components/OrderHistoryList';
 
 export * from './hooks/useUserProfile';
+export * from './hooks/useOrderHistory';
 export * from './services/profileApi';
