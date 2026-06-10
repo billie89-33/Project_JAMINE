@@ -56,8 +56,11 @@ const ShippingTable = ({ orders, loading, onUpdateTracking }) => {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <div className="text-sm font-medium text-slate-700">{order.userId?.name || 'Unknown'}</div>
-                                        <div className="text-xs text-slate-500">{order.userId?.email}</div>
+                                        {/* 🛡️ Fallback: ลองดึงชื่อ User ถ้าไม่มีให้ใช้ชื่อผู้รับในที่อยู่จัดส่ง */}
+                                        <div className="text-sm font-medium text-slate-700">
+                                            {order.userId?.name || order.shippingAddress?.fullName || 'Unknown Customer'}
+                                        </div>
+                                        <div className="text-xs text-slate-500">{order.userId?.email || order.shippingAddress?.email || '-'}</div>
                                     </td>
                                     <td className="px-6 py-4">
                                         <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
@@ -88,17 +91,7 @@ const ShippingTable = ({ orders, loading, onUpdateTracking }) => {
                                             </div>
                                         ) : (
                                             <div className="flex items-center gap-2 text-sm text-slate-700 font-mono">
-                                                {order.trackingNumber ? (
-                                                    <a 
-                                                        href={`https://track.jamine.com/${order.trackingNumber}`} 
-                                                        target="_blank" 
-                                                        rel="noopener noreferrer"
-                                                        className="text-blue-600 hover:underline flex items-center gap-1"
-                                                    >
-                                                        {order.trackingNumber}
-                                                        <ExternalLink size={12} />
-                                                    </a>
-                                                ) : 'N/A'}
+                                                {order.trackingNumber || 'N/A'}
                                             </div>
                                         )}
                                     </td>
