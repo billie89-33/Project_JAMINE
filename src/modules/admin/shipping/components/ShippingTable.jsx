@@ -56,11 +56,13 @@ const ShippingTable = ({ orders, loading, onUpdateTracking }) => {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
-                                        {/* 🛡️ Fallback: ลองดึงชื่อ User ถ้าไม่มีให้ใช้ชื่อผู้รับในที่อยู่จัดส่ง */}
-                                        <div className="text-sm font-medium text-slate-700">
-                                            {order.userId?.name || order.shippingAddress?.fullName || 'Unknown Customer'}
+                                        {/* 🧼 Clean Mode: แสดงเฉพาะชื่อผู้รับ (Recipient Name) */}
+                                        <div className="text-sm font-black text-slate-800 uppercase tracking-tight">
+                                            {order.shippingAddress?.fullName || order.userId?.name || 'Unknown'}
                                         </div>
-                                        <div className="text-xs text-slate-500">{order.userId?.email || order.shippingAddress?.email || '-'}</div>
+                                        <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">
+                                            {order.userId?.email || 'Guest Customer'}
+                                        </div>
                                     </td>
                                     <td className="px-6 py-4">
                                         <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
