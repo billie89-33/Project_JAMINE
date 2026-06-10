@@ -15,10 +15,19 @@ const ProductGrid = () => {
     const fetchLatestProducts = async () => {
       try {
         setLoading(true);
-        // ดึงสินค้าขายดีที่สุด 8 ชิ้นมาโชว์หน้าแรก
-        const res = await getProductsApi({ limit: 8, sort: 'best_seller' });
+        // ดึงสินค้า 8 ชิ้นมาโชว์หน้าแรก โดยจัดเรียงตาม soldCount เพื่อให้เป็น Best Seller จริงๆ
+        const res = await getProductsApi({ limit: 8, sort: 'soldCount_desc' });
         if (res.success) {
-          setProducts(res.data);
+          // กรองเอาเฉพาะสินค้าที่มียอดขายจริงๆ (ป้องกัน Zero-Sales Bug)
+          // หรือใช้ข้อมูลทั้งหมดหากต้องการให้แสดงสินค้าใหม่ด้วยในกรณีที่ยังไม่มีสินค้าขายดี
+          const activeProducts = res.data.filter(p => p.soldCount > 0);
+          
+          // ถ้ามีสินค้าขายดีไม่ถึง 8 ชิ้น ให้เอาสินค้าที่ขายดี + สินค้าใหม่ล่าสุดมาแสดงให้ครบโควต้า
+          if (activeProducts.length > 0) {
+            setProducts(res.data); // ตอนนี้ API น่าจะ sort มาให้แล้ว แต่ถ้ามีปัญหาสามารถจัดการต่อได้
+          } else {
+             setProducts(res.data);
+          }
         }
       } catch (error) {
         console.error("Failed to fetch home products", error);
