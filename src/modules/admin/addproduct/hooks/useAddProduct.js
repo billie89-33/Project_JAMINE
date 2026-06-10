@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useProductActions } from './useProductActions';
 import { PRODUCT_STATUS } from '@/shared/constants';
 import { useApi } from '@/shared/hooks/useApi';
-import { getCategoriesApi, getBrandsApi, getSpecKeysApi } from '@/modules/products/services/productApi';
+import { getCategoriesApi, getBrandsApi, getProductsApi } from '@/modules/products/services/productApi';
 import { toast } from 'react-hot-toast';
 
 /**
@@ -36,21 +36,6 @@ export const useAddProduct = () => {
     // 🌐 5. ดึงข้อมูล Master Data สำหรับ Auto-suggest (Datalist)
     const { data: categoriesList, execute: fetchCategories } = useApi(getCategoriesApi);
     const { data: brandsList, execute: fetchBrands } = useApi(getBrandsApi);
-    const { execute: fetchSpecKeys } = useApi(getSpecKeysApi, {
-        onSuccess: (keys) => {
-            // Smart Auto-fill: สร้างช่องรอไว้ให้เลยถ้าดึง keys มาได้
-            if (keys && keys.length > 0) {
-                const initialSpecs = keys.map((k, index) => ({
-                    id: `spec_auto_${Date.now()}_${index}`, // Unique ID สำหรับ React Key
-                    key: k.key || k,
-                    value: ''
-                }));
-                setSpecifications(initialSpecs);
-            } else {
-                setSpecifications([]);
-            }
-        }
-    });
 
     // ดึงหมวดหมู่ทั้งหมดครั้งแรกที่โหลดหน้า
     useEffect(() => {
@@ -58,15 +43,54 @@ export const useAddProduct = () => {
     }, [fetchCategories]);
 
     // ดึงแบรนด์และ Template Spec ใหม่ทุกครั้งที่หมวดหมู่เปลี่ยน
-    // (หมายเหตุ: ในอนาคตอาจปรับให้ดึงเมื่อ OnBlur เพื่อลดการยิง API ตอนพิมพ์ทีละตัวอักษร)
     useEffect(() => {
         if (!category) {
             setSpecifications([]);
             return;
         }
         fetchBrands(category);
-        fetchSpecKeys(category);
-    }, [category, fetchBrands, fetchSpecKeys]);
+        
+        // 🔮 Smart Auto-fill: ดึง Template สเปคจาก "สินค้าล่าสุด" ในหมวดหมู่นี้
+        // เพื่อให้ได้ "ลำดับดั้งเดิม" (Original Order) ไม่ถูกเรียง A-Z
+        const fetchSpecTemplateFromLatest = async () => {
+            try {
+                const res = await getProductsApi({ category, limit: 1, sort: 'newest' });
+                if (res.success && res.data && res.data.length > 0) {
+                    const latestProduct = res.data[0];
+                    let parsedSpecs = {};
+                    
+                    if (typeof latestProduct.specifications === 'string') {
+                        try {
+                            parsedSpecs = JSON.parse(latestProduct.specifications);
+                            if (typeof parsedSpecs === 'string') parsedSpecs = JSON.parse(parsedSpecs);
+                        } catch (e) {}
+                    } else if (latestProduct.specifications) {
+                        parsedSpecs = latestProduct.specifications;
+                    }
+
+                    const keys = Object.keys(parsedSpecs);
+                    if (keys.length > 0) {
+                        const initialSpecs = keys.map((k, index) => ({
+                            id: `spec_auto_${Date.now()}_${index}`,
+                            key: k,
+                            value: ''
+                        }));
+                        setSpecifications(initialSpecs);
+                    } else {
+                        setSpecifications([]);
+                    }
+                } else {
+                    setSpecifications([]);
+                }
+            } catch (error) {
+                console.error("Failed to fetch spec template", error);
+                setSpecifications([]);
+            }
+        };
+
+        fetchSpecTemplateFromLatest();
+
+    }, [category, fetchBrands]);
 
     // --- Handlers ---
 
