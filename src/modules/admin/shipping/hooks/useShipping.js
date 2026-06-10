@@ -16,12 +16,18 @@ export const useShipping = () => {
 
     // 1. Hook สำหรับดึงสถิติ
     const statsApi = useApi(getShippingStats, {
-        initialData: { toShip: 0, toProcess: 0, inTransit: 0, completed: 0 }
+        initialData: { toShip: 0, toProcess: 0, inTransit: 0, completed: 0 },
+        transform: (res) => res,
+        showToast: true, // เปิดการแจ้งเตือน Error
+        errorMessage: 'ไม่สามารถดึงข้อมูลสถิติการจัดส่งได้'
     });
 
     // 2. Hook สำหรับดึงรายการออเดอร์
     const ordersApi = useApi(getShippingOrders, {
-        initialData: { data: [], total: 0 }
+        initialData: { data: [], total: 0 },
+        transform: (res) => res,
+        showToast: true, // เปิดการแจ้งเตือน Error
+        errorMessage: 'ไม่สามารถดึงข้อมูลรายการจัดส่งได้'
     });
 
     // 3. Hook สำหรับอัปเดต Tracking ด่วน
@@ -57,8 +63,12 @@ export const useShipping = () => {
     };
 
     return {
-        stats: statsApi.data,
-        orders: ordersApi.data?.data || [],
+        // 📊 Mapping สถิติ (รองรับทั้ง .data.stats, .stats หรือ .data)
+        stats: statsApi.data?.stats || statsApi.data?.data || statsApi.data,
+        
+        // 📦 Mapping ออเดอร์ (รองรับทั้ง .data.data, .data หรือ Array ตรงๆ)
+        orders: ordersApi.data?.data || (Array.isArray(ordersApi.data) ? ordersApi.data : []),
+        
         total: ordersApi.data?.total || 0,
         loading: statsApi.loading || ordersApi.loading,
         updating: updateTrackingApi.loading,
