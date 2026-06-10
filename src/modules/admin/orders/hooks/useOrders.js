@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useApi } from '@/shared/hooks/useApi';
 import { getAllOrders, updateOrderStatus, deleteOrder } from '@/modules/admin/services';
 import { toast } from 'react-hot-toast';
+import { ORDER_STATUS } from '@/shared/constants';
 
 /**
  * 🎣 useOrders Hook
@@ -49,7 +50,25 @@ export const useOrders = () => {
     });
 
     const handleUpdateStatus = async (orderId, newStatus) => {
-        await updateStatusApi(orderId, newStatus);
+        const payload = { status: newStatus };
+
+        // 🚚 ถ้าจะเปลี่ยนเป็น Shipped ต้องขอเลขพัสดุจาก Admin ก่อน
+        if (newStatus === ORDER_STATUS.SHIPPED) {
+            const tracking = window.prompt('🚚 กรุณาระบุเลขพัสดุ (Tracking Number):');
+            
+            // ถ้ากดยกเลิก Prompt
+            if (tracking === null) return; 
+
+            // ถ้าไม่ระบุเลขพัสดุ
+            if (!tracking.trim()) {
+                toast.error('⚠️ จำเป็นต้องระบุเลขพัสดุเพื่อเปลี่ยนสถานะเป็น Shipped');
+                return;
+            }
+            
+            payload.trackingNumber = tracking.trim();
+        }
+
+        await updateStatusApi(orderId, payload);
     };
 
     const handleDeleteOrder = async (orderId) => {
