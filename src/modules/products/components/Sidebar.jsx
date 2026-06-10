@@ -1,5 +1,6 @@
 import { Filter, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * 🏔️ Sidebar Filter Component
@@ -19,6 +20,7 @@ const Sidebar = ({
   onPriceChange,
   onClearAll 
 }) => {
+  const navigate = useNavigate();
   const [isCategoryOpen, setIsCategoryOpen] = useState(true);
   const [isBrandOpen, setIsBrandOpen] = useState(true);
   const [isPriceOpen, setIsPriceOpen] = useState(true);
@@ -27,6 +29,10 @@ const Sidebar = ({
 
   const toggleSpecAccordion = (key) => {
     setOpenSpecs(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const handleCategorySelect = (cat) => {
+    navigate(`/category/${cat}`);
   };
 
   return (
@@ -69,7 +75,7 @@ const Sidebar = ({
         {isCategoryOpen && (
           <div className="px-5 pb-6 pt-1 flex flex-col gap-1.5 animate-in fade-in slide-in-from-top-2 duration-300">
             <button
-              onClick={() => setSelectedCategory('All')}
+              onClick={() => handleCategorySelect('All')}
               className={`w-full text-left px-5 py-3.5 rounded-2xl text-xs font-black transition-all border ${
                 selectedCategory === 'All' || !selectedCategory
                   ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white border-transparent shadow-lg shadow-purple-200 translate-x-2'
@@ -81,7 +87,7 @@ const Sidebar = ({
             {categories.map(cat => (
               <button
                 key={cat}
-                onClick={() => setSelectedCategory(cat)}
+                onClick={() => handleCategorySelect(cat)}
                 className={`w-full text-left px-5 py-3.5 rounded-2xl text-xs font-black transition-all border ${
                   selectedCategory === cat
                     ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white border-transparent shadow-lg shadow-purple-200 translate-x-2'
