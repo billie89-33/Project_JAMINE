@@ -16,14 +16,28 @@ export const useOrderHistory = () => {
 
   // 1. ดึงข้อมูลออเดอร์
   const { 
-    data: orders = [], 
+    data: apiResponse, 
     loading: isLoading, 
     execute: fetchOrders 
-  } = useApi(getMyOrdersApi);
+  } = useApi(getMyOrdersApi, {
+    transform: (res) => res // 🛡️ เอาตัวดิบมาจัดการเองเพื่อความชัวร์
+  });
 
   useEffect(() => {
     fetchOrders();
   }, [fetchOrders]);
+
+  // 1.1 สกัดข้อมูลออเดอร์ออกมาอย่างระมัดระวัง (Ultra-Defensive)
+  const orders = useMemo(() => {
+    if (!apiResponse) return [];
+    // ถ้าเป็น Array โดยตรง
+    if (Array.isArray(apiResponse)) return apiResponse;
+    // ถ้าห่อมาใน .data (ตามมาตรฐาน useApi/Axios)
+    if (apiResponse.data && Array.isArray(apiResponse.data)) return apiResponse.data;
+    // ถ้าห่อมาใน .orders (Fallback)
+    if (apiResponse.orders && Array.isArray(apiResponse.orders)) return apiResponse.orders;
+    return [];
+  }, [apiResponse]);
 
   // 2. อัปเดตเวลาปัจจุบันทุกวินาที (สำหรับตัวนับถอยหลัง)
   useEffect(() => {
@@ -33,18 +47,18 @@ export const useOrderHistory = () => {
 
   // 3. กรองข้อมูลตาม Tab
   const filteredOrders = useMemo(() => {
-    const safeOrders = orders || [];
-    if (activeFilter === 'all') return safeOrders;
+    if (activeFilter === 'all') return orders;
     
     // Mapping Filter Tabs -> Order Statuses
     const filterMap = {
       pending: [ORDER_STATUS.PENDING],
-      shipping: [ORDER_STATUS.PROCESSING, ORDER_STATUS.SHIPPED],
+      // ✅ เพิ่ม PAID เข้ามาในกลุ่ม Shipping เพราะจ่ายแล้วเตรียมส่ง
+      shipping: [ORDER_STATUS.PAID, ORDER_STATUS.PROCESSING, ORDER_STATUS.SHIPPED], 
       completed: [ORDER_STATUS.DELIVERED],
       cancelled: [ORDER_STATUS.CANCELLED]
     };
 
-    return safeOrders.filter(order => filterMap[activeFilter]?.includes(order.status));
+    return orders.filter(order => filterMap[activeFilter]?.includes(order.status));
   }, [orders, activeFilter]);
 
   // 4. คำนวณเวลาที่เหลือ (15 นาที)

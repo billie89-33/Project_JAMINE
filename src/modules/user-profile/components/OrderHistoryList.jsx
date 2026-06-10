@@ -127,7 +127,7 @@ const OrderHistoryList = () => {
                    <div className="flex items-center justify-between xl:justify-end gap-10">
                       <div className="text-left xl:text-right">
                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Amount</p>
-                         <p className="text-lg font-black text-purple-600">฿{(order.total || order.totalAmount || 0).toLocaleString()}</p>
+                         <p className="text-lg font-black text-purple-600">฿{(order.total || order.totalAmount || order.total_amount || 0).toLocaleString()}</p>
                       </div>
 
                       <div className="flex flex-col sm:flex-row items-center gap-3">
