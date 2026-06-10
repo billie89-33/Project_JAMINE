@@ -19,7 +19,8 @@ export const getAllOrders = async (params = {}) => {
  * @param {string} orderId 
  */
 export const getOrderByIdApi = async (orderId) => {
-    const response = await apiClient.get(`/admin/orders/${orderId}`);
+    // 🛡️ ปรับเส้นทางจาก /admin/orders/:id เป็น /orders/:id (เผื่อ Backend ใช้ Route กลาง)
+    const response = await apiClient.get(`/orders/${orderId}`);
     return response.data;
 };
 
