@@ -130,6 +130,7 @@ const OrdersTable = ({ orders, onUpdateStatus, onDelete, isLoading }) => {
                   <td className="px-6 py-4 text-center">
                     <div className="flex items-center justify-center gap-2">
                       <button 
+                        onClick={() => navigate(`/admin/order-details/${order._id}`)}
                         className="p-2 bg-purple-50 text-purple-600 rounded-xl hover:bg-purple-600 hover:text-white transition-all active:scale-90"
                         title="View Details"
                       >

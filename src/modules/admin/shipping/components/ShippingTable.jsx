@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Truck, Search, ExternalLink } from 'lucide-react';
 
 const ShippingTable = ({ orders, loading, onUpdateTracking }) => {
+    const navigate = useNavigate();
     const [trackingInput, setTrackingInput] = useState({});
 
     const handleInputChange = (orderId, value) => {
@@ -98,7 +100,10 @@ const ShippingTable = ({ orders, loading, onUpdateTracking }) => {
                                         )}
                                     </td>
                                     <td className="px-6 py-4 text-right">
-                                        <button className="text-slate-400 hover:text-blue-600 transition-colors">
+                                        <button 
+                                            onClick={() => navigate(`/admin/order-details/${order._id}`)}
+                                            className="text-slate-400 hover:text-blue-600 transition-colors"
+                                        >
                                             <ExternalLink size={18} />
                                         </button>
                                     </td>
