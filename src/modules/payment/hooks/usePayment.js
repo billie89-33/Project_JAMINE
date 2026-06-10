@@ -61,9 +61,9 @@ export const usePayment = () => {
           console.warn("Frontend Clear Cart Warning (Optional step):", clearErr);
         }
         
-        // นำทางกลับหน้าแรก (หรือหน้าประวัติคำสั่งซื้อ)
+        // ✅ เปลี่ยนจากหน้าแรก เป็นหน้าประวัติการสั่งซื้อเพื่อให้ลูกค้าเห็นสถานะที่อัปเดต
         setTimeout(() => {
-          navigate('/', { replace: true });
+          navigate('/profile?tab=orders', { replace: true });
         }, 2000);
       }
     } catch (error) {
