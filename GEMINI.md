@@ -41,6 +41,8 @@
     - *ใช้อ่านเมื่อ:* ต้องการป้องกันบัคข้อมูลซ้อน (Double Stringify), การลืมส่ง Props (Blindspot), การส่ง Array ผ่าน Axios, หรือบังคับเรียงลำดับ Object
 19. **E-commerce Order Workflow & Resilience Patterns:** [docs/19-ecommerce-order-workflow-patterns.md](./docs/19-ecommerce-order-workflow-patterns.md)
     - *ใช้อ่านเมื่อ:* ต้องการวางระบบจัดการออเดอร์, ทำหน้า Order Detail (Modal), ทำระบบ Top Seller (ป้องกันบัคยอดขายศูนย์), หรือทำ Validation สำหรับ Tracking Number
+20. **Logistics & Shipping Patterns:** [docs/20-logistics-shipping-patterns.md](./docs/20-logistics-shipping-patterns.md)
+    - *ใช้อ่านเมื่อ:* ต้องการพัฒนาระบบขนส่งให้ยืดหยุ่น (Ultra-Defensive Mapping), สร้างกฎจำกัดสถานะออเดอร์ (Strict Flow Control), หรือการทำ UI จัดส่งแบบ Clean Mode
 
 ---
 *หมายเหตุ: ไฟล์นี้ถูกออกแบบมาให้เป็น Portable Brain เมื่อคุณย้ายโฟลเดอร์โปรเจกต์ไปเครื่องอื่น Gemini จะยังคงจำกฎเหล่านี้ได้ผ่านไฟล์นี้*
