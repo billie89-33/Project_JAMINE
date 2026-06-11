@@ -46,9 +46,10 @@ export const useDashboard = () => {
     const categorySales = useMemo(() => dashboardData?.categorySales || [], [dashboardData]);
     const recentOrders = useMemo(() => dashboardData?.recentOrders || [], [dashboardData]);
     const topProducts = useMemo(() => dashboardData?.topProducts || [], [dashboardData]);
+    const lowStock = useMemo(() => dashboardData?.lowStock || [], [dashboardData]);
     
-    // 🔔 New Alert Stats
-    const lowStockCount = dashboardData?.lowStockCount || 0;
+    // 🔔 New Alert Stats (Calculated from arrays or API fields)
+    const lowStockCount = useMemo(() => lowStock.length, [lowStock]);
     const pendingOrdersCount = dashboardData?.pendingOrdersCount || 0;
 
     return {

@@ -1,4 +1,4 @@
-import { ShoppingBag, Clock } from 'lucide-react';
+import { ShoppingBag, Clock, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 /**
@@ -44,8 +44,9 @@ const RecentOrders = ({ orders }) => {
             className="flex items-center justify-between p-5 rounded-[24px] hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100 group cursor-pointer"
           >
             <div className="flex items-center gap-4">
-                <div className="w-11 h-11 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 font-black text-sm shadow-sm group-hover:bg-white transition-colors">
-                    {order.customerName.charAt(0)}
+                {/* 👤 Avatar Placeholder with Icon */}
+                <div className="w-11 h-11 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-400 shadow-sm group-hover:bg-white group-hover:text-indigo-600 transition-all duration-300">
+                    <User size={20} strokeWidth={2.5} />
                 </div>
                 <div>
                     <p className="text-sm font-bold text-slate-800">{order.customerName}</p>
