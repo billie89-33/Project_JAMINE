@@ -48,48 +48,57 @@ export const useAddProduct = () => {
             setSpecifications([]);
             return;
         }
+
+        // 🛡️ 1. ดึงแบรนด์ทันที (เพื่อ datalist)
         fetchBrands(category);
         
-        // 🔮 Smart Auto-fill: ดึง Template สเปคจาก "สินค้าล่าสุด" ในหมวดหมู่นี้
-        // เพื่อให้ได้ "ลำดับดั้งเดิม" (Original Order) ไม่ถูกเรียง A-Z
-        const fetchSpecTemplateFromLatest = async () => {
-            try {
-                const res = await getProductsApi({ category, limit: 1, sort: 'newest' });
-                if (res.success && res.data && res.data.length > 0) {
-                    const latestProduct = res.data[0];
-                    let parsedSpecs = {};
+        // ⏳ 2. ใช้ Debounce (500ms) สำหรับการดึง Spec Template
+        // เพื่อป้องกันการ "Auto-wipe" หรือหน้าจอกระตุกขณะกำลังพิมพ์หมวดหมู่ใหม่
+        const timer = setTimeout(() => {
+            const fetchSpecTemplateFromLatest = async () => {
+                try {
+                    // 🔮 Smart Auto-fill: ดึง Template สเปคจาก "สินค้าล่าสุด" ในหมวดหมู่นี้
+                    const res = await getProductsApi({ category, limit: 1, sort: 'newest' });
                     
-                    if (typeof latestProduct.specifications === 'string') {
-                        try {
-                            parsedSpecs = JSON.parse(latestProduct.specifications);
-                            if (typeof parsedSpecs === 'string') parsedSpecs = JSON.parse(parsedSpecs);
-                        } catch (e) {}
-                    } else if (latestProduct.specifications) {
-                        parsedSpecs = latestProduct.specifications;
-                    }
+                    if (res.success && res.data && res.data.length > 0) {
+                        const latestProduct = res.data[0];
+                        let parsedSpecs = {};
+                        
+                        // จัดการเรื่อง Parse JSON (ป้องกัน Double Stringify ที่อาจหลงเหลือในระบบเก่า)
+                        if (typeof latestProduct.specifications === 'string') {
+                            try {
+                                parsedSpecs = JSON.parse(latestProduct.specifications);
+                                if (typeof parsedSpecs === 'string') parsedSpecs = JSON.parse(parsedSpecs);
+                            } catch (e) {}
+                        } else if (latestProduct.specifications) {
+                            parsedSpecs = latestProduct.specifications;
+                        }
 
-                    const keys = Object.keys(parsedSpecs);
-                    if (keys.length > 0) {
-                        const initialSpecs = keys.map((k, index) => ({
-                            id: `spec_auto_${Date.now()}_${index}`,
-                            key: k,
-                            value: ''
-                        }));
-                        setSpecifications(initialSpecs);
+                        const keys = Object.keys(parsedSpecs);
+                        if (keys.length > 0) {
+                            // 💡 สร้าง Template: เอามาแค่ Key ส่วน Value ให้ว่างไว้เพื่อให้แอดมินกรอกใหม่ได้ง่าย
+                            const templateSpecs = keys.map((k, index) => ({
+                                id: `template_${Date.now()}_${index}`,
+                                key: k,
+                                value: ''
+                            }));
+                            setSpecifications(templateSpecs);
+                        }
                     } else {
-                        setSpecifications([]);
+                        // 🛡️ หัวใจการแก้บัค: หากเป็นหมวดหมู่ใหม่ (ไม่พบสินค้าล่าสุด)
+                        // ให้ "คงข้อมูลเดิมที่ผู้ใช้พิมพ์ไว้" ห้ามสั่งล้างเป็น [] เด็ดขาด
+                        console.log("New category detected or no template found. Preserving current specs.");
                     }
-                } else {
-                    setSpecifications([]);
+                } catch (error) {
+                    console.error("Failed to fetch spec template", error);
+                    // ไม่ล้างข้อมูลกรณี Error เช่นกัน เพื่อความเสถียร
                 }
-            } catch (error) {
-                console.error("Failed to fetch spec template", error);
-                setSpecifications([]);
-            }
-        };
+            };
 
-        fetchSpecTemplateFromLatest();
+            fetchSpecTemplateFromLatest();
+        }, 500);
 
+        return () => clearTimeout(timer); // เคลียร์ timer ทุกครั้งที่ Category เปลี่ยน
     }, [category, fetchBrands]);
 
     // --- Handlers ---
