@@ -168,9 +168,10 @@ const ProductForm = () => {
                                     className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-bold focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none shadow-sm"
                                 />
                                 <datalist id="categories-list">
-                                    {(categoriesList || []).map(cat => (
-                                        <option key={cat} value={cat} />
-                                    ))}
+                                    {(categoriesList || []).map(cat => {
+                                        const name = typeof cat === 'object' ? cat.name : cat;
+                                        return <option key={name} value={name} />;
+                                    })}
                                 </datalist>
                             </div>
                             <div className="space-y-2">

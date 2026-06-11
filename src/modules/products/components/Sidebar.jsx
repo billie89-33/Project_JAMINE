@@ -84,19 +84,22 @@ const Sidebar = ({
             >
               📂 EXPLORE ALL
             </button>
-            {categories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => handleCategorySelect(cat)}
-                className={`w-full text-left px-5 py-3.5 rounded-2xl text-xs font-black transition-all border ${
-                  selectedCategory === cat
-                    ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white border-transparent shadow-lg shadow-purple-200 translate-x-2'
-                    : 'text-slate-500 bg-white/50 border-white hover:bg-white hover:text-purple-600 hover:border-purple-100'
-                }`}
-              >
-                {cat.toUpperCase()}
-              </button>
-            ))}
+            {categories.map(cat => {
+              const name = typeof cat === 'object' ? cat.name : cat;
+              return (
+                <button
+                  key={name}
+                  onClick={() => handleCategorySelect(name)}
+                  className={`w-full text-left px-5 py-3.5 rounded-2xl text-xs font-black transition-all border ${
+                    selectedCategory === name
+                      ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white border-transparent shadow-lg shadow-purple-200 translate-x-2'
+                      : 'text-slate-500 bg-white/50 border-white hover:bg-white hover:text-purple-600 hover:border-purple-100'
+                  }`}
+                >
+                  {name.toUpperCase()}
+                </button>
+              );
+            })}
           </div>
         )}
       </div>

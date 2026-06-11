@@ -52,20 +52,23 @@ const NavMenu = () => {
             {loading ? (
               <div className="px-4 py-2 text-xs text-slate-400">Loading...</div>
             ) : categories && categories.length > 0 ? (
-              categories.map((catName) => (
-                <NavLink
-                  key={catName}
-                  to={`/category/${catName}`}
-                  onClick={() => setIsCatOpen(false)}
-                  className={({ isActive }) =>
-                    `block px-4 py-1.5 text-xs font-medium transition-colors hover:bg-purple-50 hover:text-purple-700 ${
-                      isActive ? "text-purple-700 bg-purple-50 font-bold" : "text-slate-600"
-                    }`
-                  }
-                >
-                  {catName}
-                </NavLink>
-              ))
+              categories.map((cat) => {
+                const name = typeof cat === 'object' ? cat.name : cat;
+                return (
+                  <NavLink
+                    key={name}
+                    to={`/category/${name}`}
+                    onClick={() => setIsCatOpen(false)}
+                    className={({ isActive }) =>
+                      `block px-4 py-1.5 text-xs font-medium transition-colors hover:bg-purple-50 hover:text-purple-700 ${
+                        isActive ? "text-purple-700 bg-purple-50 font-bold" : "text-slate-600"
+                      }`
+                    }
+                  >
+                    {name}
+                  </NavLink>
+                );
+              })
             ) : (
               <div className="px-4 py-2 text-xs text-slate-400">No categories</div>
             )}
