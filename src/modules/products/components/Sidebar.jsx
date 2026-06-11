@@ -9,13 +9,13 @@ import { useNavigate } from 'react-router-dom';
 const Sidebar = ({ 
   categories = [], 
   brands = [], 
-  specFilters = {}, // 🆕 รับข้อมูลโครงสร้าง Filter
+  specFilters = {}, 
   selectedCategory, 
   setSelectedCategory,
   selectedBrands = [], 
   onBrandToggle, 
-  selectedSpecs = {}, // 🆕 รับข้อมูลที่ User ติ๊ก
-  onSpecToggle,       // 🆕 รับ Handler สำหรับติ๊ก
+  selectedSpecs = {}, 
+  onSpecToggle,       
   priceRange, 
   onPriceChange,
   onClearAll 
@@ -24,8 +24,20 @@ const Sidebar = ({
   const [isCategoryOpen, setIsCategoryOpen] = useState(true);
   const [isBrandOpen, setIsBrandOpen] = useState(true);
   const [isPriceOpen, setIsPriceOpen] = useState(true);
-  // 🆕 State คุมการเปิด/ปิด Accordion ของ Spec แต่ละอัน
   const [openSpecs, setOpenSpecs] = useState({});
+
+  // 🎯 Filter Whitelist: กำหนดว่าแต่ละหมวดหมู่ ควรโชว์ตัวกรองสเปคหัวข้อไหนบ้าง
+  // เพื่อไม่ให้ Sidebar ยาวเกินไปจนลูกค้าใช้งานลำบาก
+  const FILTER_WHITELIST = {
+    'Notebook': ['CPU', 'RAM', 'Graphic Card', 'Display Size', 'Storage'],
+    'Monitor': ['Resolution', 'Refresh Rate', 'Panel Type', 'Display Size (in.)'],
+    'Keyboard': ['Switch Type', 'Connectivity', 'Backlight', 'Layout'],
+    'Graphics Card': ['Chipset', 'Memory Size', 'Interface'],
+    'CPU': ['Socket', 'Cores/Threads', 'Base Clock'],
+    'RAM': ['Type', 'Capacity', 'Speed'],
+    'Mainboard': ['Socket', 'Chipset', 'Form Factor'],
+    'Computer': ['CPU', 'RAM', 'Graphic Card']
+  };
 
   const toggleSpecAccordion = (key) => {
     setOpenSpecs(prev => ({ ...prev, [key]: !prev[key] }));
@@ -34,6 +46,12 @@ const Sidebar = ({
   const handleCategorySelect = (cat) => {
     navigate(`/category/${cat}`);
   };
+
+  // กรองเฉพาะหัวข้อสเปคที่อยู่ใน Whitelist ของหมวดหมู่นั้น
+  const activeWhitelists = FILTER_WHITELIST[selectedCategory] || [];
+  const curatedSpecKeys = Object.keys(specFilters).filter(key => 
+    activeWhitelists.some(w => key.toLowerCase().includes(w.toLowerCase()))
+  );
 
   return (
     <div className="w-full lg:w-72 flex flex-col gap-6 select-none relative">
@@ -151,9 +169,8 @@ const Sidebar = ({
         )}
       </div>
 
-      {/* 🆕 3.5 Dynamic Spec Filters (แสดงเฉพาะเมื่อมีข้อมูลของ Category นั้น) */}
-      {Object.keys(specFilters).map(specKey => {
-        // ให้ค่าเริ่มต้นเป็น เปิด (true) หากยังไม่มีการตั้งค่า
+      {/* 🆕 3.5 Dynamic Spec Filters (คัดกรองเฉพาะที่สำคัญตาม Whitelist) */}
+      {curatedSpecKeys.map(specKey => {
         const isOpen = openSpecs[specKey] !== false; 
         
         return (
