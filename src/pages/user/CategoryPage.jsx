@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { HeroBanner } from '@/modules/home';
 import { CategorySlider } from '@/shared/components';
 import { 
@@ -7,35 +7,38 @@ import {
   Pagination, 
   useProducts 
 } from '@/modules/products';
-import { LayoutGrid, ListFilter } from 'lucide-react';
+import { LayoutGrid, ListFilter, Search } from 'lucide-react';
 
 const CategoryPage = () => {
   // แกะค่าตัวแปรจาก URL เช่น /category/Notebook
   const { type } = useParams();
+  
+  // 🔍 ดึงค่าจาก query string เช่น ?q=asus
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get('q') || '';
 
   // 🎣 ใช้งาน Hook หลักเพื่อคุม Logic ทั้งหมดของหน้านี้
-  // รองรับทั้ง Mock Data และข้อมูลจริงจาก DB ในอนาคต
   const {
     products,
     loading,
     categories,
     brands,
-    specFilters, // 🆕 รับข้อมูลตัวกรองสเปค
+    specFilters,
     totalPages,
     currentPage,
     selectedCategory,
     selectedBrands,
     priceRange,
-    selectedSpecs, // 🆕 รับสถานะที่เลือก
+    selectedSpecs,
     sort,
     setCurrentPage,
     setSelectedCategory,
     handleBrandToggle,
     handlePriceChange,
-    handleSpecToggle, // 🆕 รับฟังก์ชันจัดการคลิก
+    handleSpecToggle,
     setSort,
     clearAllFilters
-  } = useProducts(type);
+  } = useProducts(type, searchQuery);
 
   return (
     <div className="w-full min-h-screen bg-white relative overflow-hidden pb-20">
@@ -67,13 +70,13 @@ const CategoryPage = () => {
             <Sidebar 
               categories={categories}
               brands={brands}
-              specFilters={specFilters} // 🆕 ส่งต่อ Props
+              specFilters={specFilters}
               selectedCategory={selectedCategory}
               setSelectedCategory={setSelectedCategory}
               selectedBrands={selectedBrands}
               onBrandToggle={handleBrandToggle}
-              selectedSpecs={selectedSpecs} // 🆕 ส่งต่อ Props
-              onSpecToggle={handleSpecToggle} // 🆕 ส่งต่อ Props
+              selectedSpecs={selectedSpecs}
+              onSpecToggle={handleSpecToggle}
               priceRange={priceRange}
               onPriceChange={handlePriceChange}
               onClearAll={clearAllFilters}
@@ -87,11 +90,11 @@ const CategoryPage = () => {
             <div className="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div className="flex items-center gap-4">
                 <div className="bg-purple-50 p-3 rounded-2xl text-purple-600">
-                  <LayoutGrid size={20} strokeWidth={2.5} />
+                  {searchQuery ? <Search size={20} strokeWidth={2.5} /> : <LayoutGrid size={20} strokeWidth={2.5} />}
                 </div>
                 <div>
                   <h2 className="text-xl font-black text-slate-800 tracking-tight">
-                    {selectedCategory === 'All' ? 'สินค้าทั้งหมด' : selectedCategory}
+                    {searchQuery ? `ผลการค้นหา: "${searchQuery}"` : (selectedCategory === 'All' ? 'สินค้าทั้งหมด' : selectedCategory)}
                   </h2>
                   <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">
                     พบสินค้า <span className="text-purple-600">{(products.length).toLocaleString()}</span> รายการ

@@ -6,9 +6,10 @@ import { toast } from 'react-hot-toast';
  * 🎣 useProducts Hook (User Side Logic)
  * จัดการสถานะสินค้า ตัวกรอง และการแบ่งหน้าสำหรับหน้าบ้าน
  */
-export const useProducts = (rawInitialCategory = '') => {
-  // Decode URL Parameter เพื่อความชัวร์ (เผื่อมี %20 หรืออักขระพิเศษ)
+export const useProducts = (rawInitialCategory = '', initialKeyword = '') => {
+  // Decode URL Parameters เพื่อความชัวร์
   const initialCategory = rawInitialCategory ? decodeURIComponent(rawInitialCategory) : 'All';
+  const decodedKeyword = initialKeyword ? decodeURIComponent(initialKeyword) : '';
 
   // 1. Product Data State
   const [products, setProducts] = useState([]);
@@ -23,21 +24,36 @@ export const useProducts = (rawInitialCategory = '') => {
 
   // 3. User Selected Filters
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const [searchKeyword, setSearchKeyword] = useState(decodedKeyword);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [priceRange, setPriceRange] = useState({ min: 0, max: 100000 });
   const [selectedSpecs, setSelectedSpecs] = useState({}); // 🆕 สิ่งที่ User ติ๊กเลือก
   const [sort, setSort] = useState('newest');
 
-  // 🔄 Sync: เมื่อ URL Parameter (initialCategory) เปลี่ยน ให้รีเซ็ต State ภายใน
+  // 🔄 Sync: เมื่อ URL Parameters เปลี่ยน ให้รีเซ็ต State ภายใน
   useEffect(() => {
+    // กรณีเปลี่ยนหมวดหมู่
     if (initialCategory && initialCategory !== selectedCategory) {
       setSelectedCategory(initialCategory);
-      // รีเซ็ตตัวกรองอื่นเมื่อเปลี่ยนหมวดหมู่ผ่าน URL เพื่อความไม่งงของ User
-      setSelectedBrands([]);
-      setSelectedSpecs({});
-      setCurrentPage(1);
+      setSearchKeyword(''); // ล้างคำค้นหาเมื่อเลือกหมวดหมู่ใหม่
+      resetFilters();
     }
-  }, [initialCategory, selectedCategory]);
+  }, [initialCategory]);
+
+  useEffect(() => {
+    // กรณีมีการค้นหาใหม่
+    if (decodedKeyword !== searchKeyword) {
+      setSearchKeyword(decodedKeyword);
+      setSelectedCategory('All'); // กลับไปหน้าสินค้าทั้งหมดเพื่อค้นหาแบบกว้าง
+      resetFilters();
+    }
+  }, [decodedKeyword]);
+
+  const resetFilters = () => {
+    setSelectedBrands([]);
+    setSelectedSpecs({});
+    setCurrentPage(1);
+  };
 
   // --- 🛰️ API Calls ---
 
@@ -67,6 +83,7 @@ export const useProducts = (rawInitialCategory = '') => {
         page: currentPage,
         limit: 12,
         category: selectedCategory === 'All' || !selectedCategory ? undefined : selectedCategory,
+        keyword: searchKeyword || undefined, // 🔍 ส่งคำค้นหาไปที่ API
         // แปลง Array ของ Brand เป็น String คั่นด้วยจุลภาค เพื่อให้ Backend นำไป `$in` หรือ `$or` ได้ง่าย
         brand: selectedBrands.length > 0 ? selectedBrands.join(',') : undefined,
         minPrice: priceRange.min || undefined,
