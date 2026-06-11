@@ -15,18 +15,21 @@ const ProductGrid = () => {
     const fetchLatestProducts = async () => {
       try {
         setLoading(true);
-        // ดึงสินค้า 8 ชิ้นมาโชว์หน้าแรก โดยจัดเรียงตาม soldCount เพื่อให้เป็น Best Seller จริงๆ
-        const res = await getProductsApi({ limit: 8, sort: 'soldCount_desc' });
+        // 🚀 แก้ไข: ใช้ 'best_seller' เพื่อให้ตรงกับ Logic ใน Backend (ซึ่งจะ sort ตาม -soldCount)
+        const res = await getProductsApi({ limit: 8, sort: 'best_seller' });
+        
         if (res.success) {
-          // กรองเอาเฉพาะสินค้าที่มียอดขายจริงๆ (ป้องกัน Zero-Sales Bug)
-          // หรือใช้ข้อมูลทั้งหมดหากต้องการให้แสดงสินค้าใหม่ด้วยในกรณีที่ยังไม่มีสินค้าขายดี
-          const activeProducts = res.data.filter(p => p.soldCount > 0);
+          // 🛡️ ป้องกันบัคสินค้าใหม่มาเนียน: กรองเอาเฉพาะสินค้าที่มียอดขายจริง (> 0) 
+          // เพื่อให้เป็นส่วน "Best Seller" ที่แท้จริง
+          const bestSellers = res.data.filter(p => p.soldCount > 0);
           
-          // ถ้ามีสินค้าขายดีไม่ถึง 8 ชิ้น ให้เอาสินค้าที่ขายดี + สินค้าใหม่ล่าสุดมาแสดงให้ครบโควต้า
-          if (activeProducts.length > 0) {
-            setProducts(res.data); // ตอนนี้ API น่าจะ sort มาให้แล้ว แต่ถ้ามีปัญหาสามารถจัดการต่อได้
+          if (bestSellers.length > 0) {
+            // ถ้ามีสินค้าที่ขายได้จริง ให้เอาเฉพาะกลุ่มนั้น (สูงสุด 8 ชิ้น)
+            setProducts(bestSellers.slice(0, 8));
           } else {
-             setProducts(res.data);
+            // กรณีไม่มีสินค้าขายได้เลย (เช่น ร้านเพิ่งเปิด) ให้แสดงสินค้าใหม่ล่าสุดแทน 
+            // แต่จะเอามาจาก res.data ที่ Backend ส่งมาเป็น -createdAt (fallback อัตโนมัติ)
+            setProducts(res.data);
           }
         }
       } catch (error) {
