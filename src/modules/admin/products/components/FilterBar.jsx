@@ -1,5 +1,4 @@
 import { Search, X, Filter } from 'lucide-react';
-import { CATEGORIES } from '@/shared/constants';
 
 /**
  * 🔍 FilterBar Component
@@ -10,9 +9,12 @@ const FilterBar = ({
   onSearchChange, 
   selectedCategory, 
   onCategoryChange, 
-  onClear 
+  onClear,
+  categoriesList
 }) => {
-  const categories = ['All', ...CATEGORIES];
+  // สร้าง Array ของชื่อหมวดหมู่ที่ดึงมาจาก API (รองรับข้อมูลทั้งแบบ String และ Object)
+  const categoryNames = (categoriesList || []).map(cat => typeof cat === 'object' ? cat.name : cat);
+  const categories = ['All', ...categoryNames];
 
   return (
     <div className="flex flex-col lg:flex-row items-center gap-4 mb-8">

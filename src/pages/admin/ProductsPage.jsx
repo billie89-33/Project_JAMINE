@@ -18,6 +18,7 @@ const ProductsPage = () => {
     searchTerm,
     setSearchTerm,
     isLoading,
+    categoriesList,
     handleCategoryChange,
     handleClearFilters,
     handleDeleteProduct
@@ -54,6 +55,7 @@ const ProductsPage = () => {
           selectedCategory={selectedCategory} 
           onCategoryChange={handleCategoryChange} 
           onClear={handleClearFilters}
+          categoriesList={categoriesList}
         />
 
         {/* Data Table */}

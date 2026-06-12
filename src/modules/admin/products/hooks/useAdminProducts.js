@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getAdminProducts, deleteProduct } from '@/modules/admin/services/productApi';
+import { getCategoriesApi } from '@/modules/products/services/productApi';
+import { useApi } from '@/shared/hooks/useApi';
 import { toast } from 'react-hot-toast';
 
 /**
@@ -15,6 +17,13 @@ export const useAdminProducts = () => {
   const [searchTerm, setSearchTerm] = useState(''); // 🆕 เพิ่มสถานะคำค้นหา
   const [debouncedSearch, setDebouncedSearch] = useState(''); // สำหรับหน่วงเวลาการค้นหา
   const [isLoading, setIsLoading] = useState(false);
+
+  // 🌐 ดึงข้อมูลหมวดหมู่ทั้งหมดจาก API
+  const { data: categoriesList, execute: fetchCategories } = useApi(getCategoriesApi);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
   // ⏱️ Debounce Logic: หน่วงเวลา 500ms ก่อนเริ่มค้นหาจริง
   useEffect(() => {
@@ -98,6 +107,7 @@ export const useAdminProducts = () => {
     searchTerm, // 🆕 ส่งออกเพื่อให้ UI ผูกค่า
     setSearchTerm, // 🆕 ส่งออกเพื่อให้ UI พิมพ์ค่า
     isLoading,
+    categoriesList, // 🌐 ส่งออกหมวดหมู่
     handleCategoryChange,
     handleClearFilters, // 🆕 ส่งออกปุ่มล้างข้อมูล
     handleDeleteProduct,
