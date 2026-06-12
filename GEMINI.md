@@ -44,5 +44,8 @@
 20. **Logistics & Shipping Patterns:** [docs/20-logistics-shipping-patterns.md](./docs/20-logistics-shipping-patterns.md)
     - *ใช้อ่านเมื่อ:* ต้องการพัฒนาระบบขนส่งให้ยืดหยุ่น (Ultra-Defensive Mapping), สร้างกฎจำกัดสถานะออเดอร์ (Strict Flow Control), หรือการทำ UI จัดส่งแบบ Clean Mode
 
+21. **Infinite Loop Prevention & useEffect Mastery:** [docs/21-infinite-loop-prevention.md](./docs/21-infinite-loop-prevention.md)
+    - *ใช้อ่านเมื่อ:* ต้องการป้องกันหรือตรวจสอบบั๊กการวนลูปไม่สิ้นสุด (Infinite Loop), การจัดการ `useEffect` dependencies, และการทำ Reference Equality
+
 ---
 *หมายเหตุ: ไฟล์นี้ถูกออกแบบมาให้เป็น Portable Brain เมื่อคุณย้ายโฟลเดอร์โปรเจกต์ไปเครื่องอื่น Gemini จะยังคงจำกฎเหล่านี้ได้ผ่านไฟล์นี้*
