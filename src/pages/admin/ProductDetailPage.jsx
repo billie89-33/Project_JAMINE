@@ -18,6 +18,7 @@ const ProductDetailPage = () => {
     imagePreview,
     isLoading,
     isSubmitting,
+    categoriesList,
     handleFileSelect,
     handleSpecChange,
     handleAddSpecRow,
@@ -109,6 +110,7 @@ const ProductDetailPage = () => {
             setFormData={setFormData}
             imagePreview={imagePreview}
             onFileSelect={handleFileSelect}
+            categoriesList={categoriesList}
           />
         </section>
 

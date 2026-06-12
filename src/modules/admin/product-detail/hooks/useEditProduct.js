@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getProductById, updateProduct } from '@/modules/admin/services';
 import { toast } from 'react-hot-toast';
 import { PRODUCT_STATUS } from '@/shared/constants';
+import { useApi } from '@/shared/hooks/useApi';
+import { getCategoriesApi } from '@/modules/products/services/productApi';
 
 /**
  * 🎣 useEditProduct Hook (Surgical Logic)
@@ -31,6 +33,13 @@ export const useEditProduct = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // 🌐 ดึงข้อมูล Master Data สำหรับ Auto-suggest (Datalist)
+  const { data: categoriesList, execute: fetchCategories } = useApi(getCategoriesApi);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
   // 1. ดึงข้อมูลสินค้าเดิมมา Pre-fill ในฟอร์ม
   const fetchProduct = useCallback(async () => {
@@ -216,6 +225,7 @@ export const useEditProduct = () => {
     imagePreview,
     isLoading,
     isSubmitting,
+    categoriesList,
     handleFileSelect,
     handleSpecChange,
     handleAddSpecRow,

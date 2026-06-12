@@ -1,11 +1,11 @@
 import ImageUploadBox from '@/modules/admin/addproduct/components/ImageUploadBox';
-import { CATEGORIES, PRODUCT_STATUS } from '@/shared/constants';
+import { PRODUCT_STATUS } from '@/shared/constants';
 
 /**
  * 📝 EditableMainInfo
  * ส่วนจัดการข้อมูลพื้นฐานและสื่อ สำหรับหน้าแก้ไขสินค้า
  */
-export const EditableMainInfo = ({ formData, setFormData, imagePreview, onFileSelect }) => {
+export const EditableMainInfo = ({ formData, setFormData, imagePreview, onFileSelect, categoriesList }) => {
   return (
     <div className="flex flex-col lg:flex-row gap-10">
       
@@ -108,15 +108,20 @@ export const EditableMainInfo = ({ formData, setFormData, imagePreview, onFileSe
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Category</label>
-              <select 
+              <input 
+                type="text"
+                list="categories-list"
+                placeholder="พิมพ์หรือเลือกหมวดหมู่..."
                 value={formData.category} 
                 onChange={e => setFormData({...formData, category: e.target.value})} 
-                className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-bold focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none cursor-pointer shadow-sm"
-              >
-                {CATEGORIES.map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
+                className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-bold focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none shadow-sm"
+              />
+              <datalist id="categories-list">
+                {(categoriesList || []).map(cat => {
+                  const name = typeof cat === 'object' ? cat.name : cat;
+                  return <option key={name} value={name} />;
+                })}
+              </datalist>
             </div>
             <div className="space-y-2">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Status</label>
