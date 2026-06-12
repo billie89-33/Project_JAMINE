@@ -27,7 +27,7 @@ const ProfileOverview = () => {
             Welcome back, <span className="text-purple-600">{user?.username}</span>!
           </h2>
           <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">
-            Email: {user?.email} • Member since {new Date(user?.createdAt || Date.now()).toLocaleDateString()}
+            Email: {user?.email} • Member since {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'Unknown'}
           </p>
         </div>
       </div>

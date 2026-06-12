@@ -30,6 +30,12 @@ export const useProducts = (rawInitialCategory = '', initialKeyword = '') => {
   const [selectedSpecs, setSelectedSpecs] = useState({}); // 🆕 สิ่งที่ User ติ๊กเลือก
   const [sort, setSort] = useState('newest');
 
+  const resetFilters = useCallback(() => {
+    setSelectedBrands([]);
+    setSelectedSpecs({});
+    setCurrentPage(1);
+  }, []);
+
   // 🔄 Sync: เมื่อ URL Parameters เปลี่ยน ให้รีเซ็ต State ภายใน
   useEffect(() => {
     // กรณีเปลี่ยนหมวดหมู่
@@ -38,7 +44,7 @@ export const useProducts = (rawInitialCategory = '', initialKeyword = '') => {
       setSearchKeyword(''); // ล้างคำค้นหาเมื่อเลือกหมวดหมู่ใหม่
       resetFilters();
     }
-  }, [initialCategory]);
+  }, [initialCategory, selectedCategory, resetFilters]);
 
   useEffect(() => {
     // กรณีมีการค้นหาใหม่
@@ -47,13 +53,7 @@ export const useProducts = (rawInitialCategory = '', initialKeyword = '') => {
       setSelectedCategory('All'); // กลับไปหน้าสินค้าทั้งหมดเพื่อค้นหาแบบกว้าง
       resetFilters();
     }
-  }, [decodedKeyword]);
-
-  const resetFilters = () => {
-    setSelectedBrands([]);
-    setSelectedSpecs({});
-    setCurrentPage(1);
-  };
+  }, [decodedKeyword, searchKeyword, resetFilters]);
 
   // --- 🛰️ API Calls ---
 
@@ -109,7 +109,7 @@ export const useProducts = (rawInitialCategory = '', initialKeyword = '') => {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, selectedCategory, selectedBrands, priceRange, selectedSpecs, sort]);
+  }, [currentPage, selectedCategory, searchKeyword, selectedBrands, priceRange, selectedSpecs, sort]);
 
   // --- 🔄 Effects ---
 

@@ -20,7 +20,7 @@ export const useUserProfile = () => {
     if (tab && tab !== activeTab) {
       setActiveTab(tab);
     }
-  }, [searchParams]);
+  }, [searchParams, activeTab]);
 
   return {
     activeTab,

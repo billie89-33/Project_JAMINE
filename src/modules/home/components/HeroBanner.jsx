@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { useHome } from '../hooks/useHome';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,14 @@ const HeroBanner = ({ placement = 'home_hero' }) => {
   const { banners, loading } = useHome(placement);
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const prevSlide = useCallback(() => {
+    setCurrentIndex((prev) => (prev === 0 ? banners.length - 1 : prev - 1));
+  }, [banners.length]);
+
+  const nextSlide = useCallback(() => {
+    setCurrentIndex((prev) => (prev === banners.length - 1 ? 0 : prev + 1));
+  }, [banners.length]);
+
   // ระบบ Auto-play สไลด์ทุกๆ 5 วินาที
   useEffect(() => {
     if (banners.length <= 1) return;
@@ -15,15 +23,7 @@ const HeroBanner = ({ placement = 'home_hero' }) => {
       nextSlide();
     }, 5000);
     return () => clearInterval(timer);
-  }, [currentIndex, banners.length]);
-
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev === 0 ? banners.length - 1 : prev - 1));
-  };
-
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev === banners.length - 1 ? 0 : prev + 1));
-  };
+  }, [currentIndex, banners.length, nextSlide]);
 
   if (loading) {
     return (

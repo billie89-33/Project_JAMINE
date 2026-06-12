@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getProductByIdApi } from '../services/productDetailApi';
 
 /**
@@ -10,7 +10,7 @@ export const useProductDetail = (productId) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const fetchProduct = async () => {
+    const fetchProduct = useCallback(async () => {
         try {
             setLoading(true);
             const res = await getProductByIdApi(productId);
@@ -24,13 +24,13 @@ export const useProductDetail = (productId) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [productId]);
 
     useEffect(() => {
         if (productId) {
             fetchProduct();
         }
-    }, [productId]);
+    }, [productId, fetchProduct]);
 
     return { product, loading, error, refetch: fetchProduct };
 };
