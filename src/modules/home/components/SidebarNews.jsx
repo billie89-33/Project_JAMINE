@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowUpRight, Clock, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { getNewsApi } from '@/modules/admin/services';
+import { getPublicNewsApi } from '@/modules/admin/services';
 
 const SidebarNews = () => {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ const SidebarNews = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const res = await getNewsApi({ limit: 4, isPublished: true });
+        const res = await getPublicNewsApi({ limit: 4, isPublished: true });
         if (res.success) {
           setNewsList(res.data || []);
         }
