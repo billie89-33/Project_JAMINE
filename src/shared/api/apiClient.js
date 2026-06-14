@@ -4,7 +4,7 @@ const apiClient = axios.create({
     baseURL: import.meta.env.VITE_API_URL || 'http://localhost:4001/api/v1',
     withCredentials: true,
     headers: {}, // 🛡️ ปล่อยให้ Axios จัดการ Content-Type อัตโนมัติ
-    timeout: 10000, 
+    timeout: 60000, // ⏳ เพิ่มเป็น 60 วินาที เพื่อรอ Render Server ตื่น
 });
 
 apiClient.interceptors.request.use(
