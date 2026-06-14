@@ -11,10 +11,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 /**
  * 🎣 useNewsForm Hook
  * จัดการ State ของฟอร์มสร้าง/แก้ไขข่าวสาร
+ * Audit: Added useCallback for handlers and fixed effect dependencies.
  */
 export const useNewsForm = () => {
     const navigate = useNavigate();
-    const { id } = useParams(); // ถ้ามี id แปลว่าเป็นโหมดแก้ไข
+    const { id } = useParams();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isLoading, setIsLoading] = useState(!!id);
     const [categories, setCategories] = useState([]);
@@ -69,28 +70,28 @@ export const useNewsForm = () => {
     }, [fetchCategories, fetchNewsData]);
 
     // 3. Handle Inputs
-    const handleChange = (e) => {
+    const handleChange = useCallback((e) => {
         const { name, value, type, checked } = e.target;
         setFormData(prev => ({
             ...prev,
             [name]: type === 'checkbox' ? checked : value
         }));
-    };
+    }, []);
 
-    const handleContentChange = (value) => {
+    const handleContentChange = useCallback((value) => {
         setFormData(prev => ({ ...prev, content: value }));
-    };
+    }, []);
 
-    const handleFileChange = (e) => {
+    const handleFileChange = useCallback((e) => {
         const file = e.target.files[0];
         if (file) {
             setSelectedFile(file);
             setImagePreview(URL.createObjectURL(file));
         }
-    };
+    }, []);
 
     // 4. Submit Form
-    const handleSubmit = async (e) => {
+    const handleSubmit = useCallback(async (e) => {
         if (e) e.preventDefault();
         
         if (!formData.title || !formData.category || !formData.content) {
@@ -130,7 +131,7 @@ export const useNewsForm = () => {
         } finally {
             setIsSubmitting(false);
         }
-    };
+    }, [id, formData, selectedFile, navigate]);
 
     return {
         formData,

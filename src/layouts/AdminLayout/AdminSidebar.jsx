@@ -4,7 +4,9 @@ import {
   LayoutDashboard, 
   ShoppingBag, 
   LogOut,
-  Home
+  Home,
+  Newspaper,
+  Tag
 } from 'lucide-react';
 import SidebarSubMenu from './SidebarSubMenu';
 
@@ -33,6 +35,14 @@ const AdminSidebar = () => {
       { title: 'Advertising', path: 'advertising' },
       { title: 'Shipping', path: 'shipping' },
       { title: 'Customers', path: 'users' }
+    ]
+  },
+  {
+    title: 'Content',
+    icon: <Newspaper size={20} />,
+    subNav: [
+      { title: 'News Articles', path: 'news' },
+      { title: 'News Categories', path: 'news-categories' }
     ]
   }
 ];
