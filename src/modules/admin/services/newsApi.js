@@ -44,6 +44,14 @@ export const deleteNewsApi = async (id) => {
     return response.data;
 };
 
+// อัปโหลดรูปภาพแทรกในเนื้อหาข่าว (Returns URL)
+export const uploadNewsImageApi = async (file) => {
+    const data = new FormData();
+    data.append('image', file);
+    const response = await apiClient.post('/admin/news/upload-image', data);
+    return response.data; // { success: true, url: '...' }
+};
+
 // --- 2. News Category API ---
 
 // ดึงหมวดหมู่ข่าวทั้งหมด (Admin)

@@ -1,16 +1,14 @@
 import React from 'react';
 import { 
     Save, 
-    X, 
     Upload, 
-    Image as ImageIcon, 
     Loader2, 
     ChevronLeft,
-    Type,
     Eye,
     EyeOff
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import RichTextEditor from './RichTextEditor';
 
 const NewsForm = ({ 
     formData, 
@@ -75,25 +73,18 @@ const NewsForm = ({
                         </div>
 
                         <div>
-                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-3 ml-1">Content (Markdown/HTML supported) *</label>
+                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-3 ml-1">Content (Rich Text Editor) *</label>
                             <div className="border border-slate-200 rounded-3xl overflow-hidden focus-within:ring-4 focus-within:ring-purple-500/10 focus-within:border-purple-500 transition-all">
                                 <div className="bg-slate-50 border-b border-slate-200 px-4 py-2 flex items-center gap-4">
-                                    <div className="flex items-center gap-1.5 p-1 bg-white rounded-xl shadow-sm border border-slate-100">
-                                        <button type="button" className="p-1.5 hover:bg-slate-50 rounded-lg text-slate-400 hover:text-slate-600 transition-colors"><Type size={14}/></button>
-                                        <div className="w-px h-3 bg-slate-200 mx-1"></div>
-                                        <button type="button" className="p-1.5 hover:bg-slate-50 rounded-lg text-slate-400 hover:text-slate-600 transition-colors font-bold">B</button>
-                                        <button type="button" className="p-1.5 hover:bg-slate-50 rounded-lg text-slate-400 hover:text-slate-600 transition-colors italic text-xs">I</button>
-                                    </div>
-                                    <span className="text-[9px] font-black text-slate-300 uppercase tracking-tighter italic">Rich Text Editor Ready</span>
+                                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest italic flex items-center gap-2">
+                                        <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
+                                        Cloud-Integrated Editor Ready
+                                    </span>
                                 </div>
-                                <textarea 
-                                    name="content"
+                                <RichTextEditor 
                                     value={formData.content}
-                                    onChange={(e) => handleContentChange(e.target.value)}
-                                    placeholder="Tell your story..."
-                                    rows="15"
-                                    className="w-full px-6 py-6 bg-white outline-none text-slate-600 font-medium leading-relaxed resize-none"
-                                    required
+                                    onChange={handleContentChange}
+                                    placeholder="Write your amazing story here..."
                                 />
                             </div>
                         </div>
@@ -141,7 +132,7 @@ const NewsForm = ({
                                 name="category"
                                 value={formData.category}
                                 onChange={handleChange}
-                                className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 transition-all text-sm font-bold text-slate-700"
+                                className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-purple-500/10 focus:border-purple-300 transition-all text-sm font-bold text-slate-700"
                                 required
                             >
                                 <option value="">Select Category</option>
