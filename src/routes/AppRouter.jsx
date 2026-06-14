@@ -6,7 +6,7 @@ import ProtectedRoute from "./ProtectedRoute";
 
 // Pages
 import { RegisterPage, LoginPage } from "@/pages/auth";
-import { HomePage, CategoryPage, ProductDetailPage, CheckoutPage, PaymentPage, CartPage, ProfilePage } from "@/pages/user";
+import { HomePage, CategoryPage, ProductDetailPage, CheckoutPage, PaymentPage, CartPage, ProfilePage, NewsDetailPage } from "@/pages/user";
 import * as AdminPages from "@/pages/admin";
 import { useAuth } from "@/shared/contexts/AuthContext";
 import { USER_ROLES } from "@/shared/constants";
@@ -38,6 +38,7 @@ const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: "category/:type", element: <CategoryPage /> },
       { path: "product/:productId", element: <ProductDetailPage /> },
+      { path: "news/:id", element: <NewsDetailPage /> },
     ],
   },
 
