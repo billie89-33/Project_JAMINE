@@ -86,12 +86,15 @@ const DashboardContainer = () => {
                         className="group-hover:border-purple-200 transition-all"
                     />
                 </div>
-                <StatCard 
-                    title="Total Customers"
-                    value={summary.customers.value}
-                    trend={summary.customers.trend}
-                    icon={<Users size={24} strokeWidth={2.5} />}
-                />
+                <div onClick={() => navigate('/admin/users')} className="cursor-pointer group">
+                    <StatCard 
+                        title="Total Customers"
+                        value={summary.customers.value}
+                        trend={summary.customers.trend}
+                        icon={<Users size={24} strokeWidth={2.5} />}
+                        className="group-hover:border-purple-200 transition-all"
+                    />
+                </div>
             </div>
 
             {/* 3. Urgent Alerts Row (Action Required) */}

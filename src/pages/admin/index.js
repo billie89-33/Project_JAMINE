@@ -5,4 +5,6 @@ export { default as AddProductPage } from './AddProductPage.jsx';
 export { default as OrdersPage } from './OrdersPage.jsx';
 export { default as OrderDetailPage } from './OrderDetailPage.jsx';
 export { default as AdvertisingPage } from './AdvertisingPage.jsx';
-export { default as ShippingPage } from './ShippingPage.jsx';
+export { default as ShippingPage } from './ShippingPage';
+export { default as UsersPage } from './UsersPage';
+
