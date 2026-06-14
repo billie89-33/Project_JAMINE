@@ -10,7 +10,8 @@ import {
     Calendar,
     ChevronLeft,
     ChevronRight,
-    Loader2
+    Loader2,
+    User as UserIcon
 } from 'lucide-react';
 
 /**
@@ -105,13 +106,13 @@ const CustomerList = ({
                                                 user.status === 'banned' ? 'bg-slate-300' : 'bg-gradient-to-br from-purple-500 to-indigo-500'
                                             }`}>
                                                 {user.avatar?.url ? (
-                                                    <img src={user.avatar.url} alt={user.name} className="w-full h-full object-cover" />
+                                                    <img src={user.avatar.url} alt={user.name || user.username} className="w-full h-full object-cover" />
                                                 ) : (
-                                                    <span>{user.name ? user.name[0].toUpperCase() : user.username[0].toUpperCase()}</span>
+                                                    <UserIcon size={20} strokeWidth={2.5} />
                                                 )}
                                             </div>
                                             <div>
-                                                <div className="text-sm font-black text-slate-700">{user.name || 'No Name'}</div>
+                                                <div className="text-sm font-black text-slate-700">{user.name || user.username}</div>
                                                 <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">@{user.username}</div>
                                             </div>
                                         </div>

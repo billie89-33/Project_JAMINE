@@ -10,7 +10,8 @@ import {
     UserX,
     UserCheck,
     Trash2,
-    Loader2
+    Loader2,
+    User as UserIcon
 } from 'lucide-react';
 
 /**
@@ -47,9 +48,9 @@ const CustomerDetailModal = ({
                             user.status === 'banned' ? 'bg-slate-400' : 'bg-gradient-to-br from-purple-500 to-indigo-500'
                         }`}>
                             {user.avatar?.url ? (
-                                <img src={user.avatar.url} alt={user.name} className="w-full h-full object-cover" />
+                                <img src={user.avatar.url} alt={user.name || user.username} className="w-full h-full object-cover" />
                             ) : (
-                                <span>{user.name ? user.name[0].toUpperCase() : user.username[0].toUpperCase()}</span>
+                                <UserIcon size={48} strokeWidth={2.5} />
                             )}
                         </div>
                     </div>
@@ -59,7 +60,7 @@ const CustomerDetailModal = ({
                     {/* Profile Basic Info */}
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
                         <div>
-                            <h2 className="text-2xl font-black text-slate-800">{user.name || 'No Name'}</h2>
+                            <h2 className="text-2xl font-black text-slate-800">{user.name || user.username}</h2>
                             <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">@{user.username}</p>
                             <div className="mt-3 flex items-center gap-2">
                                 <span className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
