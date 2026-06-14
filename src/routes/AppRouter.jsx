@@ -66,6 +66,8 @@ const router = createBrowserRouter([
       { path: "advertising", element: <AdminPages.AdvertisingPage /> },
       { path: "shipping", element: <AdminPages.ShippingPage /> },
       { path: "users", element: <AdminPages.UsersPage /> },
+      { path: "news-categories", element: <AdminPages.NewsCategoriesPage /> },
+
     ],
   },
 

@@ -7,4 +7,6 @@ export { default as OrderDetailPage } from './OrderDetailPage.jsx';
 export { default as AdvertisingPage } from './AdvertisingPage.jsx';
 export { default as ShippingPage } from './ShippingPage';
 export { default as UsersPage } from './UsersPage';
+export { default as NewsCategoriesPage } from './NewsCategoriesPage';
+
 
