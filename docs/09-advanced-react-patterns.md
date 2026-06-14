@@ -123,7 +123,7 @@ const fetchMasterData = async () => {
 
 **เทคนิค Best Practice:**
 1. **Hybrid Navigation**: แบ่งการค้นหาเป็น 2 ระดับ:
-   - **Quick Look (Suggestions)**: โชว์ผลลัพธ์ 5 รายการแรกที่ตรงใจที่สุดใน Dropdown เพื่อให้ผู้ใช้กดเข้าหน้าสินค้าได้ทันที
+   - **Quick Look (Suggestions)**: โชว์ผลลัพธ์ 5 รายการแรกที่ตรงใจที่สุดใน Dropdown เพื่อให้ผู้ใช้กดเข้าหน้าสินค้าได้ทีเดียว
    - **Full Results (Search Page)**: เมื่อกด Enter หรือปุ่มค้นหา ให้พาไปยังหน้า Category/All พร้อม Parameter `?q=...` เพื่อแสดงผลลัพธ์ทั้งหมด
 2. **Ref Visibility (Debounce Safety)**: ใช้ `useRef` สำหรับเก็บ `timeoutId` เพื่อให้แน่ใจว่าการเคลียร์ Timer ทำงานได้ถูกต้องแม้ Component จะถูก Re-render ถี่ๆ  
 3. **Empty Query Protection**: ห้ามยิง API หากคำค้นหามีความยาวไม่ถึงเกณฑ์ (เช่น < 2 ตัวอักษร) เพื่อป้องกันผลลัพธ์ที่กว้างเกินไปและลดโหลด API
