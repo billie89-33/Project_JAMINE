@@ -10,6 +10,10 @@ import {
 import { Link } from 'react-router-dom';
 import RichTextEditor from './RichTextEditor';
 
+/**
+ * 📰 NewsForm Component (v2.1 - Critical Fix)
+ * หน้าจอเขียนข่าวสารพร้อม Rich Text Editor ที่ติดตั้งสมบูรณ์
+ */
 const NewsForm = ({ 
     formData, 
     categories, 
@@ -24,16 +28,16 @@ const NewsForm = ({
 }) => {
     if (isLoading) {
         return (
-            <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-slate-100 shadow-sm">
+            <div className="flex flex-col items-center justify-center py-20 bg-white rounded-[2.5rem] border border-slate-100 shadow-sm">
                 <Loader2 className="animate-spin text-purple-600 mb-3" size={40} />
-                <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Loading Article Data...</p>
+                <p className="text-slate-400 font-black uppercase tracking-widest text-[10px]">Loading Article Data...</p>
             </div>
         );
     }
 
     return (
         <form onSubmit={handleSubmit} className="space-y-8 animate-in fade-in duration-700 pb-20">
-            {/* Header Actions */}
+            {/* 1. Header Actions */}
             <div className="flex items-center justify-between">
                 <Link 
                     to="/admin/news" 
@@ -42,23 +46,22 @@ const NewsForm = ({
                     <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
                     Back to Articles
                 </Link>
-                <div className="flex items-center gap-3">
-                    <button 
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="flex items-center gap-2 px-8 py-3 bg-purple-600 text-white rounded-2xl text-xs font-black shadow-xl shadow-purple-200 hover:bg-purple-700 transition-all disabled:opacity-50"
-                    >
-                        {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-                        {isEditMode ? 'Update Article' : 'Publish Article'}
-                    </button>
-                </div>
+                <button 
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="flex items-center gap-2 px-8 py-3 bg-purple-600 text-white rounded-2xl text-xs font-black shadow-xl shadow-purple-200 hover:bg-purple-700 transition-all disabled:opacity-50"
+                >
+                    {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                    {isEditMode ? 'Update Article' : 'Publish Article'}
+                </button>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 
-                {/* Left Column: Editor */}
+                {/* 2. Left Column: Main Editor */}
                 <div className="lg:col-span-8 space-y-6">
                     <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-6">
+                        {/* Title Input */}
                         <div>
                             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-3 ml-1">Article Title *</label>
                             <input 
@@ -72,15 +75,17 @@ const NewsForm = ({
                             />
                         </div>
 
+                        {/* Rich Text Editor Area */}
                         <div>
                             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-3 ml-1">Content (Rich Text Editor) *</label>
-                            <div className="border border-slate-200 rounded-3xl overflow-hidden focus-within:ring-4 focus-within:ring-purple-500/10 focus-within:border-purple-500 transition-all">
+                            <div className="border border-slate-200 rounded-3xl overflow-hidden focus-within:ring-4 focus-within:ring-purple-500/10 focus-within:border-purple-500 transition-all shadow-inner bg-white">
                                 <div className="bg-slate-50 border-b border-slate-200 px-4 py-2 flex items-center gap-4">
                                     <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest italic flex items-center gap-2">
                                         <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
-                                        Cloud-Integrated Editor Ready
+                                        Interactive Studio Mode
                                     </span>
                                 </div>
+                                {/* 🚀 ใส่ Component ตรงนี้แน่นอน */}
                                 <RichTextEditor 
                                     value={formData.content}
                                     onChange={handleContentChange}
@@ -91,14 +96,14 @@ const NewsForm = ({
                     </div>
                 </div>
 
-                {/* Right Column: Sidebar Settings */}
-                <div className="lg:col-span-4 space-y-6">
+                {/* 3. Right Column: Settings */}
+                <div className="lg:col-span-4 space-y-6 text-left">
                     
-                    {/* Cover Image */}
+                    {/* Cover Image Upload */}
                     <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-6">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-3 ml-1">Cover Image *</label>
-                        <div className="relative group">
-                            <div className={`aspect-[16/10] rounded-3xl border-2 border-dashed overflow-hidden flex flex-col items-center justify-center transition-all ${
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1 ml-1">Cover Image *</label>
+                        <div className="relative group aspect-[16/10]">
+                            <div className={`w-full h-full rounded-3xl border-2 border-dashed overflow-hidden flex flex-col items-center justify-center transition-all ${
                                 imagePreview ? 'border-purple-200 bg-white' : 'border-slate-200 bg-slate-50 hover:bg-slate-100'
                             }`}>
                                 {imagePreview ? (
@@ -116,7 +121,7 @@ const NewsForm = ({
                                         <div className="p-4 bg-white rounded-2xl shadow-sm text-slate-300 group-hover:text-purple-500 transition-colors">
                                             <Upload size={24} />
                                         </div>
-                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Select Cover File</span>
+                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Select Cover</span>
                                         <input type="file" onChange={handleFileChange} className="hidden" accept="image/*" required={!isEditMode} />
                                     </label>
                                 )}
@@ -124,7 +129,7 @@ const NewsForm = ({
                         </div>
                     </div>
 
-                    {/* Metadata Settings */}
+                    {/* Metadata & Status */}
                     <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-6">
                         <div>
                             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-3 ml-1">Category *</label>
@@ -143,7 +148,7 @@ const NewsForm = ({
                         </div>
 
                         <div>
-                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-3 ml-1">Publish Status</label>
+                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-3 ml-1">Status</label>
                             <div className="flex items-center gap-2 p-1 bg-slate-50 rounded-2xl border border-slate-200">
                                 <button 
                                     type="button"
