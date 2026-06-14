@@ -1,13 +1,20 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getUsersApi, getUserSummaryApi, updateUserStatusApi, deleteUserApi } from '@/modules/admin/services';
+import { 
+    getUsersApi, 
+    getUserSummaryApi, 
+    updateUserByAdminApi, 
+    deleteUserApi,
+    exportCustomersApi 
+} from '@/modules/admin/services';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * 🎣 useUsers Hook
- * จัดการ Logic ทั้งหมดของระบบจัดการลูกค้า (Admin)
- * ป้องกัน Infinite Loop ด้วย useCallback และใช้ Absolute Imports
+ * จัดการ Logic ทั้งหมดของระบบจัดการลูกค้า (Admin) - v2.0
  */
 export const useUsers = () => {
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
     const [isActionLoading, setIsActionLoading] = useState(false);
     const [users, setUsers] = useState([]);
@@ -22,12 +29,20 @@ export const useUsers = () => {
     const [keyword, setKeyword] = useState('');
     const [status, setStatus] = useState('all');
 
-    // Detail Modal
+    // Detail Modal & Edit State
     const [selectedUser, setSelectedUser] = useState(null);
     const [summary, setSummary] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [activeTab, setActiveTab] = useState('summary'); // 'summary' | 'addresses' | 'orders'
+    const [editForm, setEditForm] = useState({
+        name: '',
+        email: '',
+        phone: '',
+        status: 'active'
+    });
 
-    // 1. Fetch Users List - ใช้ useCallback เพื่อความเสถียรของฟังก์ชัน
+    // 1. Fetch Users List
     const fetchUsers = useCallback(async () => {
         setIsLoading(true);
         try {
@@ -48,7 +63,6 @@ export const useUsers = () => {
         }
     }, [page, keyword, status]);
 
-    // ระบบ Debounce Search
     useEffect(() => {
         const timer = setTimeout(() => {
             fetchUsers();
@@ -56,14 +70,23 @@ export const useUsers = () => {
         return () => clearTimeout(timer);
     }, [fetchUsers]);
 
-    // 2. Fetch User Summary (Profile + Stats)
+    // 2. View Detail & Summary
     const viewDetail = useCallback(async (id) => {
         setIsActionLoading(true);
+        setActiveTab('summary');
+        setIsEditMode(false);
         try {
             const res = await getUserSummaryApi(id);
             if (res.success) {
-                setSelectedUser(res.data.profile);
+                const profile = res.data.profile;
+                setSelectedUser(profile);
                 setSummary(res.data.orderSummary);
+                setEditForm({
+                    name: profile.name || '',
+                    email: profile.email || '',
+                    phone: profile.phone || '',
+                    status: profile.status || 'active'
+                });
                 setIsModalOpen(true);
             }
         } catch (error) {
@@ -73,40 +96,86 @@ export const useUsers = () => {
         }
     }, []);
 
-    // 3. Update User Status - ปรับแก้การเช็ค id เป็น _id ตาม MongoDB Standard
-    const toggleStatus = useCallback(async (id, currentStatus) => {
-        const newStatus = currentStatus === 'active' ? 'banned' : 'active';
-        const confirmMsg = newStatus === 'banned' 
-            ? 'Are you sure you want to BAN this user?' 
-            : 'Are you sure you want to ACTIVATE this user?';
-        
-        if (!window.confirm(confirmMsg)) return;
-
+    // 3. Update User (Full Edit)
+    const handleUpdateUser = async (e) => {
+        if (e) e.preventDefault();
         setIsActionLoading(true);
         try {
-            const res = await updateUserStatusApi(id, newStatus);
+            const res = await updateUserByAdminApi(selectedUser._id, editForm);
             if (res.success) {
-                toast.success(`User status updated to ${newStatus}`);
+                toast.success('User updated successfully');
+                setIsEditMode(false);
                 fetchUsers(); // Refresh list
-                
-                // อัปเดต State ภายใน Modal ถ้าเปิดอยู่
-                setSelectedUser(prev => {
-                    if (prev && prev._id === id) {
-                        return { ...prev, status: newStatus };
-                    }
-                    return prev;
-                });
+                setSelectedUser(prev => ({ ...prev, ...res.data }));
             }
         } catch (error) {
             toast.error(error.response?.data?.message || 'Update failed');
         } finally {
             setIsActionLoading(false);
         }
-    }, [fetchUsers]);
+    };
 
-    // 4. Delete User
+    // 4. Toggle Status (Surgical Update)
+    const toggleStatus = useCallback(async (id, currentStatus) => {
+        const newStatus = currentStatus === 'active' ? 'banned' : 'active';
+        if (!window.confirm(`Are you sure you want to ${newStatus.toUpperCase()} this user?`)) return;
+
+        setIsActionLoading(true);
+        try {
+            const res = await updateUserByAdminApi(id, { status: newStatus });
+            if (res.success) {
+                toast.success(`User status updated to ${newStatus}`);
+                fetchUsers();
+                if (selectedUser?._id === id) {
+                    setSelectedUser(prev => ({ ...prev, status: newStatus }));
+                    setEditForm(prev => ({ ...prev, status: newStatus }));
+                }
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Status update failed');
+        } finally {
+            setIsActionLoading(false);
+        }
+    }, [fetchUsers, selectedUser]);
+
+    // 5. Export to CSV
+    const exportToCSV = async () => {
+        setIsActionLoading(true);
+        try {
+            const res = await exportCustomersApi();
+            if (res.success) {
+                const data = res.data;
+                const headers = ['Name', 'Username', 'Email', 'Phone', 'Status', 'Joined Date'];
+                const csvRows = data.map(u => [
+                    u.name || 'N/A',
+                    u.username,
+                    u.email,
+                    u.phone || 'N/A',
+                    u.status,
+                    new Date(u.createdAt).toLocaleDateString()
+                ].join(','));
+                
+                const csvContent = [headers.join(','), ...csvRows].join('\n');
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', `customers_export_${new Date().toISOString().split('T')[0]}.csv`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                toast.success('Export started!');
+            }
+        } catch (error) {
+            toast.error('Export failed');
+        } finally {
+            setIsActionLoading(false);
+        }
+    };
+
+    // 6. Delete User
     const deleteUser = useCallback(async (id) => {
-        if (!window.confirm('CRITICAL: Are you sure you want to DELETE this user permanently? This action cannot be undone.')) return;
+        if (!window.confirm('CRITICAL: Delete this user permanently? This cannot be undone.')) return;
 
         setIsActionLoading(true);
         try {
@@ -123,24 +192,33 @@ export const useUsers = () => {
         }
     }, [fetchUsers]);
 
+    // 7. Deep Link to Orders
+    const viewCustomerOrders = (userId) => {
+        setIsModalOpen(false);
+        navigate('/admin/order', { state: { userId } });
+    };
+
     return {
         isLoading,
         isActionLoading,
         users,
         pagination,
-        page,
-        setPage,
-        keyword,
-        setKeyword,
-        status,
-        setStatus,
-        // Modal & Detail
+        page, setPage,
+        keyword, setKeyword,
+        status, setStatus,
+        // Modal & Edit
         selectedUser,
         summary,
-        isModalOpen,
-        setIsModalOpen,
+        isModalOpen, setIsModalOpen,
+        isEditMode, setIsEditMode,
+        editForm, setEditForm,
+        activeTab, setActiveTab,
+        // Actions
         viewDetail,
+        handleUpdateUser,
         toggleStatus,
-        deleteUser
+        deleteUser,
+        exportToCSV,
+        viewCustomerOrders
     };
 };
