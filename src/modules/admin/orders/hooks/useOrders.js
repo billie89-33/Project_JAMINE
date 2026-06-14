@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useApi } from '@/shared/hooks/useApi';
 import { getAllOrders, updateOrderStatus, deleteOrder } from '@/modules/admin/services';
@@ -6,37 +6,47 @@ import { toast } from 'react-hot-toast';
 import { ORDER_STATUS } from '@/shared/constants';
 
 /**
- * 🎣 useOrders Hook
+ * 🎣 useOrders Hook (Refactored for Scalability)
  * จัดการ Logic ทั้งหมดของระบบจัดการออเดอร์สำหรับ Admin
  */
 export const useOrders = () => {
     const location = useLocation();
     
-    // 💾 1. States สำหรับ Filtering & Pagination
+    // 💾 1. States สำหรับ Filtering, Search & Pagination
     const [status, setStatus] = useState(location.state?.filterStatus || '');
+    const [keyword, setKeyword] = useState(''); // ค้นหา Order ID หรือชื่อลูกค้า
     const [page, setPage] = useState(1);
     const [limit] = useState(10);
 
-    // 🚀 2. ดึงข้อมูลออเดอร์
+    // 🚀 2. ดึงข้อมูลออเดอร์ (ใช้ useApi มาตรฐาน)
     const { 
         loading: isLoading, 
         data: orderData, 
         execute: fetchOrders 
     } = useApi(getAllOrders, {
-        transform: (res) => res // 🛡️ identity transform เพื่อเอา metadata (total, totalPages) มาด้วย
+        transform: (res) => res
     });
 
-    // 🔄 3. ฟังก์ชันดึงข้อมูลใหม่
+    // 🔄 3. ฟังก์ชันดึงข้อมูลใหม่ (Stabilized with useCallback)
     const refreshOrders = useCallback(() => {
-        fetchOrders({ status, page, limit });
-    }, [fetchOrders, status, page, limit]);
+        fetchOrders({ 
+            status: status || undefined, 
+            userId: location.state?.userId || undefined, // รองรับ Deep Link จากหน้าลูกค้า
+            keyword: keyword.trim() || undefined,
+            page, 
+            limit 
+        });
+    }, [fetchOrders, status, location.state?.userId, keyword, page, limit]);
 
-    // ดึงข้อมูลเมื่อมีการเปลี่ยน Filter หรือ Page
+    // ⏳ 4. ระบบ Debounce Search และ Auto-fetch เมื่อเปลี่ยน Filter/Page
     useEffect(() => {
-        refreshOrders();
-    }, [refreshOrders]);
+        const timer = setTimeout(() => {
+            refreshOrders();
+        }, keyword ? 400 : 0); // หน่วงเวลาเฉพาะตอนพิมพ์ค้นหา
+        return () => clearTimeout(timer);
+    }, [refreshOrders, keyword]);
 
-    // 🛠️ 4. ฟังก์ชันจัดการออเดอร์
+    // 🛠️ 5. ฟังก์ชันจัดการออเดอร์
     const { execute: updateStatusApi, loading: isUpdating } = useApi(updateOrderStatus, {
         showToast: true,
         successMessage: 'อัปเดตสถานะออเดอร์เรียบร้อยแล้ว',
@@ -49,50 +59,56 @@ export const useOrders = () => {
         onSuccess: () => refreshOrders()
     });
 
-    const handleUpdateStatus = async (orderId, newStatus) => {
+    const handleUpdateStatus = useCallback(async (orderId, newStatus) => {
         const payload = { status: newStatus };
 
-        // 🚚 ถ้าจะเปลี่ยนเป็น Shipped ต้องขอเลขพัสดุจาก Admin ก่อน
         if (newStatus === ORDER_STATUS.SHIPPED) {
             const tracking = window.prompt('🚚 กรุณาระบุเลขพัสดุ (Tracking Number):');
-            
-            // ถ้ากดยกเลิก Prompt
             if (tracking === null) return; 
-
-            // ถ้าไม่ระบุเลขพัสดุ
             if (!tracking.trim()) {
                 toast.error('⚠️ จำเป็นต้องระบุเลขพัสดุเพื่อเปลี่ยนสถานะเป็น Shipped');
                 return;
             }
-            
             payload.trackingNumber = tracking.trim();
         }
 
         await updateStatusApi(orderId, payload);
-    };
+    }, [updateStatusApi]);
 
-    const handleDeleteOrder = async (orderId) => {
-        if (window.confirm('คุณแน่ใจหรือไม่ว่าต้องการลบออเดอร์นี้? การกระทำนี้ไม่สามารถย้อนกลับได้')) {
+    const handleDeleteOrder = useCallback(async (orderId) => {
+        if (window.confirm('คุณแน่ใจหรือไม่ว่าต้องการลบออเดอร์นี้?')) {
             await deleteOrderApi(orderId);
         }
-    };
+    }, [deleteOrderApi]);
 
-    const handlePageChange = (newPage) => {
+    const handlePageChange = useCallback((newPage) => {
         setPage(newPage);
-    };
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, []);
 
-    const handleStatusFilterChange = (newStatus) => {
+    const handleStatusFilterChange = useCallback((newStatus) => {
         setStatus(newStatus);
-        setPage(1); // กลับไปหน้าแรกเมื่อเปลี่ยน Filter
-    };
+        setPage(1);
+    }, []);
+
+    const handleSearchChange = useCallback((value) => {
+        setKeyword(value);
+        setPage(1);
+    }, []);
+
+    // 📦 6. Prepare Final Data
+    const orders = useMemo(() => orderData?.data || [], [orderData]);
+    const totalPages = useMemo(() => orderData?.totalPages || 1, [orderData]);
+    const totalItems = useMemo(() => orderData?.total || 0, [orderData]);
 
     return {
         // Data States
-        orders: orderData?.data || (Array.isArray(orderData) ? orderData : []),
-        total: orderData?.total || 0,
-        totalPages: orderData?.totalPages || 1,
+        orders,
+        totalItems,
+        totalPages,
         page,
         status,
+        keyword,
         
         // Loading States
         isLoading,
@@ -103,6 +119,7 @@ export const useOrders = () => {
         handleDeleteOrder,
         handlePageChange,
         handleStatusFilterChange,
+        handleSearchChange,
         refreshOrders
     };
 };
