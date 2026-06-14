@@ -63,7 +63,19 @@ const UsersContainer = () => {
 
             {/* List Section */}
             <CustomerList 
-...
+                users={users}
+                isLoading={isLoading}
+                pagination={pagination}
+                page={page}
+                setPage={setPage}
+                keyword={keyword}
+                setKeyword={setKeyword}
+                status={status}
+                setStatus={setStatus}
+                onViewDetail={viewDetail}
+                onToggleStatus={toggleStatus}
+            />
+
             {/* Detail Modal */}
             <CustomerDetailModal 
                 isOpen={isModalOpen}

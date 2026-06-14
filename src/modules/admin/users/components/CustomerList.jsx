@@ -11,7 +11,7 @@ import {
     ChevronLeft,
     ChevronRight,
     Loader2,
-    User as UserIcon
+    User as UserIcon 
 } from 'lucide-react';
 
 /**
