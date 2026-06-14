@@ -8,5 +8,8 @@ export { default as AdvertisingPage } from './AdvertisingPage.jsx';
 export { default as ShippingPage } from './ShippingPage';
 export { default as UsersPage } from './UsersPage';
 export { default as NewsCategoriesPage } from './NewsCategoriesPage';
+export { default as NewsPage } from './NewsPage';
+export { default as NewsFormPage } from './NewsFormPage';
+
 
 

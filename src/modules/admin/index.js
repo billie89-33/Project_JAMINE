@@ -8,3 +8,6 @@ export * from './order-detail';
 export * from './advertising';
 export * from './shipping';
 export * from './users';
+export * from './news-categories';
+export * from './news';
+
