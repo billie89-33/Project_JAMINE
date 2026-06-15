@@ -46,7 +46,17 @@ export const useOrders = () => {
         return () => clearTimeout(timer);
     }, [refreshOrders, keyword]);
 
-    // 🛠️ 5. ฟังก์ชันจัดการออเดอร์
+    // 📦 5. Prepare Final Data (Ultra-Defensive Mapping as per doc/20)
+    // 🛡️ ต้องประกาศข้อมูลก่อน Handlers เพื่อป้องกัน ReferenceError (Temporal Dead Zone)
+    const orders = useMemo(() => {
+        // ดึงจาก orderData.data หรือถ้า orderData เป็น Array ก็เอามาเลย ถ้าไม่ใช่ให้เป็น []
+        return orderData?.data || (Array.isArray(orderData) ? orderData : []);
+    }, [orderData]);
+
+    const totalPages = useMemo(() => orderData?.totalPages || 1, [orderData]);
+    const totalItems = useMemo(() => orderData?.total || orders.length || 0, [orderData, orders]);
+
+    // 🛠️ 6. ฟังก์ชันจัดการออเดอร์
     const { execute: updateStatusApi, loading: isUpdating } = useApi(updateOrderStatus, {
         showToast: true,
         successMessage: 'อัปเดตสถานะออเดอร์เรียบร้อยแล้ว',
@@ -106,15 +116,6 @@ export const useOrders = () => {
         setKeyword(value);
         setPage(1);
     }, []);
-
-    // 📦 6. Prepare Final Data (Ultra-Defensive Mapping as per doc/20)
-    const orders = useMemo(() => {
-        // ดึงจาก orderData.data หรือถ้า orderData เป็น Array ก็เอามาเลย ถ้าไม่ใช่ให้เป็น []
-        return orderData?.data || (Array.isArray(orderData) ? orderData : []);
-    }, [orderData]);
-
-    const totalPages = useMemo(() => orderData?.totalPages || 1, [orderData]);
-    const totalItems = useMemo(() => orderData?.total || orders.length || 0, [orderData, orders]);
 
     return {
         // Data States

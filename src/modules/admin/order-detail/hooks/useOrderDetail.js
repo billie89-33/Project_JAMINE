@@ -29,7 +29,6 @@ export const useOrderDetail = () => {
     });
 
     useEffect(() => {
-        console.log('🔍 [useOrderDetail] useEffect triggered with orderId:', orderId);
         if (orderId) {
             fetchOrderDetails(orderId).then(res => {
                 // ถ้าออเดอร์มีเลขพัสดุอยู่แล้ว ให้เซ็ตค่าใส่ช่อง Input เลย
