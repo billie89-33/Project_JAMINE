@@ -74,7 +74,7 @@ const ProductTable = ({ products, onDelete, isLoading }) => {
                   <div className="flex items-center gap-4">
                     <div className="w-16 h-16 rounded-2xl bg-slate-100 overflow-hidden border border-purple-50 shadow-sm flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
                       <img 
-                        src={product.image?.url || 'https://via.placeholder.com/150'} 
+                        src={product.image?.url || product.image || 'https://via.placeholder.com/150'} 
                         alt={product.modelName} 
                         className="w-full h-full object-cover"
                       />
