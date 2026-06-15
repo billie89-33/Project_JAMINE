@@ -137,7 +137,11 @@ const OrderDetailContainer = () => {
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-4">
                                                     <div className="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden border border-slate-200">
-                                                        <img src={item.image || 'https://via.placeholder.com/150'} alt={item.modelName} className="w-full h-full object-cover" />
+                                                        <img 
+                                                            src={item.image?.url || item.image || 'https://via.placeholder.com/150'} 
+                                                            alt={item.modelName} 
+                                                            className="w-full h-full object-cover" 
+                                                        />
                                                     </div>
                                                     <div>
                                                         <p className="text-[10px] font-black text-purple-600 uppercase tracking-widest">{item.brand}</p>
