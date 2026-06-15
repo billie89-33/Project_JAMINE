@@ -18,6 +18,7 @@ import { ORDER_STATUS, ORDER_TRANSITIONS } from '@/shared/constants';
 /**
  * 🚀 OrderDetailContainer (Admin)
  * หน้าจอแสดงรายละเอียดออเดอร์และระบบจัดการขนส่ง (Shipping Management)
+ * ปรับปรุงให้ตรงกับ Backend Model: subtotal, shippingFee, total, priceAtPurchase
  */
 const OrderDetailContainer = () => {
     const navigate = useNavigate();
@@ -132,34 +133,42 @@ const OrderDetailContainer = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-50">
-                                    {order.items?.map((item, idx) => (
-                                        <tr key={idx} className="hover:bg-slate-50/50 transition-colors">
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden border border-slate-200">
-                                                        <img 
-                                                            src={item.image?.url || item.image || 'https://via.placeholder.com/150'} 
-                                                            alt={item.modelName} 
-                                                            className="w-full h-full object-cover" 
-                                                        />
+                                    {order.items?.map((item, idx) => {
+                                        // 🛡️ strictly Match with Backend Model (priceAtPurchase)
+                                        const itemPrice = item.priceAtPurchase || 0;
+                                        const itemModel = item.modelName || 'Unknown Product';
+                                        const itemBrand = item.brand || '';
+                                        const itemImage = item.image || 'https://via.placeholder.com/150';
+
+                                        return (
+                                            <tr key={idx} className="hover:bg-slate-50/50 transition-colors">
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden border border-slate-200">
+                                                            <img 
+                                                                src={itemImage} 
+                                                                alt={itemModel} 
+                                                                className="w-full h-full object-cover" 
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-[10px] font-black text-purple-600 uppercase tracking-widest">{itemBrand}</p>
+                                                            <p className="text-sm font-bold text-slate-700 leading-tight">{itemModel}</p>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <p className="text-[10px] font-black text-purple-600 uppercase tracking-widest">{item.brand}</p>
-                                                        <p className="text-sm font-bold text-slate-700 leading-tight">{item.modelName}</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4 text-center">
-                                                <span className="text-sm font-bold text-slate-600">฿{(item.price || 0).toLocaleString()}</span>
-                                            </td>
-                                            <td className="px-6 py-4 text-center">
-                                                <span className="text-sm font-black text-slate-800 bg-slate-100 px-3 py-1 rounded-lg">x{item.quantity}</span>
-                                            </td>
-                                            <td className="px-6 py-4 text-right">
-                                                <span className="text-sm font-black text-purple-600">฿{((item.price || 0) * item.quantity).toLocaleString()}</span>
-                                            </td>
-                                        </tr>
-                                    ))}
+                                                </td>
+                                                <td className="px-6 py-4 text-center">
+                                                    <span className="text-sm font-bold text-slate-600">฿{itemPrice.toLocaleString()}</span>
+                                                </td>
+                                                <td className="px-6 py-4 text-center">
+                                                    <span className="text-sm font-black text-slate-800 bg-slate-100 px-3 py-1 rounded-lg">x{item.quantity}</span>
+                                                </td>
+                                                <td className="px-6 py-4 text-right">
+                                                    <span className="text-sm font-black text-purple-600">฿{(itemPrice * item.quantity).toLocaleString()}</span>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
                                 </tbody>
                             </table>
                         </div>
@@ -177,7 +186,7 @@ const OrderDetailContainer = () => {
                                     {order.shippingAddress?.fullName || order.userId?.name || 'Guest User'}
                                 </p>
                                 <p className="text-xs text-slate-500">{order.userId?.email || '-'}</p>
-                                <p className="text-xs text-slate-500 mt-1">{order.userId?.phone || '-'}</p>
+                                <p className="text-xs text-slate-500 mt-1">{order.shippingAddress?.phone || order.userId?.phone || '-'}</p>
                             </div>
                         </div>
                         <div className="bg-white p-6 rounded-[32px] shadow-sm border border-slate-100 flex gap-4">
@@ -188,8 +197,9 @@ const OrderDetailContainer = () => {
                                 <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Shipping Address</h4>
                                 <p className="text-xs font-medium text-slate-600 leading-relaxed">
                                     {order.shippingAddress?.fullName}<br/>
-                                    {order.shippingAddress?.addressLine1} {order.shippingAddress?.addressLine2}<br/>
-                                    {order.shippingAddress?.city}, {order.shippingAddress?.state} {order.shippingAddress?.postalCode}
+                                    {order.shippingAddress?.address}<br/>
+                                    {order.shippingAddress?.subDistrict} {order.shippingAddress?.district}<br/>
+                                    {order.shippingAddress?.province} {order.shippingAddress?.postalCode}
                                 </p>
                             </div>
                         </div>
@@ -253,20 +263,22 @@ const OrderDetailContainer = () => {
                         <div className="space-y-3 text-sm font-medium text-slate-500 border-b border-slate-100 pb-4 mb-4">
                             <div className="flex justify-between">
                                 <span>Subtotal</span>
-                                <span>฿{(order.totalAmount || order.total || order.total_amount || 0).toLocaleString()}</span>
+                                <span>฿{(order.subtotal || 0).toLocaleString()}</span>
                             </div>
                             <div className="flex justify-between">
                                 <span>Shipping Fee</span>
-                                <span className="text-emerald-500 font-bold">Free</span>
+                                <span className="text-emerald-500 font-bold">฿{(order.shippingFee || 0).toLocaleString()}</span>
                             </div>
-                            <div className="flex justify-between text-rose-500">
-                                <span>Discount</span>
-                                <span>- ฿{(order.discount || 0).toLocaleString()}</span>
-                            </div>
+                            {order.discount > 0 && (
+                                <div className="flex justify-between text-rose-500">
+                                    <span>Discount</span>
+                                    <span>- ฿{(order.discount || 0).toLocaleString()}</span>
+                                </div>
+                            )}
                         </div>
                         <div className="flex justify-between items-center text-slate-800">
                             <span className="text-xs font-black uppercase tracking-widest">Total</span>
-                            <span className="text-2xl font-black text-purple-600">฿{(order.totalAmount || order.total || order.total_amount || 0).toLocaleString()}</span>
+                            <span className="text-2xl font-black text-purple-600">฿{(order.total || 0).toLocaleString()}</span>
                         </div>
                     </div>
 
