@@ -13,7 +13,7 @@ import {
     Info
 } from 'lucide-react';
 import { useOrderDetail } from '../hooks/useOrderDetail';
-import { ORDER_STATUS } from '@/shared/constants';
+import { ORDER_STATUS, ORDER_TRANSITIONS } from '@/shared/constants';
 
 /**
  * 🚀 OrderDetailContainer (Admin)
@@ -29,6 +29,12 @@ const OrderDetailContainer = () => {
         setTrackingNumber, 
         handleUpdateStatus 
     } = useOrderDetail();
+
+    // Helper สำหรับดึงสถานะที่เปลี่ยนไปได้
+    const getAllowedOptions = (currentStatus) => {
+        const nextPossible = ORDER_TRANSITIONS[currentStatus] || [];
+        return [currentStatus, ...nextPossible];
+    };
 
     if (isLoading || !order) {
         return (
@@ -88,7 +94,7 @@ const OrderDetailContainer = () => {
                     </div>
                 </div>
 
-                {/* Status Switcher for Admin */}
+                {/* Status Switcher for Admin (Strict Flow Control) */}
                 <div className="flex items-center gap-3 bg-slate-50 p-2 rounded-2xl border border-slate-100">
                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-3">Update Status</span>
                     <select 
@@ -97,7 +103,7 @@ const OrderDetailContainer = () => {
                         disabled={isUpdating}
                         className="bg-white text-purple-600 text-xs font-black px-4 py-2.5 rounded-xl border border-slate-100 shadow-sm outline-none cursor-pointer hover:border-purple-200 transition-colors uppercase"
                     >
-                        {Object.values(ORDER_STATUS).map(s => (
+                        {getAllowedOptions(order.status).map(s => (
                             <option key={s} value={s}>{s}</option>
                         ))}
                     </select>
@@ -163,7 +169,9 @@ const OrderDetailContainer = () => {
                             </div>
                             <div>
                                 <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Customer Details</h4>
-                                <p className="text-sm font-bold text-slate-800">{order.userId?.name || 'Guest User'}</p>
+                                <p className="text-sm font-bold text-slate-800">
+                                    {order.shippingAddress?.fullName || order.userId?.name || 'Guest User'}
+                                </p>
                                 <p className="text-xs text-slate-500">{order.userId?.email || '-'}</p>
                                 <p className="text-xs text-slate-500 mt-1">{order.userId?.phone || '-'}</p>
                             </div>

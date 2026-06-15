@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useApi } from '@/shared/hooks/useApi';
 import { getAllOrders, updateOrderStatus, deleteOrder } from '@/modules/admin/services';
 import { toast } from 'react-hot-toast';
-import { ORDER_STATUS } from '@/shared/constants';
+import { ORDER_STATUS, ORDER_TRANSITIONS } from '@/shared/constants';
 
 /**
  * 🎣 useOrders Hook (Refactored for Scalability)
@@ -60,6 +60,17 @@ export const useOrders = () => {
     });
 
     const handleUpdateStatus = useCallback(async (orderId, newStatus) => {
+        // ค้นหาออเดอร์ปัจจุบันเพื่อเช็คสถานะ
+        const currentOrder = orders.find(o => o._id === orderId);
+        if (!currentOrder) return;
+
+        // ✅ กฎเหล็ก: ตรวจสอบความถูกต้องของการเปลี่ยนสถานะ (Strict Flow Control)
+        const allowedNext = ORDER_TRANSITIONS[currentOrder.status] || [];
+        if (newStatus !== currentOrder.status && !allowedNext.includes(newStatus)) {
+            toast.error(`ไม่สามารถเปลี่ยนสถานะจาก ${currentOrder.status} เป็น ${newStatus} ได้`);
+            return;
+        }
+
         const payload = { status: newStatus };
 
         if (newStatus === ORDER_STATUS.SHIPPED) {
@@ -73,7 +84,7 @@ export const useOrders = () => {
         }
 
         await updateStatusApi(orderId, payload);
-    }, [updateStatusApi]);
+    }, [updateStatusApi, orders]);
 
     const handleDeleteOrder = useCallback(async (orderId) => {
         if (window.confirm('คุณแน่ใจหรือไม่ว่าต้องการลบออเดอร์นี้?')) {
@@ -96,10 +107,14 @@ export const useOrders = () => {
         setPage(1);
     }, []);
 
-    // 📦 6. Prepare Final Data
-    const orders = useMemo(() => orderData?.data || [], [orderData]);
+    // 📦 6. Prepare Final Data (Ultra-Defensive Mapping as per doc/20)
+    const orders = useMemo(() => {
+        // ดึงจาก orderData.data หรือถ้า orderData เป็น Array ก็เอามาเลย ถ้าไม่ใช่ให้เป็น []
+        return orderData?.data || (Array.isArray(orderData) ? orderData : []);
+    }, [orderData]);
+
     const totalPages = useMemo(() => orderData?.totalPages || 1, [orderData]);
-    const totalItems = useMemo(() => orderData?.total || 0, [orderData]);
+    const totalItems = useMemo(() => orderData?.total || orders.length || 0, [orderData, orders]);
 
     return {
         // Data States

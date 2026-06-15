@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Clock, CheckCircle2, XCircle, Truck, Package, Trash2, ExternalLink, User, ShoppingBag, Loader2 } from 'lucide-react';
-import { ORDER_STATUS } from '@/shared/constants';
+import { ORDER_STATUS, ORDER_TRANSITIONS } from '@/shared/constants';
 
 /**
  * 📦 OrdersTable Component
@@ -9,6 +9,12 @@ import { ORDER_STATUS } from '@/shared/constants';
  */
 const OrdersTable = ({ orders, onUpdateStatus, onDelete, isLoading, isUpdating }) => {
   const navigate = useNavigate();
+
+  // Helper สำหรับดึงสถานะที่เปลี่ยนไปได้ (รวมสถานะปัจจุบันด้วยเพื่อให้ dropdown แสดงค่าถูก)
+  const getAllowedOptions = (currentStatus) => {
+    const nextPossible = ORDER_TRANSITIONS[currentStatus] || [];
+    return [currentStatus, ...nextPossible];
+  };
 
   const getStatusStyle = (status) => {
     switch (status) {
@@ -84,7 +90,9 @@ const OrdersTable = ({ orders, onUpdateStatus, onDelete, isLoading, isUpdating }
                         <User size={20} />
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-sm font-black text-slate-700">{order.userId?.name || 'Guest User'}</span>
+                        <span className="text-sm font-black text-slate-700">
+                          {order.shippingAddress?.fullName || order.userId?.name || 'Guest User'}
+                        </span>
                         <span className="text-[10px] text-slate-400 font-bold">{order.userId?.email || '-'}</span>
                       </div>
                     </div>
@@ -105,14 +113,14 @@ const OrdersTable = ({ orders, onUpdateStatus, onDelete, isLoading, isUpdating }
                         {order.status}
                       </div>
                       
-                      {/* Status Switcher */}
+                      {/* Status Switcher (Strict Flow Control) */}
                       <select 
                         disabled={isUpdating}
                         value={order.status}
                         onChange={(e) => onUpdateStatus(order._id, e.target.value)}
                         className="bg-white text-slate-500 text-[10px] font-black px-3 py-1.5 rounded-xl border border-slate-200 outline-none cursor-pointer hover:border-purple-300 hover:text-purple-600 transition-all uppercase disabled:opacity-50"
                       >
-                        {Object.values(ORDER_STATUS).map(s => (
+                        {getAllowedOptions(order.status).map(s => (
                           <option key={s} value={s}>{s}</option>
                         ))}
                       </select>

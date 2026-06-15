@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useApi } from '@/shared/hooks/useApi';
 import { getOrderByIdApi, updateOrderStatus } from '@/modules/admin/services';
 import { toast } from 'react-hot-toast';
-import { ORDER_STATUS } from '@/shared/constants';
+import { ORDER_STATUS, ORDER_TRANSITIONS } from '@/shared/constants';
 
 /**
  * 🎣 useOrderDetail Hook (Admin)
@@ -53,6 +53,15 @@ export const useOrderDetail = () => {
     });
 
     const handleUpdateStatus = async (newStatus) => {
+        // ✅ กฎเหล็ก: ตรวจสอบความถูกต้องของการเปลี่ยนสถานะ (Strict Flow Control)
+        const currentStatus = orderData?.data?.status || orderData?.status;
+        const allowedNext = ORDER_TRANSITIONS[currentStatus] || [];
+        
+        if (newStatus !== currentStatus && !allowedNext.includes(newStatus)) {
+            toast.error(`ไม่สามารถเปลี่ยนสถานะจาก ${currentStatus} เป็น ${newStatus} ได้`);
+            return;
+        }
+
         // ✅ Validation: ถ้าจะเปลี่ยนเป็น Shipped ต้องมีเลขพัสดุ
         if (newStatus === ORDER_STATUS.SHIPPED && !trackingNumber.trim()) {
             toast.error('กรุณาระบุเลขพัสดุก่อนทำการจัดส่งสินค้า');
