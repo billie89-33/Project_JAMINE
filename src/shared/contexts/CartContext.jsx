@@ -57,20 +57,21 @@ export const CartProvider = ({ children }) => {
 
         const { items: rawItems, subtotal, shippingFee, shipping, total, totalAmount } = response.data;
         
-        // 🛠️ Fix: เปลี่ยนจาก item.product เป็น item.productId ให้ตรงตาม Backend Schema
+        // 🛠️ Fix & Resilience: รองรับทั้ง item.productId และ item.product และดึง ID อย่างปลอดภัย
         const mappedItems = rawItems.map(item => {
-          const product = item.productId; // ดึงออบเจกต์สินค้าที่ถูก Populate มาจาก Backend
+          const productObj = item.productId || item.product; // ดึงออบเจกต์สินค้า
+          const finalId = productObj?._id || productObj?.id || (typeof productObj === 'string' ? productObj : null);
           
           return {
-            id: product?._id || product?.id,
-            cartItemId: item._id, // ไอดีของรายการในตะกร้า (ถ้ามี)
-            name: product?.modelName || product?.name || 'Unknown Product',
-            brand: product?.brand || '',
-            price: product?.price || 0,
+            id: finalId, // 🔑 คีย์สำคัญสำหรับกด เพิ่ม/ลด/ลบ ต้องห้ามเป็น undefined
+            cartItemId: item._id,
+            name: productObj?.modelName || productObj?.name || 'Unknown Product',
+            brand: productObj?.brand || '',
+            price: productObj?.price || 0,
             quantity: item.quantity,
-            image: product?.image?.url || product?.image || 'https://via.placeholder.com/300',
-            description: product?.description || '',
-            stock: product?.stock || 0
+            image: productObj?.image?.url || productObj?.image || 'https://via.placeholder.com/300',
+            description: productObj?.description || '',
+            stock: productObj?.stock || 0
           };
         });
 
@@ -117,7 +118,12 @@ export const CartProvider = ({ children }) => {
 
   // 3. อัปเดตจำนวน
   const updateQuantity = async (productId, quantity) => {
-    if (quantity < 1 || loading) return;
+    if (loading || !productId) return; // 🛡️ เช็ค productId ให้ชัวร์
+    
+    // ถ้าจำนวนลดเหลือน้อยกว่า 1 ให้ถือเป็นการลบสินค้าทิ้ง
+    if (quantity < 1) {
+      return removeItem(productId);
+    }
     
     setLoading(true);
     try {
@@ -134,7 +140,7 @@ export const CartProvider = ({ children }) => {
 
   // 4. ลบสินค้า
   const removeItem = async (productId) => {
-    if (loading) return;
+    if (loading || !productId) return;
 
     setLoading(true);
     try {
