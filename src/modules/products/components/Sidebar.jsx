@@ -1,4 +1,4 @@
-import { Filter, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { Filter, ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 

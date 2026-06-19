@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNewsCategories } from './hooks/useNewsCategories';
 import CategoryForm from './components/CategoryForm';
 import CategoryList from './components/CategoryList';

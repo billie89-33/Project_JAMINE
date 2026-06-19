@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useApi } from '@/shared/hooks/useApi';
 import { getOrderByIdApi, updateOrderStatus } from '@/modules/admin/services';

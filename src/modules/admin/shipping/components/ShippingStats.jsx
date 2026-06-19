@@ -1,4 +1,3 @@
-import React from 'react';
 import { Package, Truck, CheckCircle, Clock } from 'lucide-react';
 
 const StatCard = ({ title, value, icon: Icon, colorClass }) => (

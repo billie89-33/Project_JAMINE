@@ -1,11 +1,9 @@
-import React from 'react';
 import { 
     Edit, 
     Trash2, 
     Eye, 
     EyeOff, 
     Calendar, 
-    Tag, 
     Loader2 
 } from 'lucide-react';
 import { Link } from 'react-router-dom';

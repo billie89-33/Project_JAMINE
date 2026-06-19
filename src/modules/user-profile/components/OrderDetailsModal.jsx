@@ -1,4 +1,3 @@
-import React from 'react';
 import { X, Package, Truck, ExternalLink, MapPin } from 'lucide-react';
 import { ORDER_STATUS } from '@/shared/constants';
 

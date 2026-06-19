@@ -1,4 +1,3 @@
-import React from 'react';
 import { PieChart as PieIcon } from 'lucide-react';
 import ReactApexChart from 'react-apexcharts';
 

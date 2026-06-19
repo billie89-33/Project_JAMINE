@@ -1,4 +1,3 @@
-import React from 'react';
 import { NewsCategoriesModule } from '@/modules/admin/news-categories';
 
 /**

@@ -1,4 +1,3 @@
-import React from 'react';
 import { LineChart as LineIcon, ArrowUpRight } from 'lucide-react';
 import ReactApexChart from 'react-apexcharts';
 

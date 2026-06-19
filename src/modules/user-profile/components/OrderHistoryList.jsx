@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ShoppingBag, ExternalLink, Clock, CheckCircle2, XCircle, Package, Truck, CreditCard } from 'lucide-react';
 import { useOrderHistory } from '../hooks/useOrderHistory';
 import { ORDER_STATUS } from '@/shared/constants';

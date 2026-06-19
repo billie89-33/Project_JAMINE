@@ -5,8 +5,7 @@ import {
   ShoppingBag, 
   LogOut,
   Home,
-  Newspaper,
-  Tag
+  Newspaper
 } from 'lucide-react';
 import SidebarSubMenu from './SidebarSubMenu';
 

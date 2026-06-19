@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ImageUploadBox } from '@/modules/admin/addproduct';
-import { Save, X, Info, Image as ImageIcon } from 'lucide-react';
+import { Save, Info, Image as ImageIcon } from 'lucide-react';
 
 /**
  * ✨ BannerForm Component

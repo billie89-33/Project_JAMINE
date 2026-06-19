@@ -1,14 +1,8 @@
-import React from 'react';
 import { 
     X, 
     Mail, 
     Phone, 
-    Calendar, 
-    Shield, 
-    ShoppingBag, 
     CreditCard,
-    UserX,
-    UserCheck,
     Trash2,
     Loader2,
     User as UserIcon,

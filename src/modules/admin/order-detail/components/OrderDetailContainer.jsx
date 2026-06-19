@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
     ArrowLeft, 
@@ -7,9 +6,7 @@ import {
     MapPin, 
     CreditCard, 
     Truck, 
-    CheckCircle2, 
-    Clock, 
-    XCircle,
+    Clock,
     Info
 } from 'lucide-react';
 import { useOrderDetail } from '../hooks/useOrderDetail';

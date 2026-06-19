@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNews } from './hooks/useNews';
 import NewsTable from './components/NewsTable';
 import { Newspaper, Plus, Search, Filter, Sparkles } from 'lucide-react';

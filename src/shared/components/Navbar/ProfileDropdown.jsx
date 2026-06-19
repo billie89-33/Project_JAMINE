@@ -5,7 +5,6 @@ import {
   User, 
   Package, 
   MapPin, 
-  Settings, 
   LogOut, 
   LayoutDashboard,
   LogIn,

@@ -1,11 +1,9 @@
-import React from 'react';
 import { 
     Search, 
     Filter, 
     Eye, 
     UserX, 
-    UserCheck, 
-    Trash2,
+    UserCheck,
     Mail,
     Calendar,
     ChevronLeft,

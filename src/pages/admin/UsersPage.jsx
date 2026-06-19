@@ -1,4 +1,3 @@
-import React from 'react';
 import { UsersModule } from '@/modules/admin';
 
 /**

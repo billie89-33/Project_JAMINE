@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Plus, Trash2, MapPin, X, Edit3, Star } from 'lucide-react';
 
 /**

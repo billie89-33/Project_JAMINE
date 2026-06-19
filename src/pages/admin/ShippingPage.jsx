@@ -1,4 +1,3 @@
-import React from 'react';
 import { ShippingContainer } from '@/modules/admin/shipping';
 
 const ShippingPage = () => {

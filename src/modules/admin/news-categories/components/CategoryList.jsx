@@ -1,4 +1,3 @@
-import React from 'react';
 import { Tag, Edit2, Trash2, Loader2 } from 'lucide-react';
 
 const CategoryList = ({ categories, isLoading, onEdit, onDelete, editingId }) => {

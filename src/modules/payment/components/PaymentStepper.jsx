@@ -1,4 +1,3 @@
-import React from 'react';
 
 const PaymentStepper = ({ currentStep = 2 }) => {
   return (

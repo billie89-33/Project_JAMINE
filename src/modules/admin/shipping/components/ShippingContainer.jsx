@@ -1,8 +1,7 @@
-import React from 'react';
 import { useShipping } from '../hooks/useShipping';
 import ShippingStats from './ShippingStats';
 import ShippingTable from './ShippingTable';
-import { Search, Filter, RefreshCcw } from 'lucide-react';
+import { Search, RefreshCcw } from 'lucide-react';
 
 const ShippingContainer = () => {
     const { 

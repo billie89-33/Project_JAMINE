@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Clock, CheckCircle2, XCircle, Truck, Package, Trash2, ExternalLink, User, ShoppingBag, Loader2 } from 'lucide-react';
 import { ORDER_STATUS, ORDER_TRANSITIONS } from '@/shared/constants';

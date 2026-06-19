@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getNewsByIdApi } from '@/modules/admin/services';
-import { Calendar, User, Eye, ChevronLeft, Loader2, Share2, Clock } from 'lucide-react';
+import { Calendar, User, Eye, ChevronLeft, Loader2, Share2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const NewsDetailPage = () => {

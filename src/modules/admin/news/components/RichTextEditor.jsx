@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css'; // สไตล์พื้นฐาน
 import { uploadNewsImageApi } from '@/modules/admin/services';

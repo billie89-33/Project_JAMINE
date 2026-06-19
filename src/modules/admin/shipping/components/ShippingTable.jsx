@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Truck, Search, ExternalLink } from 'lucide-react';
+import { Truck, ExternalLink } from 'lucide-react';
 
 const ShippingTable = ({ orders, loading, onUpdateTracking }) => {
     const navigate = useNavigate();

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useUsers } from './hooks/useUsers';
 import CustomerList from './components/CustomerList';
 import CustomerDetailModal from './components/CustomerDetailModal';

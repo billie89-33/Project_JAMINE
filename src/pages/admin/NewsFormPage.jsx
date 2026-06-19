@@ -1,4 +1,3 @@
-import React from 'react';
 import NewsFormContainer from '@/modules/admin/news/NewsFormContainer';
 
 /**

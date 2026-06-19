@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNewsForm } from './hooks/useNewsForm';
 import NewsForm from './components/NewsForm';
 import { Sparkles, Newspaper } from 'lucide-react';

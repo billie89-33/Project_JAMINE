@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { useHome } from '../hooks/useHome';
 import { useNavigate } from 'react-router-dom';

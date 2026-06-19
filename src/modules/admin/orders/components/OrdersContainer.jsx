@@ -1,5 +1,4 @@
-import React from 'react';
-import { ShoppingBag, Filter, RefreshCw, Search, Loader2 } from 'lucide-react';
+import { ShoppingBag, Filter, RefreshCw, Search } from 'lucide-react';
 import { useOrders } from '../hooks/useOrders';
 import OrdersTable from './OrdersTable';
 import { ORDER_STATUS } from '@/shared/constants';

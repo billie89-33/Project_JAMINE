@@ -1,4 +1,3 @@
-import React from 'react';
 import { Plus, Save, RotateCcw, Loader2 } from 'lucide-react';
 
 const CategoryForm = ({ formData, editingId, onChange, onSubmit, onReset, isActionLoading }) => {
