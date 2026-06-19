@@ -11,20 +11,9 @@ const ProductDetailPage = () => {
   // หมายเหตุ: ในตอนนี้เรายังรองรับการรับข้อมูลจาก location.state เพื่อความเร็ว
   const { product: apiProduct, loading: apiLoading } = useProductDetail(productId);
   
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const sharedProductData = location.state?.productData;
-
-    if (sharedProductData) {
-      setProduct(sharedProductData);
-      setLoading(false);
-    } else if (apiProduct) {
-      setProduct(apiProduct);
-      setLoading(apiLoading);
-    }
-  }, [productId, location.state, apiProduct, apiLoading]);
+  const sharedProductData = location.state?.productData;
+  const product = sharedProductData || apiProduct;
+  const loading = sharedProductData ? false : apiLoading;
 
   if (loading) {
     return <div className="w-full text-center py-20 text-xs text-gray-400 font-semibold">กำลังโหลดข้อมูล...</div>;

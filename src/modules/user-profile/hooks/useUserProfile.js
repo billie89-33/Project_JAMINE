@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 /**
@@ -7,20 +6,12 @@ import { useSearchParams } from 'react-router-dom';
  */
 export const useUserProfile = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'overview');
+  const activeTab = searchParams.get('tab') || 'overview';
 
   // Sync activeTab with URL param
   const handleTabChange = (tabId) => {
-    setActiveTab(tabId);
     setSearchParams({ tab: tabId });
   };
-
-  useEffect(() => {
-    const tab = searchParams.get('tab');
-    if (tab && tab !== activeTab) {
-      setActiveTab(tab);
-    }
-  }, [searchParams, activeTab]);
 
   return {
     activeTab,

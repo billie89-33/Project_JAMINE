@@ -36,24 +36,23 @@ export const useProducts = (rawInitialCategory = '', initialKeyword = '') => {
     setCurrentPage(1);
   }, []);
 
-  // 🔄 Sync: เมื่อ URL Parameters เปลี่ยน ให้รีเซ็ต State ภายใน
-  useEffect(() => {
-    // กรณีเปลี่ยนหมวดหมู่
-    if (initialCategory && initialCategory !== selectedCategory) {
-      setSelectedCategory(initialCategory);
-      setSearchKeyword(''); // ล้างคำค้นหาเมื่อเลือกหมวดหมู่ใหม่
-      resetFilters();
-    }
-  }, [initialCategory, selectedCategory, resetFilters]);
+  const [prevInitialCat, setPrevInitialCat] = useState(initialCategory);
+  const [prevInitialKeyword, setPrevInitialKeyword] = useState(decodedKeyword);
 
-  useEffect(() => {
-    // กรณีมีการค้นหาใหม่
-    if (decodedKeyword !== searchKeyword) {
-      setSearchKeyword(decodedKeyword);
-      setSelectedCategory('All'); // กลับไปหน้าสินค้าทั้งหมดเพื่อค้นหาแบบกว้าง
-      resetFilters();
-    }
-  }, [decodedKeyword, searchKeyword, resetFilters]);
+  // 🔄 Sync: เมื่อ URL Parameters เปลี่ยน ให้รีเซ็ต State ภายในโดยตรงระหว่าง Render
+  if (initialCategory !== prevInitialCat) {
+    setPrevInitialCat(initialCategory);
+    setSelectedCategory(initialCategory);
+    setSearchKeyword('');
+    resetFilters();
+  }
+
+  if (decodedKeyword !== prevInitialKeyword) {
+    setPrevInitialKeyword(decodedKeyword);
+    setSearchKeyword(decodedKeyword);
+    setSelectedCategory('All');
+    resetFilters();
+  }
 
   // --- 🛰️ API Calls ---
 
