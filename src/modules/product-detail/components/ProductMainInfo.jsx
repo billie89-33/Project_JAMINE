@@ -40,7 +40,7 @@ const ProductMainInfo = ({ product }) => {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 bg-white p-8 md:p-12 rounded-[40px] border border-slate-100 shadow-xl shadow-purple-100/20">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 bg-white p-6 pb-28 md:p-12 md:pb-12 rounded-[32px] md:rounded-[40px] border border-slate-100 shadow-xl shadow-purple-100/20">
       
       {/* 📸 Left: Product Gallery */}
       <div className="space-y-6">
@@ -160,7 +160,8 @@ const ProductMainInfo = ({ product }) => {
         </div>
 
         <div className="mt-auto space-y-4">
-          <div className="flex flex-col sm:flex-row gap-4">
+          {/* 💻 Desktop/Tablet Buttons */}
+          <div className="hidden md:flex flex-row gap-4">
             <button
               onClick={onAddToCartClick}
               disabled={isOutOfStock}
@@ -177,6 +178,24 @@ const ProductMainInfo = ({ product }) => {
             </button>
           </div>
           
+          {/* 📱 Mobile Sticky Bottom Bar */}
+          <div className="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl border-t border-purple-100 p-4 z-50 shadow-[0_-10px_30px_rgba(124,58,237,0.1)] flex items-center gap-3">
+            <button
+              onClick={onAddToCartClick}
+              disabled={isOutOfStock}
+              className={`w-14 h-14 flex-shrink-0 flex items-center justify-center rounded-[20px] transition-all ${isOutOfStock ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-purple-100 text-purple-600 active:scale-90 shadow-lg shadow-purple-100'}`}
+            >
+              <ShoppingCart size={24} strokeWidth={2.5} />
+            </button>
+            <button
+              onClick={onBuyNowClick}
+              disabled={isOutOfStock}
+              className={`flex-1 h-14 font-black text-sm uppercase tracking-widest rounded-[20px] transition-all ${isOutOfStock ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white active:scale-95 shadow-lg shadow-purple-200'}`}
+            >
+              Buy Now
+            </button>
+          </div>
+
           <div className="flex items-center justify-center gap-2 text-slate-300">
             <Package size={14} />
             <span className="text-[10px] font-black uppercase tracking-[0.2em]">Authentic Product Guarantee</span>

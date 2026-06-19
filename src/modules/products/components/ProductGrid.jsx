@@ -9,7 +9,7 @@ const ProductGrid = ({ products, loading }) => {
   
   if (loading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
+      <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-8">
         {[...Array(8)].map((_, i) => (
           <div key={i} className="bg-white rounded-[32px] border border-slate-100 p-6 space-y-6 animate-pulse">
             <div className="aspect-square bg-slate-100 rounded-2xl"></div>
