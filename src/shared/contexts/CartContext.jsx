@@ -27,6 +27,55 @@ export const CartProvider = ({ children }) => {
   });
   const [loading, setLoading] = useState(false);
 
+  const syncCartState = useCallback((response) => {
+    if (!response.success) return;
+
+    // ⚠️ Doc 11.3: แจ้งเตือนถ้ามีการปรับสต็อกอัตโนมัติจากหลังบ้าน
+    if (response.isStockAdjusted) {
+      toast('สินค้าบางรายการถูกปรับจำนวนเนื่องจากสต็อกไม่พอ', {
+        icon: '⚠️',
+        duration: 5000,
+        style: { 
+          borderRadius: '12px', 
+          fontWeight: 'bold', 
+          background: '#FFF4E5', 
+          color: '#663C00',
+          border: '1px solid #FFB077'
+        }
+      });
+    }
+
+    const { items: rawItems, subtotal, shippingFee, shipping, total, totalAmount } = response.data;
+    
+    // 🛠️ Fix & Resilience: รองรับทั้ง item.productId และ item.product และดึง ID อย่างปลอดภัย
+    const mappedItems = rawItems.map(item => {
+      const productObj = item.productId || item.product; // ดึงออบเจกต์สินค้า
+      const finalId = productObj?._id || productObj?.id || (typeof productObj === 'string' ? productObj : null);
+      
+      return {
+        id: finalId, // 🔑 คีย์สำคัญสำหรับกด เพิ่ม/ลด/ลบ ต้องห้ามเป็น undefined
+        cartItemId: item._id,
+        name: productObj?.modelName || productObj?.name || 'Unknown Product',
+        brand: productObj?.brand || '',
+        price: productObj?.price || 0,
+        quantity: item.quantity,
+        image: productObj?.image?.url || productObj?.image || 'https://via.placeholder.com/300',
+        description: productObj?.description || '',
+        stock: productObj?.stock || 0
+      };
+    });
+
+    setCartItems(mappedItems);
+    // ✨ Doc 12.3 & V2 Spec: Trust the Backend Summary (Resilient Aliasing)
+    setSummary({
+      subtotal: subtotal || 0,
+      shipping: shippingFee !== undefined ? shippingFee : (shipping || 0),
+      discount: response.data.discount || 0,
+      total: total || totalAmount || 0,
+      itemCount: mappedItems.reduce((acc, item) => acc + item.quantity, 0)
+    });
+  }, []);
+
   // 1. ดึงข้อมูลตะกร้าจาก API
   const fetchCart = useCallback(async () => {
     if (!user) {
@@ -38,53 +87,7 @@ export const CartProvider = ({ children }) => {
     setLoading(true);
     try {
       const response = await getCartApi();
-
-      if (response.success) {
-        // ⚠️ Doc 11.3: แจ้งเตือนถ้ามีการปรับสต็อกอัตโนมัติจากหลังบ้าน
-        if (response.isStockAdjusted) {
-          toast('สินค้าบางรายการถูกปรับจำนวนเนื่องจากสต็อกไม่พอ', {
-            icon: '⚠️',
-            duration: 5000,
-            style: { 
-              borderRadius: '12px', 
-              fontWeight: 'bold', 
-              background: '#FFF4E5', 
-              color: '#663C00',
-              border: '1px solid #FFB077'
-            }
-          });
-        }
-
-        const { items: rawItems, subtotal, shippingFee, shipping, total, totalAmount } = response.data;
-        
-        // 🛠️ Fix & Resilience: รองรับทั้ง item.productId และ item.product และดึง ID อย่างปลอดภัย
-        const mappedItems = rawItems.map(item => {
-          const productObj = item.productId || item.product; // ดึงออบเจกต์สินค้า
-          const finalId = productObj?._id || productObj?.id || (typeof productObj === 'string' ? productObj : null);
-          
-          return {
-            id: finalId, // 🔑 คีย์สำคัญสำหรับกด เพิ่ม/ลด/ลบ ต้องห้ามเป็น undefined
-            cartItemId: item._id,
-            name: productObj?.modelName || productObj?.name || 'Unknown Product',
-            brand: productObj?.brand || '',
-            price: productObj?.price || 0,
-            quantity: item.quantity,
-            image: productObj?.image?.url || productObj?.image || 'https://via.placeholder.com/300',
-            description: productObj?.description || '',
-            stock: productObj?.stock || 0
-          };
-        });
-
-        setCartItems(mappedItems);
-        // ✨ Doc 12.3 & V2 Spec: Trust the Backend Summary (Resilient Aliasing)
-        setSummary({
-          subtotal: subtotal || 0,
-          shipping: shippingFee !== undefined ? shippingFee : (shipping || 0),
-          discount: response.data.discount || 0,
-          total: total || totalAmount || 0,
-          itemCount: mappedItems.reduce((acc, item) => acc + item.quantity, 0)
-        });
-      }
+      syncCartState(response);
     } catch (error) {
       console.error("Failed to fetch cart", error);
     } finally {
@@ -107,7 +110,7 @@ export const CartProvider = ({ children }) => {
       const res = await addToCartApi(productId, quantity);
       if (res.success) {
         toast.success("เพิ่มสินค้าลงตะกร้าแล้ว", { icon: '🛒' });
-        await fetchCart(); 
+        syncCartState(res); // 🚀 เร็วขึ้น 2 เท่า: ไม่อัปเดตข้อมูลผ่านการยิง GET ซ้ำ
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "เพิ่มสินค้าไม่สำเร็จ");
@@ -129,7 +132,7 @@ export const CartProvider = ({ children }) => {
     try {
       const res = await updateCartQuantityApi(productId, quantity);
       if (res.success) {
-        await fetchCart();
+        syncCartState(res); // 🚀 เร็วขึ้น 2 เท่า
       }
     } catch (error) {
       toast.error("อัปเดตจำนวนไม่สำเร็จ");
@@ -147,7 +150,7 @@ export const CartProvider = ({ children }) => {
       const res = await removeFromCartApi(productId);
       if (res.success) {
         toast.success("ลบสินค้าออกจากตะกร้าแล้ว");
-        await fetchCart();
+        syncCartState(res); // 🚀 เร็วขึ้น 2 เท่า
       }
     } catch (error) {
       toast.error("ลบสินค้าไม่สำเร็จ");
