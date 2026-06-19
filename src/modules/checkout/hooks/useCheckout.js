@@ -11,7 +11,7 @@ import { createOrderApi, addAddressApi, deleteAddressApi, updateAddressApi, setD
 export const useCheckout = () => {
   const navigate = useNavigate();
   const { user, refreshUser } = useAuth(); // 🔄 เพิ่ม refreshUser เข้ามา
-  const { cartItems, summary: cartSummary, loading: cartLoading } = useCart();
+  const { cartItems, summary: cartSummary, loading: cartLoading, clearCart } = useCart();
 
   const [addresses, setAddresses] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
@@ -33,16 +33,20 @@ export const useCheckout = () => {
       const userAddresses = user.addresses || [];
       setAddresses(userAddresses);
       
-      // ถ้ายังไม่ได้เลือกที่อยู่ ให้เลือกที่อยู่ Default หรือที่อยู่อันแรก
-      if (!selectedAddressId && userAddresses.length > 0) {
-        const defaultAddr = userAddresses.find(a => a.isDefault) || userAddresses[0];
-        setSelectedAddressId(defaultAddr._id || defaultAddr.id);
-      }
+      // 🚀 ใช้ Functional Update เพื่อป้องกันการ Render ซ้อน 2 จังหวะ (ลด Dependency วนลูป)
+      setSelectedAddressId(prevId => {
+        if (!prevId && userAddresses.length > 0) {
+          const defaultAddr = userAddresses.find(a => a.isDefault) || userAddresses[0];
+          return defaultAddr._id || defaultAddr.id;
+        }
+        return prevId;
+      });
+      
       setLoading(false);
     } else {
       setLoading(cartLoading);
     }
-  }, [user, cartLoading, selectedAddressId]);
+  }, [user, cartLoading]); // 🛑 ลบ selectedAddressId ออกจาก Dependency
 
   const submitOrder = async () => {
     if (!selectedAddressId) {
@@ -63,6 +67,13 @@ export const useCheckout = () => {
       if (res.success) {
         toast.success(res.message || "สร้างคำสั่งซื้อสำเร็จ!");
         
+        // 🧹 เคลียร์ตะกร้าทันทีที่กดสั่งซื้อเสร็จ เพื่อป้องกันปัญหาเลขตะกร้าค้างหน้าแรก
+        try {
+          await clearCart();
+        } catch (e) {
+          console.warn('Failed to clear cart:', e);
+        }
+
         // 🚀 Doc 2.4 & API PLAN Flow 5: Navigation Security
         const orderId = res.data?._id || res.data?.id;
         
