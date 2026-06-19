@@ -3,7 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { getCategoriesApi } from '@/modules/products/services/productApi';
 import { useApi } from '@/shared/hooks/useApi';
 
-const NavMenu = () => {
+const NavMenu = ({ isMobile = false, onClose }) => {
   const [isCatOpen, setIsCatOpen] = useState(false);
   const location = useLocation();
 
@@ -17,13 +17,19 @@ const NavMenu = () => {
     fetchCategories();
   }, [fetchCategories]);
 
+  // Wrapper Class สำหรับ Mobile และ Desktop
+  const containerClass = isMobile 
+    ? "flex flex-col gap-2 p-4 text-base font-medium" 
+    : "flex items-center gap-4 text-sm font-medium pl-4 border-l border-purple-600/60";
+
   return (
-    <div className="flex items-center gap-4 text-sm font-medium pl-4 border-l border-purple-600/60">
+    <div className={containerClass}>
       {/* 1. เมนู Home */}
       <NavLink 
         to="/" 
+        onClick={isMobile ? onClose : undefined}
         className={({ isActive }) => 
-          `transition-colors hover:text-white ${isActive ? "text-white font-bold" : "text-purple-200"}`
+          `transition-colors hover:text-white ${isMobile ? "py-3 border-b border-purple-700/50" : ""} ${isActive ? "text-white font-bold" : "text-purple-200"}`
         }
       >
         Home
@@ -31,13 +37,13 @@ const NavMenu = () => {
 
       {/* 2. เมนู Category พร้อมดรอปดาวน์หมวดหมู่สินค้า */}
       <div 
-        className="relative py-1" 
-        onMouseEnter={() => setIsCatOpen(true)}
-        onMouseLeave={() => setIsCatOpen(false)}
+        className={`relative ${isMobile ? "" : "py-1"}`} 
+        onMouseEnter={!isMobile ? () => setIsCatOpen(true) : undefined}
+        onMouseLeave={!isMobile ? () => setIsCatOpen(false) : undefined}
       >
         <button
           onClick={() => setIsCatOpen(!isCatOpen)}
-          className={`flex items-center gap-1 transition-colors hover:text-white py-1 ${
+          className={`flex items-center gap-1 transition-colors hover:text-white w-full text-left ${isMobile ? "py-3 border-b border-purple-700/50 justify-between" : "py-1"} ${
             isCatOpen || isCategoryActive ? "text-white font-bold" : "text-purple-200"
           }`}
         >
@@ -47,10 +53,14 @@ const NavMenu = () => {
 
         {isCatOpen && (
           <div 
-            className="absolute top-8 left-0 w-40 bg-white rounded-lg shadow-xl border border-slate-100 py-1 text-slate-700 z-50 animate-in fade-in slide-in-from-top-1 duration-100 max-h-80 overflow-y-auto"
+            className={
+              isMobile 
+                ? "bg-purple-900/50 rounded-lg mt-2 py-2 animate-in fade-in slide-in-from-top-2 duration-200" 
+                : "absolute top-8 left-0 w-40 bg-white rounded-lg shadow-xl border border-slate-100 py-1 text-slate-700 z-50 animate-in fade-in slide-in-from-top-1 duration-100 max-h-80 overflow-y-auto"
+            }
           >
             {loading ? (
-              <div className="px-4 py-2 text-xs text-slate-400">Loading...</div>
+              <div className={`px-4 py-2 text-xs ${isMobile ? "text-purple-300" : "text-slate-400"}`}>Loading...</div>
             ) : categories && categories.length > 0 ? (
               categories.map((cat) => {
                 const name = typeof cat === 'object' ? cat.name : cat;
@@ -58,10 +68,15 @@ const NavMenu = () => {
                   <NavLink
                     key={name}
                     to={`/category/${name}`}
-                    onClick={() => setIsCatOpen(false)}
+                    onClick={() => {
+                      setIsCatOpen(false);
+                      if (isMobile && onClose) onClose();
+                    }}
                     className={({ isActive }) =>
-                      `block px-4 py-1.5 text-xs font-medium transition-colors hover:bg-purple-50 hover:text-purple-700 ${
-                        isActive ? "text-purple-700 bg-purple-50 font-bold" : "text-slate-600"
+                      `block px-4 py-2 text-sm font-medium transition-colors ${
+                        isMobile 
+                          ? isActive ? "text-white bg-purple-600/50 font-bold" : "text-purple-200 hover:bg-purple-800 hover:text-white"
+                          : isActive ? "text-purple-700 bg-purple-50 font-bold" : "text-slate-600 hover:bg-purple-50 hover:text-purple-700"
                       }`
                     }
                   >
@@ -70,7 +85,7 @@ const NavMenu = () => {
                 );
               })
             ) : (
-              <div className="px-4 py-2 text-xs text-slate-400">No categories</div>
+              <div className={`px-4 py-2 text-xs ${isMobile ? "text-purple-300" : "text-slate-400"}`}>No categories</div>
             )}
           </div>
         )}
