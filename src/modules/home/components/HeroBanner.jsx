@@ -71,10 +71,12 @@ const HeroBanner = ({ placement = 'home_hero' }) => {
         />
         
         {/* แถบพาดข้อมูลแบนเนอร์ */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/20 via-transparent to-transparent pointer-events-none"></div>
-        <div className="absolute bottom-10 left-10 text-white space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-           <h3 className="text-2xl font-black uppercase tracking-widest drop-shadow-lg">{currentBanner.title}</h3>
-           <p className="text-xs font-bold text-purple-100 uppercase tracking-[0.3em] bg-purple-600/50 backdrop-blur-md px-4 py-1.5 rounded-full w-fit">Explore Collection</p>
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent pointer-events-none lg:hidden"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/20 via-transparent to-transparent pointer-events-none hidden lg:block"></div>
+        
+        <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10 text-white space-y-1 md:space-y-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500">
+           <h3 className="text-lg md:text-2xl font-black uppercase tracking-widest drop-shadow-lg">{currentBanner.title}</h3>
+           <p className="text-[9px] md:text-xs font-bold text-purple-100 uppercase tracking-[0.3em] bg-purple-600/80 md:bg-purple-600/50 backdrop-blur-md px-3 py-1 md:px-4 md:py-1.5 rounded-full w-fit">Explore Collection</p>
         </div>
       </div>
 
@@ -83,16 +85,16 @@ const HeroBanner = ({ placement = 'home_hero' }) => {
         <>
           <button
             onClick={(e) => { e.stopPropagation(); prevSlide(); }}
-            className="absolute top-1/2 left-6 -translate-y-1/2 p-4 bg-white/90 backdrop-blur-xl rounded-[20px] shadow-2xl text-purple-600 hover:bg-purple-600 hover:text-white transition-all duration-300 opacity-0 lg:group-hover:opacity-100 -translate-x-4 lg:group-hover:translate-x-0 active:scale-90"
+            className="absolute top-1/2 left-3 md:left-6 -translate-y-1/2 p-2 md:p-4 bg-white/90 backdrop-blur-xl rounded-xl md:rounded-[20px] shadow-2xl text-purple-600 hover:bg-purple-600 hover:text-white transition-all duration-300 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 translate-x-0 lg:-translate-x-4 lg:group-hover:translate-x-0 active:scale-90"
           >
-            <ChevronLeft size={24} strokeWidth={3} />
+            <ChevronLeft size={20} className="md:w-6 md:h-6" strokeWidth={3} />
           </button>
 
           <button
             onClick={(e) => { e.stopPropagation(); nextSlide(); }}
-            className="absolute top-1/2 right-6 -translate-y-1/2 p-4 bg-white/90 backdrop-blur-xl rounded-[20px] shadow-2xl text-purple-600 hover:bg-purple-600 hover:text-white transition-all duration-300 opacity-0 lg:group-hover:opacity-100 translate-x-4 lg:group-hover:translate-x-0 active:scale-90"
+            className="absolute top-1/2 right-3 md:right-6 -translate-y-1/2 p-2 md:p-4 bg-white/90 backdrop-blur-xl rounded-xl md:rounded-[20px] shadow-2xl text-purple-600 hover:bg-purple-600 hover:text-white transition-all duration-300 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 translate-x-0 lg:translate-x-4 lg:group-hover:translate-x-0 active:scale-90"
           >
-            <ChevronRight size={24} strokeWidth={3} />
+            <ChevronRight size={20} className="md:w-6 md:h-6" strokeWidth={3} />
           </button>
 
           {/* 3. Indicators (จุดเล็กๆ ด้านล่าง) */}

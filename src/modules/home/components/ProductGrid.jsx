@@ -90,8 +90,8 @@ const ProductGrid = () => {
         </button>
       </div>
 
-      {/* 📦 Product Grid (2 Columns on home, matching original sidebar layout) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full">
+      {/* 📦 Product Grid (2 Columns on mobile and desktop) */}
+      <div className="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-8 w-full">
         {products.map((product) => (
           <ProductCard key={product._id} product={product} />
         ))}
