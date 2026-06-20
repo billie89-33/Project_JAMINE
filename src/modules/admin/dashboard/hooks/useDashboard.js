@@ -50,8 +50,13 @@ export const useDashboard = () => {
     
     // 🔔 New Alert Stats (Calculated from arrays or API fields)
     const lowStockCount = useMemo(() => lowStock.length, [lowStock]);
-    const pendingOrdersCount = dashboardData?.pendingOrdersCount || 0;
     const orderStatus = useMemo(() => dashboardData?.orderStatus || [], [dashboardData]);
+    
+    // Fix: คำนวณ Pending Orders ด้วยตัวเองเพราะ Backend ไม่ได้ส่งยอดนี้มาโดยตรง
+    const pendingOrdersCount = useMemo(() => {
+        const pending = orderStatus.find(s => s.status === 'Awaiting Payment');
+        return pending ? pending.count : 0;
+    }, [orderStatus]);
 
     return {
         period,

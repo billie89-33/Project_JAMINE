@@ -17,6 +17,7 @@
       fontFamily: 'Sarabun, sans-serif',
       themeVariables: {
         fontFamily: 'Sarabun, sans-serif',
+        fontSize: '12px',
         background: '#15102d',
         primaryColor: '#a855f7',
         primaryTextColor: '#F3F4F6',
@@ -379,7 +380,6 @@
     /* Mermaid text clipping fixes */
     .mermaid text, .mermaid .label {
       font-family: 'Sarabun', sans-serif !important;
-      font-size: 13px !important;
     }
     
     .mermaid .node rect, .mermaid .node circle, .mermaid .node polygon {
@@ -438,9 +438,7 @@
       position: relative;
       padding: 3rem 2rem 2rem 2rem;
       overflow: auto;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      display: block;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
     }
     
@@ -468,18 +466,16 @@
     
     #overlay-diagram-container {
       width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: auto;
+      height: auto;
+      display: block;
+      text-align: center;
     }
     
     #overlay-diagram-container svg {
-      width: auto !important;
+      width: 100% !important;
       height: auto !important;
-      max-width: 95% !important;
-      max-height: 85vh !important;
+      max-width: 100% !important;
+      display: inline-block;
     }
 
     /* Slide Footer */

@@ -40,8 +40,8 @@ const LowStockProducts = ({ products }) => {
                             className="flex items-center gap-4 p-3 rounded-2xl hover:bg-amber-50/50 transition-colors cursor-pointer group"
                         >
                             <div className="w-12 h-12 rounded-xl bg-slate-50 border border-slate-100 overflow-hidden shrink-0">
-                                {product.image ? (
-                                    <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                {product.image?.url ? (
+                                    <img src={product.image.url} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-slate-300">
                                         <PackageOpen size={20} />
