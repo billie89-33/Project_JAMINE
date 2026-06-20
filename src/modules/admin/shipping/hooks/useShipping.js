@@ -63,11 +63,13 @@ export const useShipping = () => {
     };
 
     return {
-        // 📊 Mapping สถิติ (รองรับทั้ง .data.stats, .stats หรือ .data)
-        stats: statsApi.data?.stats || statsApi.data?.data || statsApi.data,
+        // 📊 Mapping สถิติ (Ultra-Defensive Object Mapping)
+        stats: statsApi.data?.data?.stats || statsApi.data?.stats || statsApi.data?.data || statsApi.data || {},
         
-        // 📦 Mapping ออเดอร์ (รองรับทั้ง .data.data, .data หรือ Array ตรงๆ)
-        orders: ordersApi.data?.data || (Array.isArray(ordersApi.data) ? ordersApi.data : []),
+        // 📦 Mapping ออเดอร์ (Ultra-Defensive Array Mapping)
+        orders: Array.isArray(ordersApi.data?.data?.data) ? ordersApi.data.data.data :
+                Array.isArray(ordersApi.data?.data) ? ordersApi.data.data :
+                Array.isArray(ordersApi.data) ? ordersApi.data : [],
         
         total: ordersApi.data?.total || 0,
         loading: statsApi.loading || ordersApi.loading,

@@ -61,6 +61,7 @@ export const useDashboard = () => {
         categorySales,
         recentOrders,
         topProducts,
+        lowStock, // 👈 ส่ง array ออกไปให้ Component ใช้
         lowStockCount,
         pendingOrdersCount
     };

@@ -19,8 +19,8 @@ export const getAllOrders = async (params = {}) => {
  * @param {string} orderId 
  */
 export const getOrderByIdApi = async (orderId) => {
-    // 🛡️ สำหรับ Admin ต้องระบุ /admin/orders/:id เพื่อให้ Backend ดึงข้อมูลได้ครบถ้วน
-    const response = await apiClient.get(`/admin/orders/${orderId}`);
+    // 🛡️ ใช้ /orders/:id แทน /admin/orders/:id เพื่อใช้ Shared Endpoint
+    const response = await apiClient.get(`/orders/${orderId}`);
     return response.data;
 };
 

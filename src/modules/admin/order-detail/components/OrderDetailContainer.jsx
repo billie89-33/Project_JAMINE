@@ -236,10 +236,16 @@ const OrderDetailContainer = () => {
                                 
                                 <button 
                                     onClick={() => handleUpdateStatus(ORDER_STATUS.SHIPPED)}
-                                    disabled={isUpdating || !trackingNumber.trim() || order.status === ORDER_STATUS.SHIPPED}
+                                    disabled={
+                                        isUpdating || 
+                                        !trackingNumber.trim() || 
+                                        (order.status === ORDER_STATUS.SHIPPED && trackingNumber.trim() === (order.trackingNumber || ''))
+                                    }
                                     className="w-full py-3 bg-white text-indigo-600 hover:bg-indigo-50 font-black text-xs uppercase tracking-widest rounded-xl transition-all shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    {order.status === ORDER_STATUS.SHIPPED ? '✓ จัดส่งแล้ว' : 'Mark as Shipped'}
+                                    {order.status === ORDER_STATUS.SHIPPED 
+                                        ? (trackingNumber.trim() === (order.trackingNumber || '') ? '✓ จัดส่งแล้ว' : 'Update Tracking') 
+                                        : 'Mark as Shipped'}
                                 </button>
 
                                 <div className="flex items-start gap-2 mt-4 p-3 bg-indigo-900/40 rounded-xl border border-indigo-400/30">

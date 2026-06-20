@@ -4,7 +4,8 @@ import {
   Users, 
   Sparkles,
   AlertTriangle,
-  Clock
+  Clock,
+  PackageOpen
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useDashboard } from '../hooks/useDashboard';
@@ -15,6 +16,7 @@ import RevenueChart from './RevenueChart';
 import SalesDonut from './SalesDonut';
 import RecentOrders from './RecentOrders';
 import TopProducts from './TopProducts';
+import LowStockProducts from './LowStockProducts';
 import DashboardSkeleton from './DashboardSkeleton';
 
 /**
@@ -139,10 +141,25 @@ const DashboardContainer = () => {
                 </div>
             </div>
 
-            {/* 5. Bottom Data Row: Recent Orders & Top Selling */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                <RecentOrders orders={recentOrders} />
-                <TopProducts products={topProducts} />
+            {/* 5. Bottom Data Row: Recent Orders, Top Selling & Low Stock */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-1">
+                    <RecentOrders orders={recentOrders} />
+                </div>
+                <div className="lg:col-span-1">
+                    <TopProducts products={topProducts} />
+                </div>
+                <div className="lg:col-span-1">
+                    {lowStock.length > 0 ? (
+                        <LowStockProducts products={lowStock} />
+                    ) : (
+                        <div className="bg-white rounded-[32px] shadow-sm border border-slate-100 h-full flex flex-col items-center justify-center p-8 text-center text-slate-400">
+                            <PackageOpen size={48} className="mb-4 text-emerald-200" />
+                            <h3 className="text-sm font-black text-slate-600 uppercase tracking-widest mb-1">Stock is Healthy</h3>
+                            <p className="text-xs font-medium">No products are currently low on stock.</p>
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Footer space */}

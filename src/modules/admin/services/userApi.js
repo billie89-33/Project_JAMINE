@@ -24,8 +24,8 @@ export const updateUserByAdminApi = async (id, data) => {
 };
 
 // 4. ส่งออกข้อมูลลูกค้า
-export const exportCustomersApi = async () => {
-    const response = await apiClient.get('/admin/users/export');
+export const exportCustomersApi = async (params = {}) => {
+    const response = await apiClient.get('/admin/users/export', { params });
     return response.data;
 };
 

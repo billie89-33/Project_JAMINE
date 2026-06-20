@@ -31,9 +31,10 @@ export const useOrderDetail = () => {
     useEffect(() => {
         if (orderId) {
             fetchOrderDetails(orderId).then(res => {
-                // ถ้าออเดอร์มีเลขพัสดุอยู่แล้ว ให้เซ็ตค่าใส่ช่อง Input เลย
-                if (res?.data?.trackingNumber) {
-                    setTrackingNumber(res.data.trackingNumber);
+                // ถ้าออเดอร์มีเลขพัสดุอยู่แล้ว ให้เซ็ตค่าใส่ช่อง Input เลย (Defensive Mapping)
+                const tracking = res?.data?.trackingNumber || res?.trackingNumber;
+                if (tracking) {
+                    setTrackingNumber(tracking);
                 }
             });
         }
@@ -46,8 +47,9 @@ export const useOrderDetail = () => {
         onSuccess: (updatedData) => {
             // โหลดข้อมูลใหม่เพื่ออัปเดต UI ให้ตรงกับ DB
             fetchOrderDetails(orderId);
-            if(updatedData?.data?.trackingNumber) {
-                setTrackingNumber(updatedData.data.trackingNumber);
+            const newTracking = updatedData?.data?.trackingNumber || updatedData?.trackingNumber;
+            if (newTracking) {
+                setTrackingNumber(newTracking);
             }
         }
     });

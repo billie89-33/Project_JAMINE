@@ -138,11 +138,13 @@ export const useUsers = () => {
         }
     }, [fetchUsers, selectedUser]);
 
-    // 5. Export to CSV
     const exportToCSV = async () => {
         setIsActionLoading(true);
         try {
-            const res = await exportCustomersApi();
+            const res = await exportCustomersApi({ 
+                keyword: keyword.trim(), 
+                status 
+            });
             if (res.success) {
                 const data = res.data;
                 const headers = ['Name', 'Username', 'Email', 'Phone', 'Status', 'Joined Date'];
