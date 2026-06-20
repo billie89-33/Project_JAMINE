@@ -34,3 +34,10 @@ docs/
 # Documentation & Skills
 *.md
 !README.md
+!GEMINI.md
+
+# 8. Temporary, Tests, and Generated Reports
+test.mjs
+project.md/
+jamine_component_tree.html
+presentation_slides.html
