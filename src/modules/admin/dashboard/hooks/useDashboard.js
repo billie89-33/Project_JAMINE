@@ -51,6 +51,7 @@ export const useDashboard = () => {
     // 🔔 New Alert Stats (Calculated from arrays or API fields)
     const lowStockCount = useMemo(() => lowStock.length, [lowStock]);
     const orderStatus = useMemo(() => dashboardData?.orderStatus || [], [dashboardData]);
+    const userGrowth = useMemo(() => dashboardData?.userGrowth || [], [dashboardData]);
     
     // Fix: คำนวณ Pending Orders ด้วยตัวเองเพราะ Backend ไม่ได้ส่งยอดนี้มาโดยตรง
     const pendingOrdersCount = useMemo(() => {
@@ -68,7 +69,8 @@ export const useDashboard = () => {
         recentOrders,
         topProducts,
         lowStock,
-        orderStatus, // 👈 ส่ง orderStatus ออกไปใช้
+        orderStatus,
+        userGrowth, // 👈 ส่ง userGrowth ออกไปใช้
         lowStockCount,
         pendingOrdersCount
     };

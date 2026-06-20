@@ -13,6 +13,7 @@ import { useDashboard } from '../hooks/useDashboard';
 // 🛡️ Fix: Import siblings directly to avoid circular dependency via components/index.js
 import StatCard from './StatCard';
 import RevenueChart from './RevenueChart';
+import UserGrowthChart from './UserGrowthChart';
 import SalesDonut from './SalesDonut';
 import OrderStatusChart from './OrderStatusChart';
 import RecentOrders from './RecentOrders';
@@ -130,7 +131,7 @@ const DashboardContainer = () => {
                 </div>
             </div>
 
-            {/* 4. Charts & Analytics Row */}
+            {/* 4. Time-series Analytics Row (Revenue & Growth) */}
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-10">
                 <div className="lg:col-span-2 min-h-[500px]">
                     <RevenueChart 
@@ -139,21 +140,32 @@ const DashboardContainer = () => {
                         onPeriodChange={setPeriod} 
                     />
                 </div>
+                <div className="lg:col-span-2 min-h-[500px]">
+                    <UserGrowthChart 
+                        data={userGrowth} 
+                        period={period} 
+                        onPeriodChange={setPeriod} 
+                    />
+                </div>
+            </div>
+
+            {/* 5. Breakdown & Rankings Row (Sales Donut, Order Status, Top Products) */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
                 <div className="lg:col-span-1 min-h-[500px]">
                     <SalesDonut data={categorySales} />
                 </div>
                 <div className="lg:col-span-1 min-h-[500px]">
                     <OrderStatusChart data={orderStatus} />
                 </div>
-            </div>
-
-            {/* 5. Bottom Data Row: Recent Orders, Top Selling & Low Stock */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-1">
-                    <RecentOrders orders={recentOrders} />
-                </div>
                 <div className="lg:col-span-1">
                     <TopProducts products={topProducts} />
+                </div>
+            </div>
+
+            {/* 6. Detail Lists Row (Recent Orders, Low Stock) */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-2">
+                    <RecentOrders orders={recentOrders} />
                 </div>
                 <div className="lg:col-span-1">
                     {lowStock.length > 0 ? (
