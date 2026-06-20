@@ -51,6 +51,7 @@ export const useDashboard = () => {
     // 🔔 New Alert Stats (Calculated from arrays or API fields)
     const lowStockCount = useMemo(() => lowStock.length, [lowStock]);
     const pendingOrdersCount = dashboardData?.pendingOrdersCount || 0;
+    const orderStatus = useMemo(() => dashboardData?.orderStatus || [], [dashboardData]);
 
     return {
         period,
@@ -61,7 +62,8 @@ export const useDashboard = () => {
         categorySales,
         recentOrders,
         topProducts,
-        lowStock, // 👈 ส่ง array ออกไปให้ Component ใช้
+        lowStock,
+        orderStatus, // 👈 ส่ง orderStatus ออกไปใช้
         lowStockCount,
         pendingOrdersCount
     };

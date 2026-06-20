@@ -14,6 +14,7 @@ import { useDashboard } from '../hooks/useDashboard';
 import StatCard from './StatCard';
 import RevenueChart from './RevenueChart';
 import SalesDonut from './SalesDonut';
+import OrderStatusChart from './OrderStatusChart';
 import RecentOrders from './RecentOrders';
 import TopProducts from './TopProducts';
 import LowStockProducts from './LowStockProducts';
@@ -128,7 +129,7 @@ const DashboardContainer = () => {
             </div>
 
             {/* 4. Charts & Analytics Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-10">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-10">
                 <div className="lg:col-span-2 min-h-[500px]">
                     <RevenueChart 
                         data={revenueData} 
@@ -138,6 +139,9 @@ const DashboardContainer = () => {
                 </div>
                 <div className="lg:col-span-1 min-h-[500px]">
                     <SalesDonut data={categorySales} />
+                </div>
+                <div className="lg:col-span-1 min-h-[500px]">
+                    <OrderStatusChart data={orderStatus} />
                 </div>
             </div>
 

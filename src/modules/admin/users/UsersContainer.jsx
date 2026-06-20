@@ -49,15 +49,6 @@ const UsersContainer = () => {
                         </h1>
                     </div>
                 </div>
-
-                <button 
-                    onClick={exportToCSV}
-                    disabled={isActionLoading}
-                    className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-2xl text-xs font-black shadow-xl hover:bg-slate-800 transition-all disabled:opacity-50"
-                >
-                    {isActionLoading ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
-                    Export to CSV
-                </button>
             </div>
 
             {/* List Section */}
