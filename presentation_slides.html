@@ -863,27 +863,7 @@
         <div class="grid-2col" style="height: 100%;">
           <div style="display: flex; flex-direction: column; gap: 0.5rem; height: 100%;">
             <div class="diagram-box" style="height: 360px;">
-              <div class="mermaid" id="components-diagram">
-                graph TD
-                  Main[main.jsx] --> StrictMode[StrictMode]
-                  StrictMode --> AppProvider[AppProvider]
-                  AppProvider --> AuthProvider[AuthProvider]
-                  AppProvider --> CartProvider[CartProvider]
-                  CartProvider --> App[App.jsx]
-                  App --> RouterProvider[RouterProvider]
-                  
-                  RouterProvider --> UserLayout[UserLayout]
-                  UserLayout --> Navbar[Navbar Components]
-                  UserLayout --> Footer[Footer]
-                  UserLayout --> OutletUser[User Pages: Home / Category / Detail]
 
-                  RouterProvider --> ProtectedRoute[ProtectedRoute]
-                  ProtectedRoute --> OutletProtected[Protected Pages: Cart / Checkout / Profile]
-
-                  RouterProvider --> AdminLayout[AdminLayout]
-                  AdminLayout --> AdminSidebar[AdminSidebar]
-                  AdminLayout --> OutletAdmin[Admin Pages: Dashboard / Catalog]
-              </div>
             </div>
             <button class="fullscreen-trigger" onclick="openFullscreen('components-diagram')">🔍 คลิกที่นี่เพื่อขยายรูปขนาดเต็ม (Fullscreen)</button>
           </div>

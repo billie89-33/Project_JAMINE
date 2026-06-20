@@ -35,6 +35,8 @@ const DashboardContainer = () => {
         categorySales, 
         recentOrders, 
         topProducts,
+        lowStock,
+        orderStatus,
         lowStockCount,
         pendingOrdersCount
     } = useDashboard();
