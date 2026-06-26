@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/shared/contexts/AuthContext';
 import { useApi } from '@/shared/hooks/useApi'; // 🛠️ เรียกใช้แม่บ้านส่วนกลาง
 import { loginApi } from '../services/authApi';
@@ -11,6 +11,7 @@ import { loginApi } from '../services/authApi';
 export const useLogin = () => {
   const { login: setAuthUser } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   // 📝 Form State: ปรับมาใช้ Object เพื่อความสอดคล้องกับ Register และขยายง่าย
   const [formData, setFormData] = useState({
@@ -28,7 +29,10 @@ export const useLogin = () => {
       if (res.success !== false) {
         const userPayload = res.data || userData || res;
         setAuthUser(userPayload);
-        navigate('/', { replace: true });
+
+        // 🚀 Auto-Return / Seamless Redirect: กลับไปจุดที่กดมา หรือไปหน้า Home
+        const from = location.state?.from?.pathname || location.state?.from || '/';
+        navigate(from, { replace: true });
       } else {
         setError(res.message || 'Login failed');
       }

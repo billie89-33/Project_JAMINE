@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '@/shared/contexts/AuthContext';
 import { useApi } from '@/shared/hooks/useApi';
 import { registerApi } from '../services/authApi';
 
@@ -12,6 +13,8 @@ import { registerApi } from '../services/authApi';
  */
 export const useRegister = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { login: setAuthUser } = useAuth();
 
   // 📝 Form State
   const [formData, setFormData] = useState({
@@ -27,12 +30,18 @@ export const useRegister = () => {
   // 🧹 Status State: ใช้ useApi จัดการ (เปิดใช้ Toast อัตโนมัติ)
   const { loading, error, setError, execute: registerRequest } = useApi(registerApi, {
     showToast: true,
-    successMessage: 'สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ',
+    successMessage: 'สมัครสมาชิกสำเร็จ! ยินดีต้อนรับสู่ Jamine',
     onSuccess: (data, res) => {
       console.log('✅ Registration successful:', { data, res });
       // 🛡️ Resilient Success Check: รองรับทั้งแบบมี res.success, มี res._id หรือ res.message
       if (res.success !== false) {
-        navigate('/login');
+        // ทำการ Login อัตโนมัติทันทีโดยไม่ต้องเสียเวลากลับไปหน้า Login
+        const userPayload = res.data || data || res;
+        setAuthUser(userPayload);
+
+        // 🚀 Auto-Return / Seamless Redirect: กลับไปจุดที่กดมา หรือไปหน้า Home
+        const from = location.state?.from?.pathname || location.state?.from || '/';
+        navigate(from, { replace: true });
       } else {
         setError(res.message || 'Registration failed');
       }
