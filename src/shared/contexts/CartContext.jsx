@@ -27,6 +27,7 @@ export const CartProvider = ({ children }) => {
   });
   const [loading, setLoading] = useState(false);
   const debounceTimers = useRef({});
+  const pendingUpdates = useRef({});
 
   const syncCartState = useCallback((response) => {
     if (!response.success) return;
@@ -155,18 +156,29 @@ export const CartProvider = ({ children }) => {
     // ⏳ เทคนิคที่ 2: Debounced API Synchronization (รอหยุดกด 500ms ค่อยยิง API)
     if (debounceTimers.current[productId]) {
       clearTimeout(debounceTimers.current[productId]);
+      debounceTimers.current[productId] = null;
+      pendingUpdates.current[productId] -= 1; // ยกเลิกคิวเก่าที่ยังอยู่ในโหลด Debounce
     }
 
+    pendingUpdates.current[productId] = (pendingUpdates.current[productId] || 0) + 1;
+
     debounceTimers.current[productId] = setTimeout(async () => {
+      debounceTimers.current[productId] = null; // เคลียร์สถานะ Timer ว่าเริ่มยิง API แล้ว
       try {
-        // 🔒 เทคนิคที่ 3: Background Revalidation (ส่ง API ไปหลังบ้านเงียบๆ เพื่อยืนยันความถูกต้อง)
+        // 🔒 เทคนิคที่ 3: Background Revalidation พร้อม The Guard ป้องกันเลขกะพริบ
         const res = await updateCartQuantityApi(productId, quantity);
-        if (res.success) {
+        pendingUpdates.current[productId] -= 1; // บันทึกว่า API จบแล้ว 1 คิว
+        
+        // 🛡️ The Guard: ถ้าไม่มีคิวใหม่มากดแทรกระหว่างทาง ค่อยอนุญาตให้ทับ State
+        if (pendingUpdates.current[productId] === 0) {
           syncCartState(res); // สวมทับข้อมูลจาก Backend เพื่อรับรองความถูกต้อง 100%
         }
       } catch (error) {
-        toast.error("อัปเดตจำนวนไม่สำเร็จ ระบบกำลังซิงค์ข้อมูลใหม่");
-        fetchCart(); // Fallback: ดึงข้อมูลที่ถูกต้องกลับมาหาก API ล้มเหลว
+        pendingUpdates.current[productId] -= 1;
+        if (pendingUpdates.current[productId] === 0) {
+          toast.error("อัปเดตจำนวนไม่สำเร็จ ระบบกำลังซิงค์ข้อมูลใหม่");
+          fetchCart(); // Fallback: ดึงข้อมูลที่ถูกต้องกลับมาหาก API ล้มเหลว
+        }
       }
     }, 500);
   };
