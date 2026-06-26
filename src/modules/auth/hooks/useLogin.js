@@ -24,8 +24,10 @@ export const useLogin = () => {
   const { loading, error, setError, execute: loginRequest } = useApi(loginApi, {
     onSuccess: (userData, res) => {
       console.log('✅ Login successful:', { userData, res });
-      if (res.success) {
-        setAuthUser(userData);
+      // 🛡️ Resilient Success Check: รองรับทั้งแบบมี res.success หรือส่ง User Object มาตรงๆ
+      if (res.success !== false) {
+        const userPayload = res.data || userData || res;
+        setAuthUser(userPayload);
         navigate('/', { replace: true });
       } else {
         setError(res.message || 'Login failed');

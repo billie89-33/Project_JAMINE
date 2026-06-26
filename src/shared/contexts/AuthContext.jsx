@@ -16,13 +16,16 @@ export const AuthProvider = ({ children }) => {
     const refreshUser = async () => {
         try {
             const res = await getMeApi();
-            if (res.success) {
-                setUser(res.data);
-                return res.data;
+            // 🛡️ Resilient Success Check: รองรับทั้งแบบมี res.success หรือส่ง User Object (res._id) มาตรงๆ
+            if (res && res.success !== false) {
+                const userData = res.data || res;
+                setUser(userData);
+                return userData;
             }
+            throw new Error('Invalid user response format');
         } catch (error) {
             console.error('Failed to refresh user data:', error);
-            return null;
+            throw error; // 🛡️ โยน Error ออกไปเพื่อให้ checkAuthStatus ดักจับและจัดการ Fallback/Mock ได้ถูกต้อง
         }
     };
 

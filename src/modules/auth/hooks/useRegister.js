@@ -30,7 +30,8 @@ export const useRegister = () => {
     successMessage: 'สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ',
     onSuccess: (data, res) => {
       console.log('✅ Registration successful:', { data, res });
-      if (res.success) {
+      // 🛡️ Resilient Success Check: รองรับทั้งแบบมี res.success, มี res._id หรือ res.message
+      if (res.success !== false) {
         navigate('/login');
       } else {
         setError(res.message || 'Registration failed');
