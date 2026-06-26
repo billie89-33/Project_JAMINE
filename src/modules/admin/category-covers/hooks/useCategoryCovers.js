@@ -18,7 +18,7 @@ export const useCategoryCovers = () => {
         getAdminCategoryCoversApi()
       ]);
 
-      const rawCats = catsRes || [];
+      const rawCats = catsRes?.data || [];
       const catsList = rawCats.map(c => typeof c === 'object' ? c.name : c);
 
       const coversData = coversRes?.data || [];
