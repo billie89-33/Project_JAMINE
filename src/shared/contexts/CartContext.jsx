@@ -1,4 +1,4 @@
-import  { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { 
   getCartApi, 
   addToCartApi, 
@@ -26,6 +26,7 @@ export const CartProvider = ({ children }) => {
     itemCount: 0 
   });
   const [loading, setLoading] = useState(false);
+  const debounceTimers = useRef({});
 
   const syncCartState = useCallback((response) => {
     if (!response.success) return;
@@ -119,26 +120,55 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  // 3. อัปเดตจำนวน
+  // 3. อัปเดตจำนวน (⚡ Optimistic UI + Debounced API Sync)
   const updateQuantity = async (productId, quantity) => {
-    if (loading || !productId) return; // 🛡️ เช็ค productId ให้ชัวร์
+    if (!productId) return; 
     
     // ถ้าจำนวนลดเหลือน้อยกว่า 1 ให้ถือเป็นการลบสินค้าทิ้ง
     if (quantity < 1) {
       return removeItem(productId);
     }
-    
-    setLoading(true);
-    try {
-      const res = await updateCartQuantityApi(productId, quantity);
-      if (res.success) {
-        syncCartState(res); // 🚀 เร็วขึ้น 2 เท่า
-      }
-    } catch (error) {
-      toast.error("อัปเดตจำนวนไม่สำเร็จ");
-    } finally {
-      setLoading(false);
+
+    // ⚡ เทคนิคที่ 1: Optimistic UI Update (อัปเดต State หน้าบ้านทันทีใน 0.01 วินาที)
+    setCartItems(prevItems => {
+      const updatedItems = prevItems.map(item => {
+        if (item.id === productId) {
+          return { ...item, quantity };
+        }
+        return item;
+      });
+
+      // คำนวณสรุปยอดเงินชั่วคราวให้ผู้ใช้เห็นทันที (Optimistic Summary)
+      const newSubtotal = updatedItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+      const newItemCount = updatedItems.reduce((acc, item) => acc + item.quantity, 0);
+      
+      setSummary(prevSummary => ({
+        ...prevSummary,
+        subtotal: newSubtotal,
+        total: newSubtotal + prevSummary.shipping - prevSummary.discount,
+        itemCount: newItemCount
+      }));
+
+      return updatedItems;
+    });
+
+    // ⏳ เทคนิคที่ 2: Debounced API Synchronization (รอหยุดกด 500ms ค่อยยิง API)
+    if (debounceTimers.current[productId]) {
+      clearTimeout(debounceTimers.current[productId]);
     }
+
+    debounceTimers.current[productId] = setTimeout(async () => {
+      try {
+        // 🔒 เทคนิคที่ 3: Background Revalidation (ส่ง API ไปหลังบ้านเงียบๆ เพื่อยืนยันความถูกต้อง)
+        const res = await updateCartQuantityApi(productId, quantity);
+        if (res.success) {
+          syncCartState(res); // สวมทับข้อมูลจาก Backend เพื่อรับรองความถูกต้อง 100%
+        }
+      } catch (error) {
+        toast.error("อัปเดตจำนวนไม่สำเร็จ ระบบกำลังซิงค์ข้อมูลใหม่");
+        fetchCart(); // Fallback: ดึงข้อมูลที่ถูกต้องกลับมาหาก API ล้มเหลว
+      }
+    }, 500);
   };
 
   // 4. ลบสินค้า
