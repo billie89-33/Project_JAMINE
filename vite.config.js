@@ -9,6 +9,9 @@ export default defineConfig({
     react(),
     tailwindcss()
   ],
+  server: {
+    open: '/', // 🌐 บังคับให้เปิดหน้า Home ('/') เป็นหน้าแรกตอนเริ่มเซิร์ฟเวอร์เสมอ
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
