@@ -19,20 +19,23 @@ const CategorySlider = () => {
     fetchCategories();
   }, [fetchCategories]);
 
-  // 🖼️ ระบบ Mapping รูปภาพสำรอง (Fallback) กรณีสินค้าตัวล่าสุดในหมวดนั้นไม่มีรูป หรือ API ส่งมาไม่ครบ
-  const categoryFallbackImages = {
-    'Notebook': 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=300&auto=format&fit=crop',
-    'Keyboard': 'https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?q=80&w=300&auto=format&fit=crop',
-    'Computer': 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=300&auto=format&fit=crop',
-    'Monitor': 'https://images.unsplash.com/photo-1527443224154-c4a3942d3490?q=80&w=300&auto=format&fit=crop',
-    'Gaming Mouse': 'https://images.unsplash.com/photo-1527443224154-c4a3942d3490?q=80&w=300&auto=format&fit=crop',
-    'Graphics Card': 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?q=80&w=300&auto=format&fit=crop',
-    'RAM': 'https://images.unsplash.com/photo-1562976540-1502c2145186?q=80&w=300&auto=format&fit=crop',
-    'CPU': 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?q=80&w=300&auto=format&fit=crop',
-    'Mainboard': 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=300&auto=format&fit=crop'
+  // 👑 ชั้นที่ 1: ระบบ Mapping รูปภาพปกกราฟิกพรีเมียม (Dedicated Category Asset Center)
+  // คัดสรรรูปภาพพรีเมียมระดับไฮเอนด์สำหรับหมวดหมู่ฮาร์ดแวร์โดยเฉพาะ เพื่อความสวยงามตระการตา
+  const categoryPremiumCovers = {
+    'Notebook': 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=400&auto=format&fit=crop',
+    'Keyboard': 'https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?q=80&w=400&auto=format&fit=crop',
+    'Computer': 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=400&auto=format&fit=crop',
+    'Monitor': 'https://images.unsplash.com/photo-1527443224154-c4a3942d3490?q=80&w=400&auto=format&fit=crop',
+    'Gaming Mouse': 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?q=80&w=400&auto=format&fit=crop',
+    'Graphics Card': 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?q=80&w=400&auto=format&fit=crop',
+    'RAM': 'https://images.unsplash.com/photo-1562976540-1502c2145186?q=80&w=400&auto=format&fit=crop',
+    'CPU': 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?q=80&w=400&auto=format&fit=crop',
+    'Mainboard': 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=400&auto=format&fit=crop',
+    'Smartwatch': 'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?q=80&w=400&auto=format&fit=crop',
+    'Accessories': 'https://images.unsplash.com/photo-1583394838336-acd977736f90?q=80&w=400&auto=format&fit=crop'
   };
 
-  // สร้างออบเจกต์หมวดหมู่จาก API (ตอนนี้ API ส่งมาเป็น [{ name, image }, ...])
+  // สร้างออบเจกต์หมวดหมู่จาก API (ตอนนี้ API ส่งมาเป็น [{ name, image }, ...] หรือ ['Notebook', ...])
   const categories = (apiCategories || []).map((catData, index) => {
     const name = typeof catData === 'object' ? catData.name : catData;
     const apiImage = typeof catData === 'object' ? catData.image : null;
@@ -41,8 +44,9 @@ const CategorySlider = () => {
       id: index + 1,
       name: name,
       type: name,
-      // 🚀 ลำดับความสำคัญของรูป: 1. รูปจากสินค้าล่าสุด (API) -> 2. รูปสำรอง (Hardcoded) -> 3. รูป Default
-      image: apiImage || categoryFallbackImages[name] || 'https://images.unsplash.com/photo-1588702547919-26089e690ecc?q=80&w=300&auto=format&fit=crop'
+      // 🚀 The Hybrid Smart Engine (ระบบลำดับความสำคัญ 3 ชั้น):
+      // 1. ภาพปกกราฟิกพรีเมียมเฉพาะกิจ (Dedicated) -> 2. ภาพจากสินค้าล่าสุด (Dynamic Admin) -> 3. ภาพ Default สำรอง
+      image: categoryPremiumCovers[name] || apiImage || 'https://images.unsplash.com/photo-1588702547919-26089e690ecc?q=80&w=400&auto=format&fit=crop'
     };
   });
 
