@@ -1,5 +1,7 @@
 # 1. โฟลเดอร์ติดตั้งไลบรารีฝั่งหน้าบ้าน
 node_modules/
+.npm/
+.yarn/
 
 # 2. ไฟล์บันทึกข้อมูลสภาพแวดล้อมฝั่ง Frontend (เช่น คีย์ API หลังบ้าน)
 .env
@@ -8,37 +10,62 @@ node_modules/
 .env.test.local
 .env.production.local
 *.env
+*.local
 
 # 3. โฟลเดอร์ผลลัพธ์ที่ได้จากการ Build ระบบเพื่อเตรียมขึ้นระบบจริง
 dist/
+dist-ssr/
 build/
 .out/
+.vite/
 
-# 4. ไฟล์ Log แสดงข้อผิดพลาดเวลาสั่งรันหรือบิวด์ระบบ
+# 4. ไฟล์ Log และ Cache ของระบบบิวด์/เทส
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+.eslintcache
+coverage/
+.cache/
+vite.config.js.timestamp-*
 
 # 5. ไฟล์ขยะของระบบปฏิบัติการ (Windows/Mac)
 .DS_Store
+.DS_Store?
+._*
 Thumbs.db
+ehthumbs.db
 Desktop.ini
+$RECYCLE.BIN/
 
-# 6. คอนฟิกส่วนตัวของโปรแกรม VS Code
+# 6. คอนฟิกส่วนตัวของโปรแกรม IDE (VS Code, JetBrains, Visual Studio)
 .vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
 # 7. โฟลเดอร์คู่มือและทักษะพิเศษ (เก็บไว้ดูเฉพาะในเครื่อง Gemini CLI)
 docs/
+.gemini/
 
 # Documentation & Skills
 *.md
 !README.md
 GEMINI.md
 
-# 8. Temporary, Tests, and Generated Reports
+# 8. Temporary, Tests, Backup and Generated Reports
 test.mjs
 project.md/
 jamine_component_tree.html
 presentation_slides.html
 backend_architecture_diagram.html
+*.tmp
+*.temp
+*.bak
+*.orig
+*~
+*.tgz
