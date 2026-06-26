@@ -10,4 +10,5 @@ export * from './shipping';
 export * from './users';
 export * from './news-categories';
 export * from './news';
+export * from './category-covers';
 

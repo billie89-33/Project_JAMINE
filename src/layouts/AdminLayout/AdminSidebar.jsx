@@ -32,6 +32,7 @@ const AdminSidebar = () => {
       { title: 'Add Product', path: 'add-product' },
       { title: 'Order', path: 'order' },
       { title: 'Advertising', path: 'advertising' },
+      { title: 'Category Covers', path: 'category-covers' },
       { title: 'Shipping', path: 'shipping' },
       { title: 'Customers', path: 'users' }
     ]

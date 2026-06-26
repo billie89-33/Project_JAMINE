@@ -57,3 +57,12 @@ export const getProductByIdApi = async (id) => {
     const response = await apiClient.get(`/products/${id}`);
     return response.data;
 };
+
+/**
+ * ดึงรายการภาพปกหมวดหมู่ทั้งหมด (Public Category Covers)
+ */
+export const getCategoryCoversApi = async () => {
+    const response = await apiClient.get('/category-covers');
+    return response.data;
+};
+

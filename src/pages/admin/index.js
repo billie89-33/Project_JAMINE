@@ -10,6 +10,7 @@ export { default as UsersPage } from './UsersPage';
 export { default as NewsCategoriesPage } from './NewsCategoriesPage';
 export { default as NewsPage } from './NewsPage';
 export { default as NewsFormPage } from './NewsFormPage';
+export { default as CategoryCoversPage } from './CategoryCoversPage.jsx';
 
 
 

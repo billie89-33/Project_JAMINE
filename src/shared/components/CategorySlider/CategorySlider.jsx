@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Filter } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { getCategoriesApi } from '@/modules/products/services/productApi';
+import { getCategoriesApi, getCategoryCoversApi } from '@/modules/products/services/productApi';
 import { useApi } from '@/shared/hooks/useApi';
 
 /**
@@ -12,12 +12,26 @@ const CategorySlider = () => {
   const navigate = useNavigate();
   const scrollRef = useRef(null);
 
-  // 🎣 ดึงข้อมูลหมวดหมู่จาก API
-  const { data: apiCategories, loading, execute: fetchCategories } = useApi(getCategoriesApi);
+  // 🎣 ดึงข้อมูลหมวดหมู่และภาพปกจาก API
+  const { data: apiCategories, loading: catLoading, execute: fetchCategories } = useApi(getCategoriesApi);
+  const { data: apiCovers, loading: coverLoading, execute: fetchCovers } = useApi(getCategoryCoversApi);
 
   useEffect(() => {
     fetchCategories();
-  }, [fetchCategories]);
+    fetchCovers();
+  }, [fetchCategories, fetchCovers]);
+
+  const loading = catLoading || coverLoading;
+
+  // 👑 ชั้นที่ 1: ระบบภาพปกพรีเมียมจาก Database (Admin Dedicated Covers)
+  const premiumCoversMap = {};
+  if (apiCovers?.data) {
+    apiCovers.data.forEach(item => {
+      if (item.image?.url) {
+        premiumCoversMap[item.categoryName] = item.image.url;
+      }
+    });
+  }
 
   // 🖼️ ระบบ Mapping รูปภาพสำรอง (Fallback) กรณีสินค้าตัวล่าสุดในหมวดนั้นไม่มีรูป หรือ API ส่งมาไม่ครบ
   const categoryFallbackImages = {
@@ -41,8 +55,9 @@ const CategorySlider = () => {
       id: index + 1,
       name: name,
       type: name,
-      // 🚀 ลำดับความสำคัญของรูป: 1. รูปจากสินค้าล่าสุด (API) -> 2. รูปสำรอง (Hardcoded) -> 3. รูป Default
-      image: apiImage || categoryFallbackImages[name] || 'https://images.unsplash.com/photo-1588702547919-26089e690ecc?q=80&w=300&auto=format&fit=crop'
+      // 🚀 The Hybrid Smart Engine (ระบบลำดับความสำคัญ 3 ชั้น):
+      // 1. ภาพปกพรีเมียมจาก Database (Admin Category Covers) -> 2. ภาพจากสินค้าล่าสุด (API Dynamic) -> 3. ภาพ Default สำรอง
+      image: premiumCoversMap[name] || apiImage || categoryFallbackImages[name] || 'https://images.unsplash.com/photo-1588702547919-26089e690ecc?q=80&w=300&auto=format&fit=crop'
     };
   });
 
