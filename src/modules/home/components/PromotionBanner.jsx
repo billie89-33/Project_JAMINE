@@ -10,8 +10,13 @@ const PromotionBanner = () => {
 
   if (loading) {
     return (
-      <div className="w-full h-[150px] sm:h-[200px] bg-slate-50 rounded-[32px] border border-purple-50 flex items-center justify-center animate-pulse">
-        <Loader2 className="text-purple-200 animate-spin" size={24} />
+      <div className="w-full h-[150px] sm:h-[200px] bg-gradient-to-r from-purple-100/60 to-indigo-100/60 rounded-[32px] border-2 border-white shadow-xl shadow-purple-100/30 flex items-center justify-between p-6 sm:p-8 overflow-hidden relative animate-pulse">
+        <div className="space-y-2 w-2/3">
+          <div className="h-3 bg-purple-200 rounded-full w-24"></div>
+          <div className="h-6 sm:h-8 bg-white/80 rounded-xl w-4/5"></div>
+          <div className="h-3 bg-indigo-200 rounded-full w-1/2"></div>
+        </div>
+        <div className="w-20 sm:w-28 h-8 sm:h-10 bg-white/80 rounded-xl"></div>
       </div>
     );
   }

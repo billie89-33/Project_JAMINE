@@ -27,8 +27,10 @@ const HeroBanner = ({ placement = 'home_hero' }) => {
 
   if (loading) {
     return (
-      <div className="relative w-full h-[450px] rounded-[40px] overflow-hidden bg-slate-50 flex items-center justify-center border border-purple-50 animate-pulse">
-        <Loader2 className="text-purple-300 animate-spin" size={40} />
+      <div className="relative w-full h-[300px] md:h-[450px] rounded-[40px] overflow-hidden bg-slate-900/10 backdrop-blur-md border-4 border-white/80 shadow-2xl flex flex-col justify-end p-6 md:p-10 space-y-3 animate-pulse">
+        <div className="absolute inset-0 bg-gradient-to-tr from-purple-200/20 via-slate-100/30 to-purple-100/10"></div>
+        <div className="relative z-10 h-8 md:h-10 bg-white/60 rounded-xl w-3/4 md:w-1/2"></div>
+        <div className="relative z-10 h-6 md:h-8 bg-purple-200/60 rounded-full w-32 md:w-40"></div>
       </div>
     );
   }

@@ -27,9 +27,34 @@ const SidebarNews = () => {
 
   if (isLoading) {
     return (
-      <div className="p-5 flex flex-col items-center justify-center min-h-[300px]">
-        <Loader2 className="animate-spin text-purple-600 mb-2" size={24} />
-        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Loading News...</span>
+      <div className="p-5 rounded-xl flex flex-col gap-5 w-full bg-white/50 border border-slate-100 shadow-sm animate-pulse">
+        {/* Social Buttons Skeleton */}
+        <div className="grid grid-cols-2 gap-2">
+          <div className="h-8 bg-slate-200 rounded-lg"></div>
+          <div className="h-8 bg-slate-200 rounded-lg"></div>
+          <div className="h-8 bg-slate-200 rounded-lg"></div>
+          <div className="h-8 bg-slate-200 rounded-lg"></div>
+        </div>
+        
+        {/* Header Skeleton */}
+        <div className="h-5 bg-slate-200 rounded-md w-28"></div>
+
+        {/* Main News Card Skeleton */}
+        <div className="h-48 bg-slate-200 rounded-2xl w-full"></div>
+
+        {/* Mini News List Skeleton */}
+        <div className="flex flex-col gap-4">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="flex gap-3 items-center border-b border-slate-50 pb-4 last:border-none last:pb-0">
+              <div className="w-16 h-16 rounded-xl bg-slate-200 flex-shrink-0"></div>
+              <div className="flex-grow space-y-2">
+                <div className="h-2 bg-purple-200 rounded-full w-12"></div>
+                <div className="h-3 bg-slate-200 rounded-full w-full"></div>
+                <div className="h-2 bg-slate-100 rounded-full w-20"></div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }

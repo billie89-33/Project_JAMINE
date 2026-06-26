@@ -44,17 +44,30 @@ const ProductGrid = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col gap-8 w-full">
-        <div className="flex items-center justify-between">
-          <div className="h-10 bg-slate-100 rounded-2xl w-48 animate-pulse"></div>
+      <div className="flex flex-col gap-10 w-full relative">
+        {/* ✨ Skeleton Header */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-purple-50 pb-8">
+          <div className="space-y-2">
+            <div className="h-3 bg-purple-200 rounded-full w-24 animate-pulse"></div>
+            <div className="h-8 bg-slate-200 rounded-xl w-48 animate-pulse"></div>
+          </div>
+          <div className="h-4 bg-slate-200 rounded-full w-32 animate-pulse"></div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="bg-white rounded-[40px] p-8 h-[400px] border border-slate-100 animate-pulse">
-              <div className="aspect-square bg-slate-50 rounded-3xl mb-6"></div>
-              <div className="space-y-3">
-                <div className="h-4 bg-slate-50 rounded-full w-3/4"></div>
-                <div className="h-4 bg-slate-50 rounded-full w-1/2"></div>
+
+        {/* 📦 Skeleton Grid (2 Columns, 8 Items matching real layout) */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-8 w-full">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="bg-white/90 backdrop-blur-xl rounded-[32px] p-4 sm:p-6 border border-purple-100/50 shadow-xl shadow-purple-100/20 animate-pulse flex flex-col justify-between h-[280px] sm:h-[400px]">
+              <div className="aspect-square bg-purple-50/80 rounded-2xl mb-4 w-full relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-tr from-purple-100/20 via-white/40 to-purple-50/10 animate-pulse"></div>
+              </div>
+              <div className="space-y-2 flex-grow">
+                <div className="h-2.5 sm:h-3 bg-purple-100 rounded-full w-1/3"></div>
+                <div className="h-3.5 sm:h-4 bg-slate-100 rounded-full w-4/5"></div>
+              </div>
+              <div className="flex items-center justify-between mt-4 pt-2 border-t border-slate-50">
+                <div className="h-4 sm:h-5 bg-slate-200 rounded-full w-1/2"></div>
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-purple-100 rounded-full flex-shrink-0"></div>
               </div>
             </div>
           ))}
