@@ -9,14 +9,15 @@ export const CategoryCoverGrid = ({ categories, coversMap, onUpload, isSubmittin
   const [uploadingCat, setUploadingCat] = useState(null);
 
   const handleFileChange = async (categoryName, e) => {
-    const file = e.target.files?.[0];
+    const inputElement = e.target;
+    const file = inputElement.files?.[0];
     if (!file) return;
 
     setUploadingCat(categoryName);
     await onUpload(categoryName, file);
     setUploadingCat(null);
-    // เคลียร์ input file
-    e.target.value = null;
+    // เคลียร์ input file อย่างปลอดภัยหลัง await
+    inputElement.value = '';
   };
 
   return (

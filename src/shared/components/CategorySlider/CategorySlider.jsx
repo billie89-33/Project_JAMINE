@@ -25,13 +25,12 @@ const CategorySlider = () => {
 
   // 👑 ชั้นที่ 1: ระบบภาพปกพรีเมียมจาก Database (Admin Dedicated Covers)
   const premiumCoversMap = {};
-  if (apiCovers?.data) {
-    apiCovers.data.forEach(item => {
-      if (item.image?.url) {
-        premiumCoversMap[item.categoryName] = item.image.url;
-      }
-    });
-  }
+  const coversList = Array.isArray(apiCovers) ? apiCovers : (apiCovers?.data || []);
+  coversList.forEach(item => {
+    if (item.image?.url) {
+      premiumCoversMap[item.categoryName] = item.image.url;
+    }
+  });
 
   // 🖼️ ระบบ Mapping รูปภาพสำรอง (Fallback) กรณีสินค้าตัวล่าสุดในหมวดนั้นไม่มีรูป หรือ API ส่งมาไม่ครบ
   const categoryFallbackImages = {

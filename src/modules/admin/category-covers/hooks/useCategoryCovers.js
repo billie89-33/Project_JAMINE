@@ -18,10 +18,10 @@ export const useCategoryCovers = () => {
         getAdminCategoryCoversApi()
       ]);
 
-      const rawCats = catsRes?.data || [];
+      const rawCats = Array.isArray(catsRes) ? catsRes : (catsRes?.data || []);
       const catsList = rawCats.map(c => typeof c === 'object' ? c.name : c);
 
-      const coversData = coversRes?.data || [];
+      const coversData = Array.isArray(coversRes) ? coversRes : (coversRes?.data || []);
       const cMap = {};
       coversData.forEach(item => {
         cMap[item.categoryName] = item.image?.url;
@@ -51,7 +51,7 @@ export const useCategoryCovers = () => {
     setIsSubmitting(true);
     try {
       const res = await upsertCategoryCoverApi(categoryName, formData);
-      if (res.success) {
+      if (res?.success || res?.data || res) {
         toast.success(`อัปเดตภาพปกหมวดหมู่ ${categoryName} สำเร็จ! ✨`);
         fetchData();
         return true;
