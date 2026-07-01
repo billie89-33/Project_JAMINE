@@ -66,6 +66,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const pendingUpdates = useRef<Record<string, number>>({});
 
   const syncCartState = useCallback((response: unknown) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const res = response as any;
     if (!res || !res.success) return;
 
@@ -88,6 +89,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     
     // 🛠️ Fix & Resilience: รองรับทั้ง item.productId และ item.product และดึง ID อย่างปลอดภัย
     const mappedItems: CartItemType[] = rawItems.map((item: unknown) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const it = item as any;
       const productObj = it.productId || it.product; // ดึงออบเจกต์สินค้า
       const finalId = productObj?._id || productObj?.id || (typeof productObj === 'string' ? productObj : null);
