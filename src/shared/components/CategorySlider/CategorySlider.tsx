@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Filter } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getCategoriesApi, getCategoryCoversApi } from '@/modules/products/services/productApi';
@@ -8,7 +8,7 @@ import { useApi } from '@/shared/hooks/useApi';
  * 🎡 CategorySlider Component
  * ดึงรายการหมวดหมู่สินค้ามาจาก API แบบ Dynamic
  */
-const CategorySlider = () => {
+const CategorySlider: React.FC = () => {
   const navigate = useNavigate();
   const scrollRef = useRef(null);
 
@@ -24,16 +24,17 @@ const CategorySlider = () => {
   const loading = catLoading || coverLoading;
 
   // 👑 ชั้นที่ 1: ระบบภาพปกพรีเมียมจาก Database (Admin Dedicated Covers)
-  const premiumCoversMap = {};
+  const premiumCoversMap: Record<string, string> = {};
   const coversList = Array.isArray(apiCovers) ? apiCovers : (apiCovers?.data || []);
-  coversList.forEach(item => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  coversList.forEach((item: any) => {
     if (item.image?.url) {
       premiumCoversMap[item.categoryName] = item.image.url;
     }
   });
 
   // 🖼️ ระบบ Mapping รูปภาพสำรอง (Fallback) กรณีสินค้าตัวล่าสุดในหมวดนั้นไม่มีรูป หรือ API ส่งมาไม่ครบ
-  const categoryFallbackImages = {
+  const categoryFallbackImages: Record<string, string> = {
     'Notebook': 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=300&auto=format&fit=crop',
     'Keyboard': 'https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?q=80&w=300&auto=format&fit=crop',
     'Computer': 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=300&auto=format&fit=crop',
@@ -46,7 +47,8 @@ const CategorySlider = () => {
   };
 
   // สร้างออบเจกต์หมวดหมู่จาก API (ตอนนี้ API ส่งมาเป็น [{ name, image }, ...])
-  const categories = (apiCategories || []).map((catData, index) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const categories = (apiCategories || []).map((catData: any, index: number) => {
     const name = typeof catData === 'object' ? catData.name : catData;
     const apiImage = typeof catData === 'object' ? catData.image : null;
 
@@ -61,7 +63,7 @@ const CategorySlider = () => {
   });
 
   // ฟังก์ชันควบคุมการเลื่อนสไลด์ซ้าย-ขวา
-  const handleScroll = (direction) => {
+  const handleScroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
       const { scrollLeft, clientWidth } = scrollRef.current;
       const scrollAmount = clientWidth * 0.4;
@@ -158,8 +160,11 @@ const CategorySlider = () => {
                       className="w-full h-full object-cover rounded-full group-hover/item:scale-110 transition-transform duration-700"
                       onError={(e) => {
                         // fallback icon style if image fails
-                        e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'flex';
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        if (target.nextSibling) {
+                          (target.nextSibling as HTMLElement).style.display = 'flex';
+                        }
                       }}
                     />
                     <div className="hidden absolute inset-0 bg-purple-50 items-center justify-center text-purple-300">

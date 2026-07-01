@@ -1,7 +1,8 @@
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import logoImg from "../../../assets/LOGO pink new.png"; // เช็ค path รูปโลโก้ให้ตรงกับเครื่องคุณครับ
 
-const Footer = () => {
+const Footer: React.FC = () => {
   return (
     <footer className="bg-purple-700 text-white pt-0 pb-0 px-6 md:px-12 border-t border-slate-200/20 text-xs relative mt-auto">
       

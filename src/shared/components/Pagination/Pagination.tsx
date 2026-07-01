@@ -1,4 +1,12 @@
+import React from 'react';
 import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
+
+interface PaginationProps {
+  currentPage?: number;
+  totalPages?: number;
+  onPageChange: (page: number) => void;
+  loading?: boolean;
+}
 
 /**
  * 🛰️ Shared Pagination Component (Enterprise Standard)
@@ -8,7 +16,7 @@ import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
  * @param {function} onPageChange - ฟังก์ชันทำงานเมื่อเปลี่ยนหน้า
  * @param {boolean} loading - สถานะการโหลดข้อมูล (เพื่อ Disable ปุ่มชั่วคราว)
  */
-const Pagination = ({ currentPage = 1, totalPages = 1, onPageChange, loading = false }) => {
+const Pagination: React.FC<PaginationProps> = ({ currentPage = 1, totalPages = 1, onPageChange, loading = false }) => {
   
   // ฟังก์ชันคำนวณปุ่มตัวเลขที่จะแสดง (Smart Ellipsis Logic)
   const getPageNumbers = () => {

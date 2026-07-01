@@ -1,10 +1,23 @@
 
 
+import React from 'react';
+
+interface OrderSummaryCardProps {
+  subtotal?: number;
+  shipping?: number;
+  discount?: number;
+  total?: number;
+  buttonText?: string;
+  onAction?: () => void;
+  isSubmitting?: boolean;
+  isDisabled?: boolean;
+}
+
 /**
  * 📊 OrderSummaryCard (Shared Component)
  * มาตรฐานสรุปยอดเงิน (Financial Summary Standard - Doc 12)
  */
-const OrderSummaryCard = ({ 
+const OrderSummaryCard: React.FC<OrderSummaryCardProps> = ({ 
   subtotal = 0, 
   shipping = 0, 
   discount = 0, 
