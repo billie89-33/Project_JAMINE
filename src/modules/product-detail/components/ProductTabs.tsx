@@ -1,6 +1,8 @@
-import { useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState } from 'react';
+import { Product } from '@/types';
 
-const ProductTabs = ({ product }) => {
+const ProductTabs: React.FC<{ product: Product }> = ({ product }) => {
   const [activeTab, setActiveTab] = useState('all');
 
   // 1. โค้ดดักเซฟตี้ชั้นแรก: ถ้าในจังหวะโหลด API แล้ว product ยังเป็นค่าว่าง (null) ให้คืนค่าว่างเปล่าไปก่อนเพื่อไม่ให้โค้ดด้านล่างพัง
@@ -8,13 +10,13 @@ const ProductTabs = ({ product }) => {
 
   // 2. โค้ดกำหนดโครงสร้างดัก API: บังคับว่าถ้า product.specifications ไม่มีอยู่จริงจากหลังบ้าน ให้ดักแปลงเป็น Object ว่าง {} ทันที
   // 🛡️ Safe Parse Specifications: รองรับทั้งกรณีที่เป็น Object อยู่แล้ว หรือเป็น JSON String จากหลังบ้าน
-  let productSpecs = {};
+  let productSpecs: Record<string, any> = {};
   if (typeof product.specifications === 'string') {
     try {
       productSpecs = JSON.parse(product.specifications);
       // รองรับเคส double stringify
       if (typeof productSpecs === 'string') productSpecs = JSON.parse(productSpecs);
-    } catch (e) {
+    } catch (e: unknown) {
       productSpecs = {};
     }
   } else if (product.specifications && typeof product.specifications === 'object') {

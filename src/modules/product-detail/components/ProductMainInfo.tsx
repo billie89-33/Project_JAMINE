@@ -1,9 +1,10 @@
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 import { ShoppingCart, Zap, ShieldCheck, Truck, Package } from 'lucide-react';
 import { useCart } from '@/modules/cart';
+import { Product } from '@/types';
 
-const ProductMainInfo = ({ product }) => {
+const ProductMainInfo: React.FC<{ product: Product }> = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const [activeImgIndex, setActiveImgIndex] = useState(0);
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const ProductMainInfo = ({ product }) => {
     ? product.images[activeImgIndex]
     : product?.image?.url || 'https://via.placeholder.com/600';
 
-  const handleQuantity = (type) => {
+  const handleQuantity = (type: string) => {
     if (isOutOfStock) return;
     if (type === "inc" && quantity < displayStock) setQuantity(quantity + 1);
     if (type === "dec" && quantity > 1) setQuantity(quantity - 1);
