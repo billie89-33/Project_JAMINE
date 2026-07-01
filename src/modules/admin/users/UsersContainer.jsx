@@ -1,7 +1,7 @@
 import { useUsers } from './hooks/useUsers';
 import CustomerList from './components/CustomerList';
 import CustomerDetailModal from './components/CustomerDetailModal';
-import { Users, Sparkles, Download, Loader2 } from 'lucide-react';
+import { Users, Sparkles } from 'lucide-react';
 
 /**
  * 🚀 UsersContainer

@@ -28,6 +28,7 @@ export const useProductDetail = (productId) => {
 
     useEffect(() => {
         if (productId) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             fetchProduct();
         }
     }, [productId, fetchProduct]);

@@ -69,7 +69,9 @@ export const useAddProduct = () => {
                             try {
                                 parsedSpecs = JSON.parse(latestProduct.specifications);
                                 if (typeof parsedSpecs === 'string') parsedSpecs = JSON.parse(parsedSpecs);
-                            } catch (e) {}
+                            } catch (e) {
+                                console.warn("Failed to parse specifications", e);
+                            }
                         } else if (latestProduct.specifications) {
                             parsedSpecs = latestProduct.specifications;
                         }

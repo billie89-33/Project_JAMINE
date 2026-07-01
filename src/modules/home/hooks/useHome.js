@@ -25,6 +25,7 @@ export const useHome = (placement = 'home_hero') => {
     }, [placement]);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchBanners();
     }, [fetchBanners]);
 

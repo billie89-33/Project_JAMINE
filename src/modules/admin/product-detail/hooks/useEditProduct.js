@@ -104,6 +104,7 @@ export const useEditProduct = () => {
   }, [productId, navigate]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchProduct();
   }, [fetchProduct]);
 

@@ -95,7 +95,7 @@ export const CartProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, syncCartState]);
 
   // 2. เพิ่มสินค้า
   const addToCart = async (productId, quantity = 1) => {
@@ -214,6 +214,7 @@ export const CartProvider = ({ children }) => {
 
   // 🔄 ซิงค์ข้อมูลเมื่อ User ล็อกอิน/ล็อกเอาท์
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchCart();
   }, [fetchCart]);
 

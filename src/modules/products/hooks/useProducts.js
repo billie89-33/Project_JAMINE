@@ -114,11 +114,13 @@ export const useProducts = (rawInitialCategory = '', initialKeyword = '') => {
 
   // ดึง Master Data เมื่อ Component Mount หรือเปลี่ยน Category
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchMasterData();
   }, [fetchMasterData]);
 
   // ดึงสินค้าเมื่อ Filter หรือ Page เปลี่ยน
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchProducts();
   }, [fetchProducts]);
 

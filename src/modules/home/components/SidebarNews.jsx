@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { ArrowUpRight, Clock, Loader2 } from 'lucide-react';
+import { ArrowUpRight, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getPublicNewsApi } from '@/modules/admin/services';
 

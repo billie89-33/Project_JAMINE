@@ -28,6 +28,7 @@ export const BannerForm = ({ initialData, onSubmit, onCancel, isSubmitting }) =>
   // Sync state with initialData when editing
   useEffect(() => {
     if (initialData) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         title: initialData.title || '',
         linkUrl: initialData.linkUrl || '',
@@ -90,7 +91,7 @@ export const BannerForm = ({ initialData, onSubmit, onCancel, isSubmitting }) =>
     
     // 🔍 Debug: ตรวจสอบข้อมูลใน FormData ก่อนส่งจริง
     console.log('🚀 Final Banner Payload (FormData):');
-    for (let [key, value] of submitData.entries()) {
+    for (const [key, value] of submitData.entries()) {
       if (key === 'image') {
         console.log(`- ${key}:`, value instanceof File ? `File [${value.name}]` : 'Not a File!');
       } else {

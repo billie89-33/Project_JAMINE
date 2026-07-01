@@ -15,6 +15,7 @@ const SearchBar = ({ isMobileSearchOpen, setIsMobileSearchOpen }) => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
     if (searchQuery.trim().length < 2) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSuggestions([]);
       return;
     }
@@ -60,7 +61,7 @@ const SearchBar = ({ isMobileSearchOpen, setIsMobileSearchOpen }) => {
   };
 
   // คอมโพเนนต์ภายในสำหรับรายการแนะนำสินค้า
-  const RenderProductItems = () =>
+  const renderProductItems = () =>
     suggestions.map((product) => (
       <button
         key={product._id}
@@ -115,7 +116,7 @@ const SearchBar = ({ isMobileSearchOpen, setIsMobileSearchOpen }) => {
             {isLoading ? (
               <div className="p-4 text-center text-xs text-slate-400 font-bold uppercase tracking-widest animate-pulse">Searching...</div>
             ) : (
-              <RenderProductItems />
+              renderProductItems()
             )}
           </div>
         )}
@@ -156,7 +157,7 @@ const SearchBar = ({ isMobileSearchOpen, setIsMobileSearchOpen }) => {
               {isLoading ? (
                 <div className="p-4 text-center text-xs text-slate-400 font-black">SEARCHING...</div>
               ) : (
-                <RenderProductItems />
+                renderProductItems()
               )}
             </div>
           )}

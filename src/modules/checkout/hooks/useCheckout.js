@@ -31,6 +31,7 @@ export const useCheckout = () => {
   useEffect(() => {
     if (user) {
       const userAddresses = user.addresses || [];
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setAddresses(userAddresses);
       
       // 🚀 ใช้ Functional Update เพื่อป้องกันการ Render ซ้อน 2 จังหวะ (ลด Dependency วนลูป)

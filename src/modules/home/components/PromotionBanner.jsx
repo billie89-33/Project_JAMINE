@@ -2,7 +2,7 @@
 
 import { useHome } from '../hooks/useHome';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, Megaphone } from 'lucide-react';
+import { Megaphone } from 'lucide-react';
 
 const PromotionBanner = () => {
   const navigate = useNavigate();

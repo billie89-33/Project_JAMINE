@@ -25,7 +25,7 @@ const AdvertisingPage = () => {
 
   // จัดการการส่งข้อมูลฟอร์ม (ทั้งสร้างใหม่และแก้ไข)
   const handleFormSubmit = async (formData, id) => {
-    let success = false;
+    let success;
     if (id) {
       // โหมดแก้ไข (Surgical Patch)
       success = await handleUpdate(id, formData);

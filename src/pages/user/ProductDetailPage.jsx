@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { ProductMainInfo, ProductTabs, useProductDetail } from '@/modules/product-detail';
 
