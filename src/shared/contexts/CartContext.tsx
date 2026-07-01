@@ -65,8 +65,9 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const debounceTimers = useRef<Record<string, NodeJS.Timeout | null>>({});
   const pendingUpdates = useRef<Record<string, number>>({});
 
-  const syncCartState = useCallback((response: any) => {
-    if (!response.success) return;
+  const syncCartState = useCallback((response: unknown) => {
+    const res = response as any;
+    if (!res || !res.success) return;
 
     // ⚠️ Doc 11.3: แจ้งเตือนถ้ามีการปรับสต็อกอัตโนมัติจากหลังบ้าน
     if (response.isStockAdjusted) {
@@ -86,8 +87,9 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     const { items: rawItems, subtotal, shippingFee, shipping, total, totalAmount } = response.data;
     
     // 🛠️ Fix & Resilience: รองรับทั้ง item.productId และ item.product และดึง ID อย่างปลอดภัย
-    const mappedItems: CartItemType[] = rawItems.map((item: any) => {
-      const productObj = item.productId || item.product; // ดึงออบเจกต์สินค้า
+    const mappedItems: CartItemType[] = rawItems.map((item: unknown) => {
+      const it = item as any;
+      const productObj = it.productId || it.product; // ดึงออบเจกต์สินค้า
       const finalId = productObj?._id || productObj?.id || (typeof productObj === 'string' ? productObj : null);
       
       return {
@@ -150,8 +152,9 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         toast.success("เพิ่มสินค้าลงตะกร้าแล้ว", { icon: '🛒' });
         syncCartState(res); // 🚀 เร็วขึ้น 2 เท่า: ไม่อัปเดตข้อมูลผ่านการยิง GET ซ้ำ
       }
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "เพิ่มสินค้าไม่สำเร็จ");
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || "เพิ่มสินค้าไม่สำเร็จ");
     } finally {
       setLoading(false);
     }
