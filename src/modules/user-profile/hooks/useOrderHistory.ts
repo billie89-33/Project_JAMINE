@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useCallback, useEffect, useMemo } from 'react';
+import { Order } from '@/types';
 import { useNavigate } from 'react-router-dom';
 import { useApi } from '@/shared/hooks/useApi';
 import { getMyOrdersApi } from '../services/profileApi';
@@ -31,12 +31,14 @@ export const useOrderHistory = () => {
   // 1.1 สกัดข้อมูลออเดอร์ออกมาอย่างระมัดระวัง (Ultra-Defensive)
   const orders = useMemo(() => {
     if (!apiResponse) return [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const res = apiResponse as any;
     // ถ้าเป็น Array โดยตรง
-    if (Array.isArray(apiResponse)) return apiResponse;
+    if (Array.isArray(res)) return res;
     // ถ้าห่อมาใน .data (ตามมาตรฐาน useApi/Axios)
-    if (apiResponse.data && Array.isArray(apiResponse.data)) return apiResponse.data;
+    if (res.data && Array.isArray(res.data)) return res.data;
     // ถ้าห่อมาใน .orders (Fallback)
-    if (apiResponse.orders && Array.isArray(apiResponse.orders)) return apiResponse.orders;
+    if (res.orders && Array.isArray(res.orders)) return res.orders;
     return [];
   }, [apiResponse]);
 
@@ -62,8 +64,7 @@ export const useOrderHistory = () => {
     return orders.filter(order => filterMap[activeFilter]?.includes(order.status));
   }, [orders, activeFilter]);
 
-  // 4. คำนวณเวลาที่เหลือ (15 นาที)
-  const getRemainingTime = useCallback((expiresAt: any) => {
+  const getRemainingTime = useCallback((expiresAt: string | Date | undefined) => {
     if (!expiresAt) return null;
     const expiry = new Date(expiresAt).getTime();
     const diff = expiry - now.getTime();
@@ -75,8 +76,7 @@ export const useOrderHistory = () => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   }, [now]);
 
-  // 5. Action Handlers
-  const handlePayNow = (order: any) => {
+  const handlePayNow = (order: Order) => {
     // นำทางไปหน้า Payment พร้อมส่ง Order ID และยอดเงิน
     navigate('/payment', { 
         state: { 

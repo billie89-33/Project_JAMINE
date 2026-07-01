@@ -1,5 +1,31 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { apiClient } from '@/shared/api';
+import { ApiResponse, Product } from '@/types';
+
+export interface ProductQueryParams {
+    page?: number;
+    limit?: number;
+    category?: string;
+    keyword?: string;
+    brand?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    sort?: string;
+    [key: string]: string | number | undefined;
+}
+
+export interface PaginatedProductsResponse extends ApiResponse<Product[]> {
+    totalPages: number;
+}
+
+export type CategoryItem = { name: string; _id?: string; image?: any } | string;
+
+export interface CategoryCover {
+    _id?: string;
+    category?: string;
+    categoryName?: string;
+    image?: { url: string; public_id?: string };
+    [key: string]: unknown;
+}
 
 /**
  * 📦 User Product Service
@@ -10,7 +36,7 @@ import { apiClient } from '@/shared/api';
 /**
  * ดึงรายการสินค้าทั้งหมดพร้อมระบบกรองขั้นสูง
  */
-export const getProductsApi = async (params: any): Promise<any> => {
+export const getProductsApi = async (params: ProductQueryParams): Promise<PaginatedProductsResponse> => {
     const response = await apiClient.get('/products', { params });
     return response.data;
 };
@@ -18,7 +44,7 @@ export const getProductsApi = async (params: any): Promise<any> => {
 /**
  * ดึงรายการหมวดหมู่ (Categories) ทั้งหมดที่มีในระบบ
  */
-export const getCategoriesApi = async (): Promise<any> => {
+export const getCategoriesApi = async (): Promise<ApiResponse<CategoryItem[]>> => {
     const response = await apiClient.get('/products/categories');
     return response.data;
 };
@@ -26,7 +52,7 @@ export const getCategoriesApi = async (): Promise<any> => {
 /**
  * ดึงรายการแบรนด์ (Brands) ทั้งหมดที่มีในระบบ
  */
-export const getBrandsApi = async (category?: string): Promise<any> => {
+export const getBrandsApi = async (category?: string): Promise<ApiResponse<string[]>> => {
     const params = category ? { category } : {};
     const response = await apiClient.get('/products/brands', { params });
     return response.data;
@@ -35,7 +61,7 @@ export const getBrandsApi = async (category?: string): Promise<any> => {
 /**
  * ดึงโครงสร้างสเปคเดิมมาใช้ซ้ำ (Smart Spec Template)
  */
-export const getSpecKeysApi = async (category: string): Promise<any> => {
+export const getSpecKeysApi = async (category: string): Promise<ApiResponse<string[]> | []> => {
     if (!category) return [];
     const response = await apiClient.get('/products/spec-keys', { params: { category } });
     return response.data;
@@ -44,7 +70,7 @@ export const getSpecKeysApi = async (category: string): Promise<any> => {
 /**
  * ดึงข้อมูลตัวเลือกสเปคสำหรับทำ Advance Filter
  */
-export const getSpecFiltersApi = async (category: string): Promise<any> => {
+export const getSpecFiltersApi = async (category: string): Promise<ApiResponse<Record<string, string[]>> | {}> => {
     if (!category || category === 'All') return {};
     const response = await apiClient.get('/products/spec-filters', { params: { category } });
     return response.data;
@@ -54,7 +80,7 @@ export const getSpecFiltersApi = async (category: string): Promise<any> => {
  * ดึงข้อมูลสินค้าชิ้นเดียวตาม ID
  * @param {string} id - ID ของสินค้า
  */
-export const getProductByIdApi = async (id: string): Promise<any> => {
+export const getProductByIdApi = async (id: string): Promise<ApiResponse<Product>> => {
     const response = await apiClient.get(`/products/${id}`);
     return response.data;
 };
@@ -62,7 +88,7 @@ export const getProductByIdApi = async (id: string): Promise<any> => {
 /**
  * ดึงรายการภาพปกหมวดหมู่ทั้งหมด (Public Category Covers)
  */
-export const getCategoryCoversApi = async (): Promise<any> => {
+export const getCategoryCoversApi = async (): Promise<ApiResponse<unknown[]>> => {
     const response = await apiClient.get('/category-covers');
     return response.data;
 };

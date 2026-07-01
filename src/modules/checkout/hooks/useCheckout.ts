@@ -4,6 +4,7 @@ import { toast } from 'react-hot-toast';
 import { useAuth } from '@/shared/contexts/AuthContext';
 import { useCart } from '@/modules/cart'; // 🛒 ดึงข้อมูลจาก Context แทน
 import { createOrderApi, addAddressApi, deleteAddressApi, updateAddressApi, setDefaultAddressApi } from '../services/checkoutApi';
+import { Address } from '@/types';
 
 /**
  * 🎣 useCheckout Hook
@@ -13,8 +14,8 @@ export const useCheckout = () => {
   const { user, refreshUser } = useAuth(); // 🔄 เพิ่ม refreshUser เข้ามา
   const { cartItems, summary: cartSummary, loading: cartLoading, clearCart } = useCart();
 
-  const [addresses, setAddresses] = useState([]);
-  const [selectedAddressId, setSelectedAddressId] = useState(null);
+  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [paymentMethod] = useState('promptpay');
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,7 +39,7 @@ export const useCheckout = () => {
       setSelectedAddressId(prevId => {
         if (!prevId && userAddresses.length > 0) {
           const defaultAddr = userAddresses.find(a => a.isDefault) || userAddresses[0];
-          return defaultAddr._id || defaultAddr.id;
+          return defaultAddr?._id || defaultAddr?.id || null;
         }
         return prevId;
       });
@@ -86,14 +87,14 @@ export const useCheckout = () => {
       }
     } catch (error) {
       console.error("Submit Order Error:", error);
-      toast.error(error.response?.data?.message || "ไม่สามารถสร้างคำสั่งซื้อได้");
+      toast.error((error as { response?: { data?: { message?: string } } })?.response?.data?.message || "ไม่สามารถสร้างคำสั่งซื้อได้");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   // ➕ ฟังก์ชันเพิ่มที่อยู่ใหม่ (พร้อม Sync Global State)
-  const addAddress = async (newAddressData) => {
+  const addAddress = async (newAddressData: Partial<Address>) => {
     try {
       const res = await addAddressApi(newAddressData);
       if (res.success) {
@@ -110,7 +111,7 @@ export const useCheckout = () => {
   };
 
   // 📝 ฟังก์ชันอัปเดตที่อยู่
-  const updateAddress = async (addressId, updatedData) => {
+  const updateAddress = async (addressId: string, updatedData: Partial<Address>) => {
     try {
       const res = await updateAddressApi(addressId, updatedData);
       if (res.success) {
@@ -123,7 +124,7 @@ export const useCheckout = () => {
   };
 
   // ⭐ ฟังก์ชันตั้งเป็นที่อยู่หลัก
-  const setDefaultAddress = async (addressId) => {
+  const setDefaultAddress = async (addressId: string) => {
     try {
       const res = await setDefaultAddressApi(addressId);
       if (res.success) {
@@ -136,7 +137,7 @@ export const useCheckout = () => {
   };
 
   // 🗑️ ฟังก์ชันลบที่อยู่ (พร้อม Sync Global State)
-  const deleteAddress = async (addressId) => {
+  const deleteAddress = async (addressId: string) => {
     try {
       const res = await deleteAddressApi(addressId);
       if (res.success) {

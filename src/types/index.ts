@@ -3,6 +3,8 @@
 
 export interface Address {
   _id?: string;
+  id?: string;
+  name?: string;
   fullName: string;
   phone: string;
   address: string;
@@ -11,6 +13,10 @@ export interface Address {
   subDistrict: string;
   postalCode: string;
   isDefault: boolean;
+  addressLine1?: string;
+  addressLine2?: string;
+  city?: string;
+  state?: string;
 }
 
 export interface User {
@@ -68,6 +74,33 @@ export interface Product {
   updatedAt?: string;
 }
 
+export interface Banner {
+  _id: string;
+  title?: string;
+  image?: { url: string; public_id?: string };
+  imageUrl?: string;
+  link?: string;
+  linkUrl?: string;
+  placement?: string;
+  isActive?: boolean;
+}
+
+export interface RegisterPayload {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword?: string;
+}
+
+export interface News {
+  _id: string;
+  title: string;
+  category?: { name: string; _id?: string };
+  image?: { url: string; public_id?: string };
+  createdAt: string;
+  isPublished?: boolean;
+}
+
 // 📦 Order Interfaces
 export interface OrderItem {
   productId: string | Product; // Can be ID string or populated Product object
@@ -75,11 +108,13 @@ export interface OrderItem {
   modelName: string;
   image: string;
   quantity: number;
-  priceAtPurchase: number;
+  priceAtPurchase?: number;
+  price?: number;
 }
 
 export interface Order {
   _id: string;
+  id?: string;
   orderNumber?: string;
   userId: string | User; // Can be ID string or populated User object
   items: OrderItem[];
@@ -87,6 +122,9 @@ export interface Order {
   subtotal: number;
   shippingFee: number;
   total: number;
+  totalAmount?: number;
+  total_amount?: number;
+  discount?: number;
   status: string; // e.g. 'PENDING', 'PAID', 'SHIPPED', 'DELIVERED', 'CANCELLED'
   paymentDetails?: {
     method?: string;
@@ -98,4 +136,10 @@ export interface Order {
   shippedAt?: string | null;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface ChangePasswordPayload {
+  currentPassword?: string;
+  newPassword?: string;
+  confirmPassword?: string;
 }

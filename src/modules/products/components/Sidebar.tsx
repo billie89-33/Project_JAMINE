@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
+import { CategoryItem } from '../services/productApi';
 import { Filter, ChevronDown, ChevronUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
  * ส่วนควบคุมการกรองสินค้าด้านซ้าย (User Side)
  */
 interface SidebarProps {
-  categories?: any[];
+  categories?: CategoryItem[];
   brands?: string[];
   specFilters?: Record<string, string[]>;
   selectedCategory?: string;
@@ -44,7 +44,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   // 🎯 Filter Whitelist: กำหนดว่าแต่ละหมวดหมู่ ควรโชว์ตัวกรองสเปคหัวข้อไหนบ้าง
   // เพื่อไม่ให้ Sidebar ยาวเกินไปจนลูกค้าใช้งานลำบาก
-  const FILTER_WHITELIST = {
+  const FILTER_WHITELIST: Record<string, string[]> = {
     'Notebook': ['CPU', 'RAM', 'Graphic Card', 'Display Size', 'Storage'],
     'Monitor': ['Resolution', 'Refresh Rate', 'Panel Type', 'Display Size (in.)'],
     'Keyboard': ['Switch Type', 'Connectivity', 'Backlight', 'Layout'],
@@ -55,16 +55,16 @@ const Sidebar: React.FC<SidebarProps> = ({
     'Computer': ['CPU', 'RAM', 'Graphic Card']
   };
 
-  const toggleSpecAccordion = (key) => {
-    setOpenSpecs(prev => ({ ...prev, [key]: !prev[key] }));
+  const toggleSpecAccordion = (key: string) => {
+    setOpenSpecs(prev => ({ ...prev, [key]: !(prev as Record<string, boolean>)[key] }));
   };
 
-  const handleCategorySelect = (cat) => {
+  const handleCategorySelect = (cat: string) => {
     navigate(`/category/${cat}`);
   };
 
   // กรองเฉพาะหัวข้อสเปคที่อยู่ใน Whitelist ของหมวดหมู่นั้น
-  const activeWhitelists = FILTER_WHITELIST[selectedCategory] || [];
+  const activeWhitelists = (selectedCategory && FILTER_WHITELIST[selectedCategory]) ? FILTER_WHITELIST[selectedCategory] : [];
   const curatedSpecKeys = Object.keys(specFilters).filter(key => 
     activeWhitelists.some(w => key.toLowerCase().includes(w.toLowerCase()))
   );
@@ -187,7 +187,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
       {/* 🆕 3.5 Dynamic Spec Filters (คัดกรองเฉพาะที่สำคัญตาม Whitelist) */}
       {curatedSpecKeys.map(specKey => {
-        const isOpen = openSpecs[specKey] !== false; 
+        const isOpen = (openSpecs as Record<string, boolean>)[specKey] !== false; 
         
         return (
           <div key={specKey} className="bg-purple-50/40 backdrop-blur-sm rounded-[32px] border border-purple-100/50 shadow-sm overflow-hidden animate-in fade-in duration-300">

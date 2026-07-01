@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Filter } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { getCategoriesApi, getCategoryCoversApi } from '@/modules/products/services/productApi';
+import { getCategoriesApi, getCategoryCoversApi, CategoryCover, CategoryItem } from '@/modules/products/services/productApi';
 import { useApi } from '@/shared/hooks/useApi';
 
 /**
@@ -25,9 +25,8 @@ const CategorySlider: React.FC = () => {
 
   // 👑 ชั้นที่ 1: ระบบภาพปกพรีเมียมจาก Database (Admin Dedicated Covers)
   const premiumCoversMap: Record<string, string> = {};
-  const coversList = Array.isArray(apiCovers) ? apiCovers : (apiCovers?.data || []);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  coversList.forEach((item: any) => {
+  const coversList = Array.isArray(apiCovers) ? apiCovers : ((apiCovers as any)?.data || []);
+  coversList.forEach((item: CategoryCover) => {
     if (item.image?.url) {
       premiumCoversMap[item.categoryName] = item.image.url;
     }
@@ -47,10 +46,10 @@ const CategorySlider: React.FC = () => {
   };
 
   // สร้างออบเจกต์หมวดหมู่จาก API (ตอนนี้ API ส่งมาเป็น [{ name, image }, ...])
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const categories = (apiCategories || []).map((catData: any, index: number) => {
+  const categoriesList = Array.isArray(apiCategories) ? apiCategories : ((apiCategories as any)?.data || []);
+  const categories = categoriesList.map((catData: CategoryItem, index: number) => {
     const name = typeof catData === 'object' ? catData.name : catData;
-    const apiImage = typeof catData === 'object' ? catData.image : null;
+    const apiImage = typeof catData === 'object' ? (catData as any).image : null;
 
     return {
       id: index + 1,

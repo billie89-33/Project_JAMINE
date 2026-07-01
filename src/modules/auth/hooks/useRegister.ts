@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
+import { User, ApiResponse, RegisterPayload } from '@/types';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/shared/contexts/AuthContext';
 import { useApi } from '@/shared/hooks/useApi';
@@ -29,15 +29,16 @@ export const useRegister = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // 🧹 Status State: ใช้ useApi จัดการ (เปิดใช้ Toast อัตโนมัติ)
-  const { loading, error, setError, execute: registerRequest } = useApi<any, [any], any>(registerApi, {
+  // 🧹 Status State: ใช้ useApi จัดการ (เปิดใช้ Toast อัตโนมัติ)
+  const { loading, error, setError, execute: registerRequest } = useApi<User, [RegisterPayload], unknown>(registerApi, {
     showToast: true,
     successMessage: 'สมัครสมาชิกสำเร็จ! ยินดีต้อนรับสู่ Jamine',
-    onSuccess: (data: any, res: any) => {
+    onSuccess: (data: User, res: ApiResponse<User>) => {
       console.log('✅ Registration successful:', { data, res });
       // 🛡️ Resilient Success Check: รองรับทั้งแบบมี res.success, มี res._id หรือ res.message
       if (res.success !== false) {
         // ทำการ Login อัตโนมัติทันทีโดยไม่ต้องเสียเวลากลับไปหน้า Login
-        const userPayload = res.data || data || res;
+        const userPayload = res.data || data || (res as unknown as User);
         setAuthUser(userPayload);
 
         // 🚀 Auto-Return / Seamless Redirect: กลับไปจุดที่กดมา หรือไปหน้า Home
@@ -111,8 +112,8 @@ export const useRegister = () => {
       await registerRequest(payload);
     } catch (err) {
       // 🔍 Debug: พิมพ์ Error ทั้งหมดออกมาดูเพื่อหาสาเหตุ 400 Bad Request
-      if (err && (err as any).response) {
-        console.error('Registration Backend Error:', (err as any).response.data);
+      if (err && (err as { response?: { data?: unknown } }).response) {
+        console.error('Registration Backend Error:', (err as { response?: { data?: unknown } }).response?.data);
       }
       console.error('Registration flow error:', err);
     }

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { getOrderDetailsApi, mockPaymentApi } from '../services/paymentApi';
 import { useCart } from '@/shared/contexts/CartContext';
+import { Order } from '@/types';
 
 /**
  * 🎣 usePayment Hook
@@ -13,7 +14,7 @@ export const usePayment = () => {
   const { orderId } = useParams(); // 🛠️ Resilience: ดึงจาก URL แทนการพึ่งพาแค่ location.state
   const { clearCart } = useCart();
 
-  const [order, setOrder] = useState(null);
+  const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [isVerifying, setIsVerifying] = useState(false);
 
@@ -32,7 +33,7 @@ export const usePayment = () => {
         }
       } catch (error) {
         console.error("Fetch Order Details Error:", error);
-        toast.error(error.response?.data?.message || "ไม่สามารถดึงข้อมูลคำสั่งซื้อได้");
+        toast.error((error as { response?: { data?: { message?: string } } })?.response?.data?.message || "ไม่สามารถดึงข้อมูลคำสั่งซื้อได้");
         navigate('/');
       } finally {
         setLoading(false);
@@ -68,7 +69,7 @@ export const usePayment = () => {
       }
     } catch (error) {
       console.error("Verify Payment Error:", error);
-      toast.error(error.response?.data?.message || "การยืนยันยอดเงินล้มเหลว");
+      toast.error((error as { response?: { data?: { message?: string } } })?.response?.data?.message || "การยืนยันยอดเงินล้มเหลว");
     } finally {
       setIsVerifying(false);
     }

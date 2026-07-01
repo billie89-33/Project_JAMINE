@@ -1,11 +1,16 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import generatePayload from 'promptpay-qr';
 import QRCodeComp from 'react-qr-code'; 
 
 // 🛡️ Fix for potential CJS/ESM interop issues with react-qr-code
-const QRCode = QRCodeComp.default || QRCodeComp;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const QRCode = (QRCodeComp as any).default || QRCodeComp;
 
-const PromptPayQRBox = ({ totalAmount = 0 }) => {
+interface PromptPayQRBoxProps {
+  totalAmount?: number;
+}
+
+const PromptPayQRBox: React.FC<PromptPayQRBoxProps> = ({ totalAmount = 0 }) => {
   const [timeLeft, setTimeLeft] = useState(15 * 60);
 
   useEffect(() => {
@@ -14,7 +19,7 @@ const PromptPayQRBox = ({ totalAmount = 0 }) => {
     return () => clearInterval(timer);
   }, [timeLeft]);
 
-  const formatTime = (seconds) => {
+  const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;

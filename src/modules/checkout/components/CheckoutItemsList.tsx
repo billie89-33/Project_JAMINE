@@ -1,5 +1,20 @@
+import React from 'react';
 
-const CheckoutItemsList = ({ cartItems }) => {
+interface CheckoutItem {
+  id?: string;
+  modelName?: string;
+  name?: string;
+  priceAtPurchase?: number;
+  price?: number;
+  image?: string;
+  quantity?: number;
+}
+
+interface CheckoutItemsListProps {
+  cartItems?: CheckoutItem[];
+}
+
+const CheckoutItemsList: React.FC<CheckoutItemsListProps> = ({ cartItems }) => {
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm flex flex-col gap-4 max-h-[350px] overflow-y-auto">
       <h3 className="font-black text-gray-900 text-xs uppercase tracking-wider border-b border-gray-50 pb-2">Items in order</h3>

@@ -1,13 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect, useCallback } from 'react';
 import { getBannersApi } from '../services/homeApi';
+import { Banner } from '@/types';
 
 /**
  * 🎣 useHome Hook
  * จัดการข้อมูลหน้าแรก และแบนเนอร์ตามตำแหน่ง
  */
 export const useHome = (placement: string = 'home_hero') => {
-    const [banners, setBanners] = useState<any[]>([]);
+    const [banners, setBanners] = useState<Banner[]>([]);
     const [loading, setLoading] = useState(true);
 
     const fetchBanners = useCallback(async () => {

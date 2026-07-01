@@ -1,5 +1,10 @@
+import React from 'react';
 
-const PaymentStepper = ({ currentStep = 2 }) => {
+interface PaymentStepperProps {
+  currentStep?: number;
+}
+
+const PaymentStepper: React.FC<PaymentStepperProps> = ({ currentStep = 2 }) => {
   return (
     <div className="flex items-center gap-3 bg-white border border-gray-100 px-4 py-2.5 rounded-full shadow-sm w-fit select-none">
       

@@ -1,15 +1,13 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface UseApiOptions<TData = any, TResponse = any> {
+export interface UseApiOptions<TData = unknown, TResponse = unknown> {
   initialData?: TData | null;
   showToast?: boolean;
   successMessage?: string;
   errorMessage?: string;
   onSuccess?: (data: TData, response: TResponse) => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onError?: (message: string, error: any) => void;
+  onError?: (message: string, error: unknown) => void;
   onFinally?: () => void;
   transform?: (res: TResponse) => TData;
 }
@@ -18,8 +16,7 @@ export interface UseApiOptions<TData = any, TResponse = any> {
  * 🛠️ useApi - Advanced Global Hook (Standard Edition)
  * ออกแบบมาให้ยืดหยุ่นสูง เพื่อใช้ในโปรเจกต์นี้และนำไปใช้ต่อในโปรเจกต์อื่นได้ง่าย
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const useApi = <TData = any, TArgs extends any[] = any[], TResponse = any>(
+export const useApi = <TData = unknown, TArgs extends unknown[] = unknown[], TResponse = unknown>(
   apiFunc: (...args: TArgs) => Promise<TResponse>,
   options: UseApiOptions<TData, TResponse> = {}
 ) => {
@@ -44,8 +41,7 @@ export const useApi = <TData = any, TArgs extends any[] = any[], TResponse = any
       showToast = false,
       successMessage,
       errorMessage,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      transform = (res: any) => res?.data ?? res
+      transform = (res: TResponse) => (res as { data?: TData }).data ?? (res as unknown as TData)
     } = optionsRef.current;
 
     try {
@@ -64,8 +60,7 @@ export const useApi = <TData = any, TArgs extends any[] = any[], TResponse = any
       return res;
     } catch (err: unknown) {
       // ❌ Handle Error
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const errObj = err as any;
+      const errObj = err as Error & { response?: { data?: { message?: string, error?: string } } };
       const responseData = errObj.response?.data;
       const msg = errorMessage || 
                  responseData?.message || 

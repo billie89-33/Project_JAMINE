@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect, useCallback } from 'react';
-import { getProductsApi, getCategoriesApi, getBrandsApi, getSpecFiltersApi } from '../services/productApi';
+import { Product } from '@/types';
+import { getProductsApi, getCategoriesApi, getBrandsApi, getSpecFiltersApi, CategoryItem, ProductQueryParams } from '../services/productApi';
 import { toast } from 'react-hot-toast';
 
 /**
@@ -13,22 +13,22 @@ export const useProducts = (rawInitialCategory: string = '', initialKeyword: str
   const decodedKeyword = initialKeyword ? decodeURIComponent(initialKeyword) : '';
 
   // 1. Product Data State
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
   // 2. Filter Master Data (จาก DB)
-  const [categories, setCategories] = useState([]);
-  const [brands, setBrands] = useState([]);
-  const [specFilters, setSpecFilters] = useState({}); // 🆕 โครงสร้าง Advance Filter
+  const [categories, setCategories] = useState<CategoryItem[]>([]);
+  const [brands, setBrands] = useState<string[]>([]);
+  const [specFilters, setSpecFilters] = useState<Record<string, string[]>>({}); // 🆕 โครงสร้าง Advance Filter
 
   // 3. User Selected Filters
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [searchKeyword, setSearchKeyword] = useState(decodedKeyword);
-  const [selectedBrands, setSelectedBrands] = useState([]);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState({ min: 0, max: 100000 });
-  const [selectedSpecs, setSelectedSpecs] = useState({}); // 🆕 สิ่งที่ User ติ๊กเลือก
+  const [selectedSpecs, setSelectedSpecs] = useState<Record<string, string[]>>({}); // 🆕 สิ่งที่ User ติ๊กเลือก
   const [sort, setSort] = useState('newest');
 
   const resetFilters = useCallback(() => {
@@ -61,15 +61,15 @@ export const useProducts = (rawInitialCategory: string = '', initialKeyword: str
   const fetchMasterData = useCallback(async () => {
     try {
       // 🛡️ Safe Fetch: แยกดัก Error แต่ละตัว ป้องกัน Promise.all พังทั้งยวงถ้า API ตัวใดตัวนึงล่ม
-      const fetchCategories = getCategoriesApi().catch(e => { console.error("Cat API Error", e); return { success: false }; });
-      const fetchBrands = getBrandsApi(selectedCategory !== 'All' ? selectedCategory : undefined).catch(e => { console.error("Brand API Error", e); return { success: false }; });
-      const fetchSpecs = getSpecFiltersApi(selectedCategory).catch(e => { console.error("Spec API Error", e); return { success: false }; });
+      const fetchCategories = getCategoriesApi().catch(e => { console.error("Cat API Error", e); return { success: false, data: undefined }; });
+      const fetchBrands = getBrandsApi(selectedCategory !== 'All' ? selectedCategory : undefined).catch(e => { console.error("Brand API Error", e); return { success: false, data: undefined }; });
+      const fetchSpecs = getSpecFiltersApi(selectedCategory).catch(e => { console.error("Spec API Error", e); return { success: false, data: undefined }; });
 
       const [catRes, brandRes, specRes] = await Promise.all([fetchCategories, fetchBrands, fetchSpecs]);
       
-      if (catRes && catRes.success) setCategories(catRes.data || []);
-      if (brandRes && brandRes.success) setBrands(brandRes.data || []);
-      if (specRes && specRes.success) setSpecFilters(specRes.data || {});
+      if ('success' in catRes && catRes.success) setCategories(catRes.data || []);
+      if ('success' in brandRes && brandRes.success) setBrands(brandRes.data || []);
+      if ('success' in specRes && specRes.success) setSpecFilters(specRes.data || {});
     } catch (error) {
       console.error("Failed to fetch master data", error);
     }
@@ -79,7 +79,7 @@ export const useProducts = (rawInitialCategory: string = '', initialKeyword: str
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const params = {
+      const params: ProductQueryParams = {
         page: currentPage,
         limit: 12,
         category: selectedCategory === 'All' || !selectedCategory ? undefined : selectedCategory,
@@ -127,7 +127,7 @@ export const useProducts = (rawInitialCategory: string = '', initialKeyword: str
 
   // --- 🛠️ Handlers ---
 
-  const handleBrandToggle = (brandName) => {
+  const handleBrandToggle = (brandName: string) => {
     setSelectedBrands(prev => 
       prev.includes(brandName) 
         ? prev.filter(b => b !== brandName) 
@@ -136,13 +136,13 @@ export const useProducts = (rawInitialCategory: string = '', initialKeyword: str
     setCurrentPage(1); // รีเซ็ตหน้า
   };
 
-  const handlePriceChange = (min, max) => {
+  const handlePriceChange = (min: number, max: number) => {
     setPriceRange({ min, max });
     setCurrentPage(1);
   };
 
   // 🆕 Handler สำหรับการติ๊กเลือก Advance Filter
-  const handleSpecToggle = (specKey, value) => {
+  const handleSpecToggle = (specKey: string, value: string) => {
     setSelectedSpecs(prev => {
       const currentValues = prev[specKey] || [];
       const newValues = currentValues.includes(value)

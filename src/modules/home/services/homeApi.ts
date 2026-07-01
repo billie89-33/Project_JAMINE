@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { apiClient } from '@/shared/api';
+import { ApiResponse, Banner } from '@/types';
 
 /**
  * 🏠 Home API Service
@@ -10,7 +10,7 @@ import { apiClient } from '@/shared/api';
  * ดึงรายการแบนเนอร์ตามตำแหน่งแสดงผล
  * @param {string} placement - ตำแหน่ง (home_hero, category_hero, etc.)
  */
-export const getBannersApi = async (placement: string): Promise<any> => {
+export const getBannersApi = async (placement: string): Promise<ApiResponse<Banner[]>> => {
     const response = await apiClient.get('/banners', { params: { placement } });
     return response.data;
 };

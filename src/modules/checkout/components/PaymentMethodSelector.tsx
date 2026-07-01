@@ -1,5 +1,10 @@
+import React from 'react';
 
-const PaymentMethodSelector = ({ paymentMethod }) => {
+interface PaymentMethodSelectorProps {
+  paymentMethod: string;
+}
+
+const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({ paymentMethod }) => {
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col gap-4">
       <h3 className="font-black text-gray-900 text-xs uppercase tracking-wider mb-1">Choose payment method</h3>

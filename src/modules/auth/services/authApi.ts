@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import apiClient from '@/shared/api/apiClient';
+import { ApiResponse, User, RegisterPayload } from '@/types';
 
 /**
  * 🔐 Auth API Services
@@ -8,25 +8,25 @@ import apiClient from '@/shared/api/apiClient';
  */
 
 // 1. เข้าสู่ระบบ (Login)
-export const loginApi = async (email: string, password: string): Promise<any> => {
+export const loginApi = async (email: string, password: string): Promise<ApiResponse<User>> => {
     const response = await apiClient.post('/users/login', { email, password });
     return response.data;
 };
 
 // 2. สมัครสมาชิก (Register)
-export const registerApi = async (userData: any): Promise<any> => {
+export const registerApi = async (userData: RegisterPayload): Promise<ApiResponse<User>> => {
     const response = await apiClient.post('/users/register', userData);
     return response.data;
 };
 
 // 3. ออกจากระบบ (Logout)
-export const logoutApi = async (): Promise<any> => {
+export const logoutApi = async (): Promise<ApiResponse<null>> => {
     const response = await apiClient.post('/users/logout');
     return response.data;
 };
 
 // 4. ดึงข้อมูลผู้ใช้ปัจจุบัน (Get Me)
-export const getMeApi = async (): Promise<any> => {
+export const getMeApi = async (): Promise<ApiResponse<User>> => {
     const response = await apiClient.get('/users/me');
     return response.data;
 };

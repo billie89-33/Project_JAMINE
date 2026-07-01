@@ -1,11 +1,22 @@
 import { useState } from 'react';
 import { Plus, Trash2, MapPin, X, Edit3, Star } from 'lucide-react';
+import { Address } from '@/types';
 
 /**
  * 📦 AddressSelector Component
  * จัดการการเลือกและการบริหารจัดการที่อยู่จัดส่ง (CRUD)
  */
-const AddressSelector = ({ 
+interface AddressSelectorProps {
+  addresses?: Address[];
+  selectedAddressId?: string | null;
+  onSelectAddress: (id: string) => void;
+  onAddAddress: (address: Partial<Address>) => void;
+  onDeleteAddress: (id: string) => void;
+  onUpdateAddress: (id: string, address: Partial<Address>) => void;
+  onSetDefaultAddress?: (id: string) => void;
+}
+
+const AddressSelector: React.FC<AddressSelectorProps> = ({ 
   addresses = [], 
   selectedAddressId, 
   onSelectAddress, 
@@ -15,7 +26,7 @@ const AddressSelector = ({
   onSetDefaultAddress
 }) => {
   const [isAdding, setIsAdding] = useState(false);
-  const [editingAddressId, setEditingAddressId] = useState(null);
+  const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -28,7 +39,7 @@ const AddressSelector = ({
     postalCode: ''
   });
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -39,7 +50,7 @@ const AddressSelector = ({
     setEditingAddressId(null);
   };
 
-  const handleEdit = (addr) => {
+  const handleEdit = (addr: Address) => {
     setFormData({
       name: addr.name || '',
       fullName: addr.fullName || '',
@@ -94,7 +105,7 @@ const AddressSelector = ({
 
       <div className="flex flex-col gap-4">
         {addresses.map((addr) => {
-          const id = addr._id || addr.id;
+          const id = addr._id || addr.id || '';
           const isSelected = selectedAddressId === id;
           const isDefault = addr.isDefault;
 
@@ -283,7 +294,7 @@ const AddressSelector = ({
                 name="address" 
                 value={formData.address} 
                 onChange={handleInputChange}
-                rows="2"
+                rows={2}
                 placeholder="House number, Building, Street..."
                 className="w-full px-4 py-3 bg-white border border-slate-200 rounded-2xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all resize-none"
               />

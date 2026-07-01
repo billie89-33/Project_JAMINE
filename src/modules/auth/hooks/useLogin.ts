@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
+import { User, ApiResponse } from '@/types';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/shared/contexts/AuthContext';
 import { useApi } from '@/shared/hooks/useApi'; // 🛠️ เรียกใช้แม่บ้านส่วนกลาง
@@ -23,12 +23,13 @@ export const useLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   
   // 🧹 Status State: ใช้ onSuccess option เพื่อลด Logic ใน Submit function
-  const { loading, error, setError, execute: loginRequest } = useApi<any, [string, string], any>(loginApi, {
-    onSuccess: (userData: any, res: any) => {
+  // 🧹 Status State: ใช้ onSuccess option เพื่อลด Logic ใน Submit function
+  const { loading, error, setError, execute: loginRequest } = useApi<User, [string, string], unknown>(loginApi, {
+    onSuccess: (userData: User, res: ApiResponse<User>) => {
       console.log('✅ Login successful:', { userData, res });
       // 🛡️ Resilient Success Check: รองรับทั้งแบบมี res.success หรือส่ง User Object มาตรงๆ
       if (res.success !== false) {
-        const userPayload = res.data || userData || res;
+        const userPayload = res.data || userData || (res as unknown as User);
         setAuthUser(userPayload);
 
         // 🚀 Auto-Return / Seamless Redirect: กลับไปจุดที่กดมา หรือไปหน้า Home

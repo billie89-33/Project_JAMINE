@@ -1,9 +1,9 @@
 import React from 'react';
 import { X, Package, Truck, ExternalLink, MapPin } from 'lucide-react';
 import { ORDER_STATUS } from '@/shared/constants';
+import { Order } from '@/types';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const OrderDetailsModal: React.FC<{ order: any; onClose: () => void }> = ({ order, onClose }) => {
+const OrderDetailsModal: React.FC<{ order: Order; onClose: () => void }> = ({ order, onClose }) => {
     if (!order) return null;
 
     const isShipped = order.status === ORDER_STATUS.SHIPPED || order.status === ORDER_STATUS.DELIVERED;
