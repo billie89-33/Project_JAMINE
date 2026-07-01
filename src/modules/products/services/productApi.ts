@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { apiClient } from '@/shared/api';
 
 /**
@@ -9,7 +10,7 @@ import { apiClient } from '@/shared/api';
 /**
  * ดึงรายการสินค้าทั้งหมดพร้อมระบบกรองขั้นสูง
  */
-export const getProductsApi = async (params) => {
+export const getProductsApi = async (params: any): Promise<any> => {
     const response = await apiClient.get('/products', { params });
     return response.data;
 };
@@ -17,7 +18,7 @@ export const getProductsApi = async (params) => {
 /**
  * ดึงรายการหมวดหมู่ (Categories) ทั้งหมดที่มีในระบบ
  */
-export const getCategoriesApi = async () => {
+export const getCategoriesApi = async (): Promise<any> => {
     const response = await apiClient.get('/products/categories');
     return response.data;
 };
@@ -25,7 +26,7 @@ export const getCategoriesApi = async () => {
 /**
  * ดึงรายการแบรนด์ (Brands) ทั้งหมดที่มีในระบบ
  */
-export const getBrandsApi = async (category) => {
+export const getBrandsApi = async (category?: string): Promise<any> => {
     const params = category ? { category } : {};
     const response = await apiClient.get('/products/brands', { params });
     return response.data;
@@ -34,7 +35,7 @@ export const getBrandsApi = async (category) => {
 /**
  * ดึงโครงสร้างสเปคเดิมมาใช้ซ้ำ (Smart Spec Template)
  */
-export const getSpecKeysApi = async (category) => {
+export const getSpecKeysApi = async (category: string): Promise<any> => {
     if (!category) return [];
     const response = await apiClient.get('/products/spec-keys', { params: { category } });
     return response.data;
@@ -43,7 +44,7 @@ export const getSpecKeysApi = async (category) => {
 /**
  * ดึงข้อมูลตัวเลือกสเปคสำหรับทำ Advance Filter
  */
-export const getSpecFiltersApi = async (category) => {
+export const getSpecFiltersApi = async (category: string): Promise<any> => {
     if (!category || category === 'All') return {};
     const response = await apiClient.get('/products/spec-filters', { params: { category } });
     return response.data;
@@ -53,7 +54,7 @@ export const getSpecFiltersApi = async (category) => {
  * ดึงข้อมูลสินค้าชิ้นเดียวตาม ID
  * @param {string} id - ID ของสินค้า
  */
-export const getProductByIdApi = async (id) => {
+export const getProductByIdApi = async (id: string): Promise<any> => {
     const response = await apiClient.get(`/products/${id}`);
     return response.data;
 };
@@ -61,7 +62,7 @@ export const getProductByIdApi = async (id) => {
 /**
  * ดึงรายการภาพปกหมวดหมู่ทั้งหมด (Public Category Covers)
  */
-export const getCategoryCoversApi = async () => {
+export const getCategoryCoversApi = async (): Promise<any> => {
     const response = await apiClient.get('/category-covers');
     return response.data;
 };

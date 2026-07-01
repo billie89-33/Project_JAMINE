@@ -1,12 +1,14 @@
+import React from 'react';
 import { ShoppingCart, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '@/modules/cart';
+import { Product } from '@/types';
 
 /**
  * 🃏 ProductCard Component
  * แสดงข้อมูลสินค้าแต่ละชิ้นแบบพรีเมียม (User Side)
  */
-const ProductCard = ({ product }) => {
+const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   
@@ -14,7 +16,7 @@ const ProductCard = ({ product }) => {
   const price = product.price || 0;
   const isOutOfStock = product.status === 'out_of_stock' || product.stock === 0;
 
-  const handleAddToCart = async (e) => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.stopPropagation(); // ป้องกันการ navigate ไปหน้า detail
     if (isOutOfStock) return;
     await addToCart(product._id || product.id, 1);

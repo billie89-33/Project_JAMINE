@@ -1,12 +1,13 @@
 
-import { useState, useEffect } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState, useEffect } from 'react';
 import { ArrowUpRight, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getPublicNewsApi } from '@/modules/admin/services';
 
-const SidebarNews = () => {
+const SidebarNews: React.FC = () => {
   const navigate = useNavigate();
-  const [newsList, setNewsList] = useState([]);
+  const [newsList, setNewsList] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

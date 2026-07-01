@@ -1,12 +1,28 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState } from 'react';
 import { Filter, ChevronDown, ChevronUp } from 'lucide-react';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 /**
  * 🏔️ Sidebar Filter Component
  * ส่วนควบคุมการกรองสินค้าด้านซ้าย (User Side)
  */
-const Sidebar = ({ 
+interface SidebarProps {
+  categories?: any[];
+  brands?: string[];
+  specFilters?: Record<string, string[]>;
+  selectedCategory?: string;
+  setSelectedCategory: (cat: string) => void;
+  selectedBrands?: string[];
+  onBrandToggle: (brand: string) => void;
+  selectedSpecs?: Record<string, string[]>;
+  onSpecToggle: (key: string, value: string) => void;
+  priceRange: { min: number; max: number };
+  onPriceChange: (min: number, max: number) => void;
+  onClearAll: () => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ 
   categories = [], 
   brands = [], 
   specFilters = {}, 

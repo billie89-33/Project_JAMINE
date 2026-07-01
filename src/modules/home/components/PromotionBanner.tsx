@@ -1,10 +1,11 @@
 
 
+import React from 'react';
 import { useHome } from '../hooks/useHome';
 import { useNavigate } from 'react-router-dom';
 import { Megaphone } from 'lucide-react';
 
-const PromotionBanner = () => {
+const PromotionBanner: React.FC = () => {
   const navigate = useNavigate();
   const { banners, loading } = useHome('promotion_bar');
 

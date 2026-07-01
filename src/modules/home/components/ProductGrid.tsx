@@ -1,14 +1,15 @@
 
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ProductCard } from '@/modules/products';
 import { getProductsApi } from '@/modules/products/services/productApi';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Product } from '@/types';
 
-const ProductGrid = () => {
+const ProductGrid: React.FC = () => {
   const navigate = useNavigate();
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

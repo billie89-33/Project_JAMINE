@@ -1,11 +1,18 @@
+import React from 'react';
 import ProductCard from './ProductCard';
 import { PackageSearch } from 'lucide-react';
+import { Product } from '@/types';
 
 /**
  * 📦 ProductGrid Component
  * ส่วนจัดการเลย์เอาต์การแสดงผลรายการสินค้าแบบ Grid
  */
-const ProductGrid = ({ products, loading }) => {
+interface ProductGridProps {
+  products: Product[];
+  loading: boolean;
+}
+
+const ProductGrid: React.FC<ProductGridProps> = ({ products, loading }) => {
   
   if (loading) {
     return ( 

@@ -1,9 +1,13 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useHome } from '../hooks/useHome';
 import { useNavigate } from 'react-router-dom';
 
-const HeroBanner = ({ placement = 'home_hero' }) => {
+interface HeroBannerProps {
+  placement?: string;
+}
+
+const HeroBanner: React.FC<HeroBannerProps> = ({ placement = 'home_hero' }) => {
   const navigate = useNavigate();
   const { banners, loading } = useHome(placement);
   const [currentIndex, setCurrentIndex] = useState(0);

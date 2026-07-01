@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect, useCallback } from 'react';
 import { getProductsApi, getCategoriesApi, getBrandsApi, getSpecFiltersApi } from '../services/productApi';
 import { toast } from 'react-hot-toast';
@@ -6,7 +7,7 @@ import { toast } from 'react-hot-toast';
  * 🎣 useProducts Hook (User Side Logic)
  * จัดการสถานะสินค้า ตัวกรอง และการแบ่งหน้าสำหรับหน้าบ้าน
  */
-export const useProducts = (rawInitialCategory = '', initialKeyword = '') => {
+export const useProducts = (rawInitialCategory: string = '', initialKeyword: string = '') => {
   // Decode URL Parameters เพื่อความชัวร์
   const initialCategory = rawInitialCategory ? decodeURIComponent(rawInitialCategory) : 'All';
   const decodedKeyword = initialKeyword ? decodeURIComponent(initialKeyword) : '';
