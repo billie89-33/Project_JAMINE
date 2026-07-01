@@ -7,9 +7,18 @@ interface SearchBarProps {
   setIsMobileSearchOpen: (isOpen: boolean) => void;
 }
 
+interface Suggestion {
+  _id: string;
+  modelName: string;
+  price?: number;
+  image?: {
+    url: string;
+  };
+}
+
 const SearchBar: React.FC<SearchBarProps> = ({ isMobileSearchOpen, setIsMobileSearchOpen }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [isFocused, setIsFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -67,7 +76,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ isMobileSearchOpen, setIsMobileSe
 
   // คอมโพเนนต์ภายในสำหรับรายการแนะนำสินค้า
   const renderProductItems = () =>
-    suggestions.map((product: any) => (
+    suggestions.map((product) => (
       <button
         key={product._id}
         onMouseDown={() => handleProductClick(product._id)}
