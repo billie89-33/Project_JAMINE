@@ -25,7 +25,7 @@ export interface User {
     url: string | null;
   };
   role: string;
-  status: 'active' | 'banned';
+  status?: 'active' | 'banned';
   addresses?: Address[];
   createdAt?: string;
   updatedAt?: string;
@@ -51,7 +51,11 @@ export interface Product {
   description: string;
   price: number;
   image: ProductImage;
+  images?: string[];
   sku: string;
+  id?: string;
+  name?: string;
+  quantity?: number;
   category: string;
   tags?: string[];
   stock: number;

@@ -62,7 +62,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     itemCount: 0 
   });
   const [loading, setLoading] = useState<boolean>(false);
-  const debounceTimers = useRef<Record<string, NodeJS.Timeout | null>>({});
+  const debounceTimers = useRef<Record<string, ReturnType<typeof setTimeout> | null>>({});
   const pendingUpdates = useRef<Record<string, number>>({});
 
   const syncCartState = useCallback((response: unknown) => {
@@ -71,7 +71,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     if (!res || !res.success) return;
 
     // ⚠️ Doc 11.3: แจ้งเตือนถ้ามีการปรับสต็อกอัตโนมัติจากหลังบ้าน
-    if (response.isStockAdjusted) {
+    if (res.isStockAdjusted) {
       toast('สินค้าบางรายการถูกปรับจำนวนเนื่องจากสต็อกไม่พอ', {
         icon: '⚠️',
         duration: 5000,
@@ -85,7 +85,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       });
     }
 
-    const { items: rawItems, subtotal, shippingFee, shipping, total, totalAmount } = response.data;
+    const { items: rawItems, subtotal, shippingFee, shipping, total, totalAmount } = res.data;
     
     // 🛠️ Fix & Resilience: รองรับทั้ง item.productId และ item.product และดึง ID อย่างปลอดภัย
     const mappedItems: CartItemType[] = rawItems.map((item: unknown) => {
@@ -96,11 +96,11 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       
       return {
         id: finalId, // 🔑 คีย์สำคัญสำหรับกด เพิ่ม/ลด/ลบ ต้องห้ามเป็น undefined
-        cartItemId: item._id,
+        cartItemId: it._id,
         name: productObj?.modelName || productObj?.name || 'Unknown Product',
         brand: productObj?.brand || '',
         price: productObj?.price || 0,
-        quantity: item.quantity,
+        quantity: it.quantity,
         image: productObj?.image?.url || productObj?.image || 'https://via.placeholder.com/300',
         description: productObj?.description || '',
         stock: productObj?.stock || 0
@@ -112,7 +112,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     setSummary({
       subtotal: subtotal || 0,
       shipping: shippingFee !== undefined ? shippingFee : (shipping || 0),
-      discount: response.data.discount || 0,
+      discount: res.data.discount || 0,
       total: total || totalAmount || 0,
       itemCount: mappedItems.reduce((acc, item) => acc + item.quantity, 0)
     });
@@ -196,7 +196,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
     // ⏳ เทคนิคที่ 2: Debounced API Synchronization (รอหยุดกด 500ms ค่อยยิง API)
     if (debounceTimers.current[productId]) {
-      clearTimeout(debounceTimers.current[productId] as NodeJS.Timeout);
+      clearTimeout(debounceTimers.current[productId] as ReturnType<typeof setTimeout>);
       debounceTimers.current[productId] = null;
       pendingUpdates.current[productId] -= 1; // ยกเลิกคิวเก่าที่ยังอยู่ในโหลด Debounce
     }

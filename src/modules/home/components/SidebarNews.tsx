@@ -94,7 +94,7 @@ const SidebarNews: React.FC = () => {
                 src={mainNews.image?.url} 
                 alt={mainNews.title} 
                 className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700"
-                onError={(e) => { e.target.src = 'https://placehold.co/600x400/f3f4f6/a1a1aa?text=No+Image'; }}
+                onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/600x400/f3f4f6/a1a1aa?text=No+Image'; }}
               />
               <div className="absolute bottom-4 left-4 right-4 z-20">
                 <span className="bg-purple-600 text-white font-black text-[8px] px-2 py-0.5 rounded-md uppercase tracking-widest shadow-lg">
@@ -124,7 +124,7 @@ const SidebarNews: React.FC = () => {
                     src={news.image?.url} 
                     alt={news.title} 
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
-                    onError={(e) => { e.target.src = 'https://placehold.co/100x100/f3f4f6/a1a1aa?text=Img'; }}
+                    onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/100x100/f3f4f6/a1a1aa?text=Img'; }}
                   />
                 </div>
                 <div className="flex-grow">

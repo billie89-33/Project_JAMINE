@@ -65,8 +65,8 @@ export const useOrderHistory = () => {
   // 4. คำนวณเวลาที่เหลือ (15 นาที)
   const getRemainingTime = useCallback((expiresAt: any) => {
     if (!expiresAt) return null;
-    const expiry = new Date(expiresAt);
-    const diff = expiry - now;
+    const expiry = new Date(expiresAt).getTime();
+    const diff = expiry - now.getTime();
     
     if (diff <= 0) return 'Expired';
 
