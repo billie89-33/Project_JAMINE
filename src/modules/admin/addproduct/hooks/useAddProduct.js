@@ -45,6 +45,7 @@ export const useAddProduct = () => {
     // ดึงแบรนด์และ Template Spec ใหม่ทุกครั้งที่หมวดหมู่เปลี่ยน
     useEffect(() => {
         if (!category) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setSpecifications([]);
             return;
         }
