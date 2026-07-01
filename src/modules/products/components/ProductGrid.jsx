@@ -8,7 +8,7 @@ import { PackageSearch } from 'lucide-react';
 const ProductGrid = ({ products, loading }) => {
   
   if (loading) {
-    return (
+    return ( 
       <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-8">
         {[...Array(8)].map((_, i) => (
           <div key={i} className="bg-white rounded-[32px] border border-slate-100 p-6 space-y-6 animate-pulse">
