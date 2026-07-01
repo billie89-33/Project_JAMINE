@@ -1,5 +1,24 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { apiClient } from '@/shared/api';
+import { ApiResponse, Product } from '@/types';
+
+export interface CartResponseData {
+  items: Array<{
+    _id: string;
+    quantity: number;
+    productId?: string | Product;
+    product?: string | Product;
+  }>;
+  subtotal: number;
+  shippingFee?: number;
+  shipping?: number;
+  discount?: number;
+  total?: number;
+  totalAmount?: number;
+}
+
+export interface CartApiResponse extends ApiResponse<CartResponseData> {
+  isStockAdjusted?: boolean;
+}
 
 /**
  * 🛒 Cart API Service
@@ -10,7 +29,7 @@ import { apiClient } from '@/shared/api';
 /**
  * ดึงข้อมูลสินค้าในตะกร้าทั้งหมด
  */
-export const getCartApi = async (): Promise<any> => {
+export const getCartApi = async (): Promise<CartApiResponse> => {
     const response = await apiClient.get('/cart');
     return response.data;
 };
@@ -20,7 +39,7 @@ export const getCartApi = async (): Promise<any> => {
  * @param {string} productId - ไอดีสินค้า
  * @param {number} quantity - จำนวน
  */
-export const addToCartApi = async (productId: string, quantity: number = 1): Promise<any> => {
+export const addToCartApi = async (productId: string, quantity: number = 1): Promise<CartApiResponse> => {
     const response = await apiClient.post('/cart', { productId, quantity });
     return response.data;
 };
@@ -30,7 +49,7 @@ export const addToCartApi = async (productId: string, quantity: number = 1): Pro
  * @param {string} productId - ไอดีสินค้า
  * @param {number} quantity - จำนวนใหม่
  */
-export const updateCartQuantityApi = async (productId: string, quantity: number): Promise<any> => {
+export const updateCartQuantityApi = async (productId: string, quantity: number): Promise<CartApiResponse> => {
     const response = await apiClient.patch('/cart/update-quantity', { productId, quantity });
     return response.data;
 };
@@ -39,7 +58,7 @@ export const updateCartQuantityApi = async (productId: string, quantity: number)
  * ลบสินค้าออกจากตะกร้า
  * @param {string} productId - ไอดีสินค้า
  */
-export const removeFromCartApi = async (productId: string): Promise<any> => {
+export const removeFromCartApi = async (productId: string): Promise<CartApiResponse> => {
     const response = await apiClient.delete(`/cart/${productId}`);
     return response.data;
 };
@@ -47,7 +66,7 @@ export const removeFromCartApi = async (productId: string): Promise<any> => {
 /**
  * ล้างสินค้าทั้งหมดออกจากตะกร้า (ใช้หลังการชำระเงินสำเร็จ)
  */
-export const clearCartApi = async (): Promise<any> => {
+export const clearCartApi = async (): Promise<CartApiResponse> => {
     const response = await apiClient.delete('/cart/clear');
     return response.data;
 };
@@ -55,7 +74,7 @@ export const clearCartApi = async (): Promise<any> => {
 /**
  * ดึงข้อมูลสรุปยอดรวมตะกร้า
  */
-export const getCartSummaryApi = async (): Promise<any> => {
+export const getCartSummaryApi = async (): Promise<CartApiResponse> => {
     const response = await apiClient.get('/cart/summary');
     return response.data;
 };

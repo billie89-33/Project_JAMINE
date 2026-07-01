@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect, useCallback } from 'react';
+import { Product } from '@/types';
 import { getProductByIdApi } from '../services/productDetailApi';
 
 /**
@@ -7,7 +7,7 @@ import { getProductByIdApi } from '../services/productDetailApi';
  * คุม Business Logic สำหรับหน้าจัดการรายละเอียดสินค้า
  */
 export const useProductDetail = (productId: string) => {
-    const [product, setProduct] = useState<any>(null);
+    const [product, setProduct] = useState<Product | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -20,8 +20,9 @@ export const useProductDetail = (productId: string) => {
             } else {
                 setError("ไม่พบข้อมูลสินค้า");
             }
-        } catch (err: any) {
-            setError(err.message || "เกิดข้อผิดพลาดในการดึงข้อมูล");
+        } catch (err) {
+            const error = err as Error;
+            setError(error.message || "เกิดข้อผิดพลาดในการดึงข้อมูล");
         } finally {
             setLoading(false);
         }

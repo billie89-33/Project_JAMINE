@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { Product } from '@/types';
 
@@ -10,13 +9,13 @@ const ProductTabs: React.FC<{ product: Product }> = ({ product }) => {
 
   // 2. โค้ดกำหนดโครงสร้างดัก API: บังคับว่าถ้า product.specifications ไม่มีอยู่จริงจากหลังบ้าน ให้ดักแปลงเป็น Object ว่าง {} ทันที
   // 🛡️ Safe Parse Specifications: รองรับทั้งกรณีที่เป็น Object อยู่แล้ว หรือเป็น JSON String จากหลังบ้าน
-  let productSpecs: Record<string, any> = {};
+  let productSpecs: Record<string, string | number> = {};
   if (typeof product.specifications === 'string') {
     try {
       productSpecs = JSON.parse(product.specifications);
       // รองรับเคส double stringify
       if (typeof productSpecs === 'string') productSpecs = JSON.parse(productSpecs);
-    } catch (e: unknown) {
+    } catch (e) {
       productSpecs = {};
     }
   } else if (product.specifications && typeof product.specifications === 'object') {

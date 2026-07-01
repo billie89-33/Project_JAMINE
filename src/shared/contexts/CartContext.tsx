@@ -4,7 +4,8 @@ import {
   addToCartApi, 
   updateCartQuantityApi, 
   removeFromCartApi,
-  clearCartApi
+  clearCartApi,
+  CartApiResponse
 } from '@/modules/cart/services/cartApi';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '@/shared/contexts/AuthContext';
@@ -65,9 +66,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const debounceTimers = useRef<Record<string, ReturnType<typeof setTimeout> | null>>({});
   const pendingUpdates = useRef<Record<string, number>>({});
 
-  const syncCartState = useCallback((response: unknown) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const res = response as any;
+  const syncCartState = useCallback((res: CartApiResponse) => {
     if (!res || !res.success) return;
 
     // ⚠️ Doc 11.3: แจ้งเตือนถ้ามีการปรับสต็อกอัตโนมัติจากหลังบ้าน
@@ -88,10 +87,9 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     const { items: rawItems, subtotal, shippingFee, shipping, total, totalAmount } = res.data;
     
     // 🛠️ Fix & Resilience: รองรับทั้ง item.productId และ item.product และดึง ID อย่างปลอดภัย
-    const mappedItems: CartItemType[] = rawItems.map((item: unknown) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const it = item as any;
-      const productObj = it.productId || it.product; // ดึงออบเจกต์สินค้า
+    const mappedItems: CartItemType[] = rawItems.map((it) => {
+      const rawProduct = it.productId || it.product;
+      const productObj = (typeof rawProduct === 'string' ? { _id: rawProduct } : rawProduct) as import('@/types').Product; // ดึงออบเจกต์สินค้า
       const finalId = productObj?._id || productObj?.id || (typeof productObj === 'string' ? productObj : null);
       
       return {
@@ -101,7 +99,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         brand: productObj?.brand || '',
         price: productObj?.price || 0,
         quantity: it.quantity,
-        image: productObj?.image?.url || productObj?.image || 'https://via.placeholder.com/300',
+        image: productObj?.image?.url || (typeof productObj?.image === 'string' ? productObj.image : 'https://via.placeholder.com/300'),
         description: productObj?.description || '',
         stock: productObj?.stock || 0
       };
@@ -154,7 +152,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         toast.success("เพิ่มสินค้าลงตะกร้าแล้ว", { icon: '🛒' });
         syncCartState(res); // 🚀 เร็วขึ้น 2 เท่า: ไม่อัปเดตข้อมูลผ่านการยิง GET ซ้ำ
       }
-    } catch (error: unknown) {
+    } catch (error) {
       const err = error as { response?: { data?: { message?: string } } };
       toast.error(err.response?.data?.message || "เพิ่มสินค้าไม่สำเร็จ");
     } finally {
