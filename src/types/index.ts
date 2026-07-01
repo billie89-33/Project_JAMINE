@@ -37,3 +37,61 @@ export interface ApiResponse<T> {
   data: T;
   message?: string;
 }
+
+// 🛒 Product Interfaces
+export interface ProductImage {
+  url: string;
+  publicId?: string;
+}
+
+export interface Product {
+  _id: string;
+  brand: string;
+  modelName: string;
+  description: string;
+  price: number;
+  image: ProductImage;
+  sku: string;
+  category: string;
+  tags?: string[];
+  stock: number;
+  status: string;
+  isFeatured?: boolean;
+  soldCount?: number;
+  viewCount?: number;
+  specifications?: Record<string, string>;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+// 📦 Order Interfaces
+export interface OrderItem {
+  productId: string | Product; // Can be ID string or populated Product object
+  brand: string;
+  modelName: string;
+  image: string;
+  quantity: number;
+  priceAtPurchase: number;
+}
+
+export interface Order {
+  _id: string;
+  orderNumber?: string;
+  userId: string | User; // Can be ID string or populated User object
+  items: OrderItem[];
+  shippingAddress: Address;
+  subtotal: number;
+  shippingFee: number;
+  total: number;
+  status: string; // e.g. 'PENDING', 'PAID', 'SHIPPED', 'DELIVERED', 'CANCELLED'
+  paymentDetails?: {
+    method?: string;
+    paidAt?: string;
+    transactionId?: string;
+  };
+  expiresAt: string;
+  trackingNumber?: string | null;
+  shippedAt?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
