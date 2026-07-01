@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef, ReactNode } from 'react';
 import { 
   getCartApi, 
   addToCartApi, 
@@ -9,27 +9,63 @@ import {
 import { toast } from 'react-hot-toast';
 import { useAuth } from '@/shared/contexts/AuthContext';
 
-const CartContext = createContext();
+export interface CartItemType {
+  id: string;
+  cartItemId: string;
+  name: string;
+  brand: string;
+  price: number;
+  quantity: number;
+  image: string;
+  description: string;
+  stock: number;
+}
+
+export interface CartSummaryType {
+  subtotal: number;
+  shipping: number;
+  discount: number;
+  total: number;
+  itemCount: number;
+}
+
+export interface CartContextType {
+  cartItems: CartItemType[];
+  summary: CartSummaryType;
+  loading: boolean;
+  addToCart: (productId: string, quantity?: number) => Promise<void>;
+  updateQuantity: (productId: string, quantity: number) => Promise<void>;
+  removeItem: (productId: string) => Promise<void>;
+  clearCart: () => Promise<void>;
+  refreshCart: () => Promise<void>;
+}
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const CartContext = createContext<CartContextType | undefined>(undefined);
+
+interface CartProviderProps {
+  children: ReactNode;
+}
 
 /**
  * 🛒 CartProvider
  * ศูนย์กลางจัดการข้อมูลตะกร้าสินค้าสำหรับทั้งแอปพลิเคชัน (Standard Compliant)
  */
-export const CartProvider = ({ children }) => {
+export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const { user } = useAuth();
-  const [cartItems, setCartItems] = useState([]);
-  const [summary, setSummary] = useState({ 
+  const [cartItems, setCartItems] = useState<CartItemType[]>([]);
+  const [summary, setSummary] = useState<CartSummaryType>({ 
     subtotal: 0, 
     shipping: 0, 
     discount: 0, 
     total: 0, 
     itemCount: 0 
   });
-  const [loading, setLoading] = useState(false);
-  const debounceTimers = useRef({});
-  const pendingUpdates = useRef({});
+  const [loading, setLoading] = useState<boolean>(false);
+  const debounceTimers = useRef<Record<string, NodeJS.Timeout | null>>({});
+  const pendingUpdates = useRef<Record<string, number>>({});
 
-  const syncCartState = useCallback((response) => {
+  const syncCartState = useCallback((response: any) => {
     if (!response.success) return;
 
     // ⚠️ Doc 11.3: แจ้งเตือนถ้ามีการปรับสต็อกอัตโนมัติจากหลังบ้าน
@@ -50,7 +86,7 @@ export const CartProvider = ({ children }) => {
     const { items: rawItems, subtotal, shippingFee, shipping, total, totalAmount } = response.data;
     
     // 🛠️ Fix & Resilience: รองรับทั้ง item.productId และ item.product และดึง ID อย่างปลอดภัย
-    const mappedItems = rawItems.map(item => {
+    const mappedItems: CartItemType[] = rawItems.map((item: any) => {
       const productObj = item.productId || item.product; // ดึงออบเจกต์สินค้า
       const finalId = productObj?._id || productObj?.id || (typeof productObj === 'string' ? productObj : null);
       
@@ -98,7 +134,7 @@ export const CartProvider = ({ children }) => {
   }, [user, syncCartState]);
 
   // 2. เพิ่มสินค้า
-  const addToCart = async (productId, quantity = 1) => {
+  const addToCart = async (productId: string, quantity: number = 1) => {
     if (!user) {
       toast.error("กรุณาเข้าสู่ระบบเพื่อใช้งานตะกร้าสินค้า", { id: 'auth-error' });
       return;
@@ -114,7 +150,7 @@ export const CartProvider = ({ children }) => {
         toast.success("เพิ่มสินค้าลงตะกร้าแล้ว", { icon: '🛒' });
         syncCartState(res); // 🚀 เร็วขึ้น 2 เท่า: ไม่อัปเดตข้อมูลผ่านการยิง GET ซ้ำ
       }
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response?.data?.message || "เพิ่มสินค้าไม่สำเร็จ");
     } finally {
       setLoading(false);
@@ -122,7 +158,7 @@ export const CartProvider = ({ children }) => {
   };
 
   // 3. อัปเดตจำนวน (⚡ Optimistic UI + Debounced API Sync)
-  const updateQuantity = async (productId, quantity) => {
+  const updateQuantity = async (productId: string, quantity: number) => {
     if (!productId) return; 
     
     // ถ้าจำนวนลดเหลือน้อยกว่า 1 ให้ถือเป็นการลบสินค้าทิ้ง
@@ -155,7 +191,7 @@ export const CartProvider = ({ children }) => {
 
     // ⏳ เทคนิคที่ 2: Debounced API Synchronization (รอหยุดกด 500ms ค่อยยิง API)
     if (debounceTimers.current[productId]) {
-      clearTimeout(debounceTimers.current[productId]);
+      clearTimeout(debounceTimers.current[productId] as NodeJS.Timeout);
       debounceTimers.current[productId] = null;
       pendingUpdates.current[productId] -= 1; // ยกเลิกคิวเก่าที่ยังอยู่ในโหลด Debounce
     }
@@ -184,7 +220,7 @@ export const CartProvider = ({ children }) => {
   };
 
   // 4. ลบสินค้า
-  const removeItem = async (productId) => {
+  const removeItem = async (productId: string) => {
     if (loading || !productId) return;
 
     setLoading(true);
@@ -218,7 +254,7 @@ export const CartProvider = ({ children }) => {
     fetchCart();
   }, [fetchCart]);
 
-  const value = {
+  const value: CartContextType = {
     cartItems,
     summary,
     loading,
@@ -237,7 +273,8 @@ export const CartProvider = ({ children }) => {
 };
 
 // Hook สำหรับเรียกใช้งานได้ง่ายๆ
-export const useCart = () => {
+// eslint-disable-next-line react-refresh/only-export-components
+export const useCart = (): CartContextType => {
   const context = useContext(CartContext);
   if (!context) {
     throw new Error('useCart must be used within a CartProvider');
