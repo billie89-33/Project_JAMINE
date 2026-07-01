@@ -7,14 +7,14 @@
 export const USER_ROLES = {
     USER: 'user',
     ADMIN: 'admin'
-};
+} as const;
 
 // 2. สถานะของสินค้า (Product Status)
 export const PRODUCT_STATUS = {
     ACTIVE: 'active',
     INACTIVE: 'inactive',
     DRAFT: 'draft'
-};
+} as const;
 
 // 3. หมวดหมู่สินค้า (Standard Categories)
 export const CATEGORIES = [
@@ -27,7 +27,7 @@ export const CATEGORIES = [
     'RAM', 
     'CPU', 
     'Mainboard'
-];
+] as const;
 
 // 4. สถานะออเดอร์ (Order Status)
 export const ORDER_STATUS = {
@@ -37,7 +37,7 @@ export const ORDER_STATUS = {
     SHIPPED: 'Shipped',
     DELIVERED: 'Delivered',
     CANCELLED: 'Cancelled'
-};
+} as const;
 
 // 5. กฎการเปลี่ยนสถานะออเดอร์ (Strict Status Flow)
 export const ORDER_TRANSITIONS = {
@@ -47,4 +47,4 @@ export const ORDER_TRANSITIONS = {
     [ORDER_STATUS.SHIPPED]: [ORDER_STATUS.DELIVERED],
     [ORDER_STATUS.DELIVERED]: [],
     [ORDER_STATUS.CANCELLED]: []
-};
+} as const;

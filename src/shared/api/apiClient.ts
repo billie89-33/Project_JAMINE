@@ -1,4 +1,9 @@
-import axios from 'axios';
+import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+
+// 🛡️ ขยาย Type ของ Axios ให้รองรับ metadata สำหรับคำนวณเวลา
+interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
+    metadata?: { startTime: Date };
+}
 
 const apiClient = axios.create({
     baseURL: import.meta.env.VITE_API_URL || 'http://localhost:4001/api/v1',
@@ -8,30 +13,33 @@ const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use(
-    (config) => {
+    (config: CustomAxiosRequestConfig) => {
         // ⏱️ Start timer
         config.metadata = { startTime: new Date() };
-        console.log(`🚀 [API Request] ${config.method.toUpperCase()} ${config.url}`);
+        console.log(`🚀 [API Request] ${config.method?.toUpperCase()} ${config.url}`);
         return config;
     },
-    (error) => Promise.reject(error)
+    (error: AxiosError) => Promise.reject(error)
 );
 
 apiClient.interceptors.response.use(
-    (response) => {
+    (response: AxiosResponse) => {
         // ⏱️ End timer
-        const startTime = response.config.metadata.startTime;
-        const duration = new Date() - startTime;
-        console.log(`✅ [API Response] ${response.config.method.toUpperCase()} ${response.config.url} - ${duration}ms`);
+        const config = response.config as CustomAxiosRequestConfig;
+        if (config.metadata) {
+            const duration = new Date().getTime() - config.metadata.startTime.getTime();
+            console.log(`✅ [API Response] ${config.method?.toUpperCase()} ${config.url} - ${duration}ms`);
+        }
         return response;
     },
-    (error) => {
-        const { response, config } = error;
+    (error: AxiosError) => {
+        const { response } = error;
+        const config = error.config as CustomAxiosRequestConfig;
         
         // ⏱️ End timer even on error
         if (config && config.metadata) {
-            const duration = new Date() - config.metadata.startTime;
-            console.error(`❌ [API Error] ${config.method.toUpperCase()} ${config.url} - ${duration}ms`);
+            const duration = new Date().getTime() - config.metadata.startTime.getTime();
+            console.error(`❌ [API Error] ${config.method?.toUpperCase()} ${config.url} - ${duration}ms`);
         }
 
         if (response && response.status === 401) {
