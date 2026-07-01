@@ -1,24 +1,38 @@
-import { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import { getMeApi, logoutApi } from '@/modules/auth/services/authApi';
 import { USER_ROLES } from '@/shared/constants';
+import { User } from '@/types';
+
+interface AuthContextType {
+    user: User | null;
+    loading: boolean;
+    login: (userData: User) => void;
+    logout: () => Promise<void>;
+    refreshUser: () => Promise<User>;
+}
 
 /**
  * 🔐 Global Auth Context
  * จัดการสิทธิ์การเข้าถึงและความปลอดภัยของแอปพลิเคชัน
  */
-export const AuthContext = createContext();
+// eslint-disable-next-line react-refresh/only-export-components
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+interface AuthProviderProps {
+    children: ReactNode;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+    const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
 
     // 🔄 ฟังก์ชันดึงข้อมูลผู้ใช้ใหม่ (Sync Global State)
-    const refreshUser = async () => {
+    const refreshUser = async (): Promise<User> => {
         try {
             const res = await getMeApi();
             // 🛡️ Resilient Success Check: รองรับทั้งแบบมี res.success หรือส่ง User Object (res._id) มาตรงๆ
             if (res && res.success !== false) {
-                const userData = res.data || res;
+                const userData = (res.data || res) as User;
                 setUser(userData);
                 return userData;
             }
@@ -58,7 +72,7 @@ export const AuthProvider = ({ children }) => {
         checkAuthStatus();
     }, []);
 
-    const login = (userData) => {
+    const login = (userData: User) => {
         setUser(userData);
     };
 
@@ -82,7 +96,8 @@ export const AuthProvider = ({ children }) => {
 };
 
 // Custom Hook เพื่อการเรียกใช้งานที่สั้นลง
-export const useAuth = () => {
+// eslint-disable-next-line react-refresh/only-export-components
+export const useAuth = (): AuthContextType => {
     const context = useContext(AuthContext);
     if (!context) throw new Error('useAuth must be used within an AuthProvider');
     return context;

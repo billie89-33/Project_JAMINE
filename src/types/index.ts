@@ -2,10 +2,14 @@
 // ใช้ไฟล์นี้เป็นศูนย์กลางในการเก็บ Interface หลักของระบบ
 
 export interface User {
-  id: string | number;
+  _id: string;
+  id?: string;
+  username: string;
   email: string;
   name?: string;
-  role?: string;
+  role: string;
+  addresses?: Record<string, unknown>[];
+  [key: string]: unknown; // Allow other dynamic fields for now
 }
 
 // ตัวอย่าง ApiResponse สำหรับนำไปใช้ต่อใน axios
