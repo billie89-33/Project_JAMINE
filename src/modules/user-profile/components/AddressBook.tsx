@@ -1,9 +1,9 @@
-
+import React from 'react';
 import { AddressSelector } from '@/modules/checkout';
 import { useCheckout } from '@/modules/checkout/hooks/useCheckout';
 import { MapPin } from 'lucide-react';
 
-const AddressBook = () => {
+const AddressBook: React.FC = () => {
   // 🔄 Reuse the logic from checkout module since it's already robust
   const {
     addresses,

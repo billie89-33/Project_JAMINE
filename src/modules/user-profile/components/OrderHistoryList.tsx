@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { ShoppingBag, ExternalLink, Clock, CheckCircle2, XCircle, Package, Truck, CreditCard } from 'lucide-react';
 import { useOrderHistory } from '../hooks/useOrderHistory';
 import { ORDER_STATUS } from '@/shared/constants';
 import OrderDetailsModal from './OrderDetailsModal';
 
-const OrderHistoryList = () => {
+const OrderHistoryList: React.FC = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const { 
     orders, 

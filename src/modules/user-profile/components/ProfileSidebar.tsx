@@ -1,4 +1,4 @@
-
+import React from 'react';
 import { 
   LayoutDashboard, 
   User, 
@@ -14,7 +14,12 @@ import { useNavigate } from 'react-router-dom';
  * 🧭 ProfileSidebar Component
  * เมนูนำทางด้านข้างสำหรับหน้า User Profile
  */
-const ProfileSidebar = ({ activeTab, onTabChange }) => {
+interface ProfileSidebarProps {
+  activeTab: string;
+  onTabChange: (tabId: string) => void;
+}
+
+const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ activeTab, onTabChange }) => {
   const { logout } = useAuth();
   const navigate = useNavigate();
 

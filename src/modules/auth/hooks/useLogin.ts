@@ -1,4 +1,5 @@
-import { useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/shared/contexts/AuthContext';
 import { useApi } from '@/shared/hooks/useApi'; // 🛠️ เรียกใช้แม่บ้านส่วนกลาง
@@ -22,8 +23,8 @@ export const useLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   
   // 🧹 Status State: ใช้ onSuccess option เพื่อลด Logic ใน Submit function
-  const { loading, error, setError, execute: loginRequest } = useApi(loginApi, {
-    onSuccess: (userData, res) => {
+  const { loading, error, setError, execute: loginRequest } = useApi<any, [string, string], any>(loginApi, {
+    onSuccess: (userData: any, res: any) => {
       console.log('✅ Login successful:', { userData, res });
       // 🛡️ Resilient Success Check: รองรับทั้งแบบมี res.success หรือส่ง User Object มาตรงๆ
       if (res.success !== false) {
@@ -37,7 +38,7 @@ export const useLogin = () => {
         setError(res.message || 'Login failed');
       }
     },
-    onError: (msg) => {
+    onError: (msg: string) => {
       console.error('❌ Login error:', msg);
     }
   });
@@ -47,12 +48,12 @@ export const useLogin = () => {
   /**
    * จัดการการเปลี่ยนแปลงค่าในฟอร์ม
    */
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleLoginSubmit = async (e) => {
+  const handleLoginSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
 
     // 🛡️ 1. Validation: แจ้งเตือน User ถ้าลืมกรอกข้อมูล

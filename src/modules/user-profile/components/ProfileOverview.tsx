@@ -1,8 +1,8 @@
-
+import React from 'react';
 import { useAuth } from '@/shared/contexts/AuthContext';
 import { ShoppingBag, MapPin, Star, Clock } from 'lucide-react';
 
-const ProfileOverview = () => {
+const ProfileOverview: React.FC = () => {
   const { user } = useAuth();
 
   const stats = [

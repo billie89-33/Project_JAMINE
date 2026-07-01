@@ -1,3 +1,4 @@
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useLogin } from '../hooks/useLogin';
 
@@ -5,7 +6,7 @@ import { useLogin } from '../hooks/useLogin';
  * 🎨 LoginForm (UI Component)
  * เน้นการแสดงผลเท่านั้น ส่วน Logic ทั้งหมดถูกดึงไปไว้ใน useLogin Hook
  */
-const LoginForm = () => {
+const LoginForm: React.FC = () => {
   // 🎣 ดึงสมอง (Logic) มาจาก Hook
   const {
     formData,

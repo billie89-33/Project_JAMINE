@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import apiClient from '@/shared/api/apiClient';
 
 /**
@@ -6,20 +7,20 @@ import apiClient from '@/shared/api/apiClient';
  */
 
 // 1. ดึงรายการคำสั่งซื้อของ User
-export const getMyOrdersApi = async () => {
+export const getMyOrdersApi = async (): Promise<any> => {
     const response = await apiClient.get('/orders/me');
     // Backend ส่งมาเป็น { success: true, data: [...] }
     return response.data.data;
 };
 
 // 2. อัปเดตข้อมูล Profile (เช่น ชื่อ)
-export const updateProfileApi = async (userData) => {
+export const updateProfileApi = async (userData: any): Promise<any> => {
     const response = await apiClient.patch('/users/profile', userData);
     return response.data;
 };
 
 // 3. เปลี่ยนรหัสผ่าน
-export const changePasswordApi = async (passwordData) => {
+export const changePasswordApi = async (passwordData: any): Promise<any> => {
     const response = await apiClient.patch('/users/change-password', passwordData);
     return response.data;
 };

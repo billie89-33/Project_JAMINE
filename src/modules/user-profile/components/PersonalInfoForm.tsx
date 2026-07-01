@@ -1,8 +1,8 @@
-
+import React from 'react';
 import { useAuth } from '@/shared/contexts/AuthContext';
 import { Mail, User as UserIcon, Lock, ShieldCheck } from 'lucide-react';
 
-const PersonalInfoForm = () => {
+const PersonalInfoForm: React.FC = () => {
   const { user } = useAuth();
 
   return (

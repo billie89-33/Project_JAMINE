@@ -9,7 +9,7 @@ export const useUserProfile = () => {
   const activeTab = searchParams.get('tab') || 'overview';
 
   // Sync activeTab with URL param
-  const handleTabChange = (tabId) => {
+  const handleTabChange = (tabId: string) => {
     setSearchParams({ tab: tabId });
   };
 

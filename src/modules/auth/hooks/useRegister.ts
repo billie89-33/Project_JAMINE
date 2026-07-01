@@ -1,4 +1,5 @@
-import { useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/shared/contexts/AuthContext';
 import { useApi } from '@/shared/hooks/useApi';
@@ -28,10 +29,10 @@ export const useRegister = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // 🧹 Status State: ใช้ useApi จัดการ (เปิดใช้ Toast อัตโนมัติ)
-  const { loading, error, setError, execute: registerRequest } = useApi(registerApi, {
+  const { loading, error, setError, execute: registerRequest } = useApi<any, [any], any>(registerApi, {
     showToast: true,
     successMessage: 'สมัครสมาชิกสำเร็จ! ยินดีต้อนรับสู่ Jamine',
-    onSuccess: (data, res) => {
+    onSuccess: (data: any, res: any) => {
       console.log('✅ Registration successful:', { data, res });
       // 🛡️ Resilient Success Check: รองรับทั้งแบบมี res.success, มี res._id หรือ res.message
       if (res.success !== false) {
@@ -46,7 +47,7 @@ export const useRegister = () => {
         setError(res.message || 'Registration failed');
       }
     },
-    onError: (msg) => {
+    onError: (msg: string) => {
       console.error('❌ Registration error:', msg);
     }
   });
@@ -54,7 +55,7 @@ export const useRegister = () => {
   /**
    * จัดการการเปลี่ยนแปลงค่าในฟอร์ม (Universal Change Handler)
    */
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -68,7 +69,7 @@ export const useRegister = () => {
   /**
    * ฟังก์ชันส่งข้อมูลการสมัครสมาชิก
    */
-  const handleRegisterSubmit = async (e) => {
+  const handleRegisterSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     
     // 🛡️ 1. Validation (Frontend Level) - ปรับปรุงให้แจ้งเตือนรายฟิลด์เพื่อ Debug บัค
@@ -110,8 +111,8 @@ export const useRegister = () => {
       await registerRequest(payload);
     } catch (err) {
       // 🔍 Debug: พิมพ์ Error ทั้งหมดออกมาดูเพื่อหาสาเหตุ 400 Bad Request
-      if (err.response) {
-        console.error('Registration Backend Error:', err.response.data);
+      if (err && (err as any).response) {
+        console.error('Registration Backend Error:', (err as any).response.data);
       }
       console.error('Registration flow error:', err);
     }

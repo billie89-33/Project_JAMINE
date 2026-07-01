@@ -1,3 +1,4 @@
+import React from "react";
 import { NavLink } from "react-router-dom";
 import { useRegister } from "../hooks/useRegister";
 
@@ -5,7 +6,7 @@ import { useRegister } from "../hooks/useRegister";
  * 🎨 RegisterForm (UI Component)
  * เน้นการแสดงผล ส่วน Logic ทั้งหมดถูกดึงไปไว้ใน useRegister Hook
  */
-const RegisterForm = () => {
+const RegisterForm: React.FC = () => {
   // 🎣 ดึงสมอง (Logic) มาจาก Hook
   const {
     formData,

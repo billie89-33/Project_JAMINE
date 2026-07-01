@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApi } from '@/shared/hooks/useApi';
@@ -62,7 +63,7 @@ export const useOrderHistory = () => {
   }, [orders, activeFilter]);
 
   // 4. คำนวณเวลาที่เหลือ (15 นาที)
-  const getRemainingTime = useCallback((expiresAt) => {
+  const getRemainingTime = useCallback((expiresAt: any) => {
     if (!expiresAt) return null;
     const expiry = new Date(expiresAt);
     const diff = expiry - now;
@@ -75,7 +76,7 @@ export const useOrderHistory = () => {
   }, [now]);
 
   // 5. Action Handlers
-  const handlePayNow = (order) => {
+  const handlePayNow = (order: any) => {
     // นำทางไปหน้า Payment พร้อมส่ง Order ID และยอดเงิน
     navigate('/payment', { 
         state: { 
@@ -85,7 +86,7 @@ export const useOrderHistory = () => {
     });
   };
 
-  const handleTrackOrder = (trackingNumber) => {
+  const handleTrackOrder = (trackingNumber: string) => {
     if (!trackingNumber) return;
     // ลิงก์ไปเว็บเช็คพัสดุ (จำลอง)
     window.open(`https://track.jamine.com/${trackingNumber}`, '_blank');
