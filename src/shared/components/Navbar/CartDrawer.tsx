@@ -1,8 +1,14 @@
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useCart } from '@/shared/contexts/CartContext';
 import { Trash2, Plus, Minus, X } from 'lucide-react';
 
-const CartDrawer = ({ isOpen, onClose }) => {
+interface CartDrawerProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
   const { cartItems, summary, updateQuantity, removeItem, loading } = useCart();
 
   if (!isOpen) return null;

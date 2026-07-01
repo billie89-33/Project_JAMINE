@@ -1,8 +1,13 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getProductsApi } from "@/modules/products/services/productApi";
 
-const SearchBar = ({ isMobileSearchOpen, setIsMobileSearchOpen }) => {
+interface SearchBarProps {
+  isMobileSearchOpen: boolean;
+  setIsMobileSearchOpen: (isOpen: boolean) => void;
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({ isMobileSearchOpen, setIsMobileSearchOpen }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [isFocused, setIsFocused] = useState(false);
@@ -40,7 +45,7 @@ const SearchBar = ({ isMobileSearchOpen, setIsMobileSearchOpen }) => {
     };
   }, [searchQuery]);
 
-  const handleSearchSubmit = (e) => {
+  const handleSearchSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!searchQuery.trim()) return;
     
@@ -49,7 +54,7 @@ const SearchBar = ({ isMobileSearchOpen, setIsMobileSearchOpen }) => {
     resetSearchState();
   };
 
-  const handleProductClick = (productId) => {
+  const handleProductClick = (productId: string) => {
     navigate(`/product/${productId}`);
     resetSearchState();
   };
@@ -62,7 +67,7 @@ const SearchBar = ({ isMobileSearchOpen, setIsMobileSearchOpen }) => {
 
   // คอมโพเนนต์ภายในสำหรับรายการแนะนำสินค้า
   const renderProductItems = () =>
-    suggestions.map((product) => (
+    suggestions.map((product: any) => (
       <button
         key={product._id}
         onMouseDown={() => handleProductClick(product._id)}

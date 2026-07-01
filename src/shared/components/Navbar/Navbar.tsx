@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
 import BrandLogo from "./BrandLogo";
 import NavMenu from "./NavMenu";
@@ -6,7 +6,7 @@ import CartButton from "./CartButton";
 import ProfileDropdown from "./ProfileDropdown";
 import SearchBar from "./SearchBar";
 
-const Navbar = () => {
+const Navbar: React.FC = () => {
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 

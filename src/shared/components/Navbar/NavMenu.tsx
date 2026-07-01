@@ -1,9 +1,19 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { getCategoriesApi } from '@/modules/products/services/productApi';
 import { useApi } from '@/shared/hooks/useApi';
 
-const NavMenu = ({ isMobile = false, onClose }) => {
+interface NavMenuProps {
+  isMobile?: boolean;
+  onClose?: () => void;
+}
+
+interface CategoryData {
+  name: string;
+  image: string;
+}
+
+const NavMenu: React.FC<NavMenuProps> = ({ isMobile = false, onClose }) => {
   const [isCatOpen, setIsCatOpen] = useState(false);
   const location = useLocation();
 
@@ -11,7 +21,7 @@ const NavMenu = ({ isMobile = false, onClose }) => {
   const isCategoryActive = location.pathname.startsWith('/category');
 
   // 🎣 ดึงข้อมูลหมวดหมู่จาก API
-  const { data: categories, loading, execute: fetchCategories } = useApi(getCategoriesApi);
+  const { data: categories, loading, execute: fetchCategories } = useApi<Array<CategoryData | string>>(getCategoriesApi);
 
   useEffect(() => {
     fetchCategories();
