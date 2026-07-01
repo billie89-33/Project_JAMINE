@@ -1,4 +1,14 @@
-export default function CartItem({ product, onIncrease, onDecrease, onRemove }) {
+import React from 'react';
+import { CartItemType } from '@/shared/contexts/CartContext';
+
+interface CartItemProps {
+  product: CartItemType;
+  onIncrease: (id: string) => void;
+  onDecrease: (id: string) => void;
+  onRemove: (id: string) => void;
+}
+
+const CartItem: React.FC<CartItemProps> = ({ product, onIncrease, onDecrease, onRemove }) => {
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-purple-50 py-10 last:border-0 group">
       {/* 🖼️ ข้อมูลสินค้า */}
@@ -54,3 +64,5 @@ export default function CartItem({ product, onIncrease, onDecrease, onRemove }) 
     </div>
   );
 }
+
+export default CartItem;

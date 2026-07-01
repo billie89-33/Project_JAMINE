@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { apiClient } from '@/shared/api';
 
 /**
@@ -9,7 +10,7 @@ import { apiClient } from '@/shared/api';
 /**
  * ดึงข้อมูลสินค้าในตะกร้าทั้งหมด
  */
-export const getCartApi = async () => {
+export const getCartApi = async (): Promise<any> => {
     const response = await apiClient.get('/cart');
     return response.data;
 };
@@ -19,7 +20,7 @@ export const getCartApi = async () => {
  * @param {string} productId - ไอดีสินค้า
  * @param {number} quantity - จำนวน
  */
-export const addToCartApi = async (productId, quantity = 1) => {
+export const addToCartApi = async (productId: string, quantity: number = 1): Promise<any> => {
     const response = await apiClient.post('/cart', { productId, quantity });
     return response.data;
 };
@@ -29,7 +30,7 @@ export const addToCartApi = async (productId, quantity = 1) => {
  * @param {string} productId - ไอดีสินค้า
  * @param {number} quantity - จำนวนใหม่
  */
-export const updateCartQuantityApi = async (productId, quantity) => {
+export const updateCartQuantityApi = async (productId: string, quantity: number): Promise<any> => {
     const response = await apiClient.patch('/cart/update-quantity', { productId, quantity });
     return response.data;
 };
@@ -38,7 +39,7 @@ export const updateCartQuantityApi = async (productId, quantity) => {
  * ลบสินค้าออกจากตะกร้า
  * @param {string} productId - ไอดีสินค้า
  */
-export const removeFromCartApi = async (productId) => {
+export const removeFromCartApi = async (productId: string): Promise<any> => {
     const response = await apiClient.delete(`/cart/${productId}`);
     return response.data;
 };
@@ -46,7 +47,7 @@ export const removeFromCartApi = async (productId) => {
 /**
  * ล้างสินค้าทั้งหมดออกจากตะกร้า (ใช้หลังการชำระเงินสำเร็จ)
  */
-export const clearCartApi = async () => {
+export const clearCartApi = async (): Promise<any> => {
     const response = await apiClient.delete('/cart/clear');
     return response.data;
 };
@@ -54,7 +55,7 @@ export const clearCartApi = async () => {
 /**
  * ดึงข้อมูลสรุปยอดรวมตะกร้า
  */
-export const getCartSummaryApi = async () => {
+export const getCartSummaryApi = async (): Promise<any> => {
     const response = await apiClient.get('/cart/summary');
     return response.data;
 };

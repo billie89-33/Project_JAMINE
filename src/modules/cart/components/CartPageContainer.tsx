@@ -15,12 +15,12 @@ export default function CartPageContainer() {
     removeItem 
   } = useCart();
 
-  const increaseQty = (id) => {
+  const increaseQty = (id: string) => {
     const item = products.find(p => p.id === id);
     if (item) updateQuantity(id, item.quantity + 1);
   };
 
-  const decreaseQty = (id) => {
+  const decreaseQty = (id: string) => {
     const item = products.find(p => p.id === id);
     if (item && item.quantity > 1) updateQuantity(id, item.quantity - 1);
   };
