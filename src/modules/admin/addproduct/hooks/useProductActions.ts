@@ -53,13 +53,13 @@ export const useProductActions = () => {
         
         // 🧼 2.1 จัดการ Price & Stock: ทำให้มั่นใจว่าเป็นตัวเลข
         const cleanPrice = String(price || '0').replace(/,/g, '');
-        formData.append('price', Number(cleanPrice) || 0);
-        formData.append('stock', Number(stock) || 0);
+        formData.append('price', String(Number(cleanPrice) || 0));
+        formData.append('stock', String(Number(stock) || 0));
         
         formData.append('sku', sku || '');
         formData.append('category', category || '');
         formData.append('status', status || 'active');
-        formData.append('isFeatured', String(isFeatured) === 'true');
+        formData.append('isFeatured', String(isFeatured === 'true' || isFeatured === true));
         
         // 🧼 3. จัดการ Tags
         const tagsArray = typeof tags === 'string'

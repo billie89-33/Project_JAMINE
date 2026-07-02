@@ -75,7 +75,7 @@ const ProductForm = () => {
                                     className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-bold focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none transition-all shadow-sm" 
                                 />
                                 <datalist id="brands-list">
-                                    {(brandsList || []).map(b => (
+                                    {((brandsList as any[]) || []).map(b => (
                                         <option key={b} value={b} />
                                     ))}
                                 </datalist>
@@ -100,7 +100,7 @@ const ProductForm = () => {
                                 value={description} 
                                 onChange={e => setDescription(e.target.value)} 
                                 required 
-                                rows="4"
+                                rows={4}
                                 className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-medium focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none transition-all shadow-sm resize-none" 
                             />
                         </div>
@@ -135,7 +135,7 @@ const ProductForm = () => {
                                 <input 
                                     type="number" 
                                     value={stock} 
-                                    onChange={e => setStock(e.target.value)} 
+                                    onChange={e => setStock(Number(e.target.value))} 
                                     min="0" 
                                     required 
                                     className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-black focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none transition-all shadow-sm" 
@@ -168,7 +168,7 @@ const ProductForm = () => {
                                     className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-bold focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none shadow-sm"
                                 />
                                 <datalist id="categories-list">
-                                    {(categoriesList || []).map(cat => {
+                                    {((categoriesList as any[]) || []).map(cat => {
                                         const name = typeof cat === 'object' ? cat.name : cat;
                                         return <option key={name} value={name} />;
                                     })}
@@ -178,7 +178,7 @@ const ProductForm = () => {
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Status</label>
                                 <select 
                                     value={status} 
-                                    onChange={e => setStatus(e.target.value)} 
+                                    onChange={e => setStatus(e.target.value as any)} 
                                     className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-bold focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none cursor-pointer shadow-sm"
                                 >
                                     <option value={PRODUCT_STATUS.ACTIVE}>Active</option>

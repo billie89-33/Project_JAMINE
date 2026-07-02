@@ -3,8 +3,13 @@ import { toast } from 'react-hot-toast';
 import { useAuth } from '@/shared/contexts/AuthContext';
 import { useEffect } from 'react';
 
+interface ProtectedRouteProps {
+  redirectPath?: string;
+  children?: React.ReactNode;
+}
+
 // 💡 เพิ่มการรับค่า props ชื่อ children เข้ามาใช้งาน
-const ProtectedRoute = ({ redirectPath = '/login', children }) => {
+const ProtectedRoute = ({ redirectPath = '/login', children }: ProtectedRouteProps) => {
  const { user } = useAuth();
  const location = useLocation();
 

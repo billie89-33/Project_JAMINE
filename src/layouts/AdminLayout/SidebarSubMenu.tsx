@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
-const SidebarSubMenu = ({ item, activeLink, normalLink }) => {
+const SidebarSubMenu = ({ item }: { item: any }) => {
   const [subnav, setSubnav] = useState(false);
   const showSubnav = () => setSubnav(!subnav);
 
