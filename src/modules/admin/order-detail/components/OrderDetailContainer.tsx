@@ -28,9 +28,8 @@ const OrderDetailContainer = () => {
         handleUpdateStatus 
     } = useOrderDetail();
 
-    // Helper สำหรับดึงสถานะที่เปลี่ยนไปได้
     const getAvailableStatuses = (currentStatus: string) => {
-        const nextPossible = (ORDER_TRANSITIONS as any)[currentStatus] || [];
+        const nextPossible = (ORDER_TRANSITIONS as Record<string, string[]>)[currentStatus] || [];
         return [currentStatus, ...nextPossible];
     };
 

@@ -3,8 +3,10 @@ import {
     createNewsApi, 
     updateNewsApi, 
     getNewsByIdApi,
-    getNewsCategoriesApi
+    getNewsCategoriesApi,
+    NewsCategory
 } from '@/modules/admin/services';
+import { News } from '@/types';
 import toast from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -18,7 +20,7 @@ export const useNewsForm = () => {
     const { id } = useParams();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isLoading, setIsLoading] = useState(!!id);
-    const [categories, setCategories] = useState<any[]>([]);
+    const [categories, setCategories] = useState<NewsCategory[]>([]);
 
     const [formData, setFormData] = useState({
         title: '',
@@ -27,8 +29,8 @@ export const useNewsForm = () => {
         isPublished: true
     });
 
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [imagePreview, setImagePreview] = useState(null);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
 
     // 1. Load Categories
     const fetchCategories = useCallback(async () => {
@@ -47,15 +49,15 @@ export const useNewsForm = () => {
         try {
             const res = await getNewsByIdApi(id);
             if (res.success) {
-                const originalNews = res.data as any;
+                const originalNews = res.data;
                 setFormData({
                     title: originalNews.title,
-                    category: (originalNews.category as any)?._id || originalNews.category || '',
+                    category: originalNews.category?._id || (typeof originalNews.category === 'string' ? originalNews.category : ''),
                     content: originalNews.content || '',
-                    isFeatured: !!originalNews.isFeatured,
+                    isFeatured: !!(originalNews as { isFeatured?: boolean }).isFeatured,
                     isPublished: !!originalNews.isPublished,
                 });
-                setImagePreview((originalNews.image as any)?.url || null);
+                setImagePreview(originalNews.image?.url || null);
             }
         } catch (error) {
             toast.error('Failed to load news article');
@@ -72,11 +74,12 @@ export const useNewsForm = () => {
     }, [fetchCategories, fetchNewsData]);
 
     // 3. Handle Inputs
-    const handleChange = useCallback((e: any) => {
-        const { name, value, type, checked } = e.target;
+    const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | { target: { name: string; value: string | boolean; type?: string; checked?: boolean } }) => {
+        const target = e.target as { name: string; value: string | boolean; type?: string; checked?: boolean };
+        const { name, value, type, checked } = target;
         setFormData(prev => ({
             ...prev,
-            [name]: type === 'checkbox' ? checked : value
+            [name]: type === 'checkbox' ? !!checked : value
         }));
     }, []);
 
@@ -84,16 +87,16 @@ export const useNewsForm = () => {
         setFormData(prev => ({ ...prev, content: value }));
     }, []);
 
-    const handleFileChange = useCallback((e: any) => {
-        const file = e.target.files[0];
+    const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
         if (file) {
             setSelectedFile(file);
-            setImagePreview(URL.createObjectURL(file) as any);
+            setImagePreview(URL.createObjectURL(file));
         }
     }, []);
 
     // 4. Submit Form
-    const handleSubmit = useCallback(async (e: any) => {
+    const handleSubmit = useCallback(async (e?: React.FormEvent) => {
         if (e) e.preventDefault();
         
         if (!formData.title || !formData.category || !formData.content) {
@@ -128,8 +131,9 @@ export const useNewsForm = () => {
             if (res.success) {
                 navigate('/admin/news');
             }
-        } catch (error: any) {
-            toast.error(error.response?.data?.message || 'Failed to save article');
+        } catch (error) {
+            const err = error as { response?: { data?: { message?: string } } };
+            toast.error(err.response?.data?.message || 'Failed to save article');
         } finally {
             setIsSubmitting(false);
         }

@@ -3,8 +3,10 @@ import {
     getNewsApi, 
     deleteNewsApi, 
     updateNewsApi, 
-    getNewsCategoriesApi 
+    getNewsCategoriesApi,
+    NewsCategory 
 } from '@/modules/admin/services';
+import { News } from '@/types';
 import toast from 'react-hot-toast';
 
 /**
@@ -14,8 +16,8 @@ import toast from 'react-hot-toast';
 export const useNews = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isActionLoading, setIsActionLoading] = useState(false);
-    const [newsList, setNewsList] = useState([]);
-    const [categories, setCategories] = useState<any[]>([]);
+    const [newsList, setNewsList] = useState<News[]>([]);
+    const [categories, setCategories] = useState<NewsCategory[]>([]);
     
     // Filters
     const [page, setPage] = useState(1);
@@ -36,10 +38,11 @@ export const useNews = () => {
             };
             const res = await getNewsApi(params);
             if (res.success) {
-                setNewsList((res.data as any).news || res.data || []);
+                setNewsList(res.data.news || []);
             }
-        } catch (error: any) {
-            toast.error(error.response?.data?.message || 'Failed to fetch news');
+        } catch (error) {
+            const err = error as { response?: { data?: { message?: string } } };
+            toast.error(err.response?.data?.message || 'Failed to fetch news');
         } finally {
             setIsLoading(false);
         }
@@ -58,7 +61,7 @@ export const useNews = () => {
         try {
             const res = await getNewsCategoriesApi();
             if (res.success) {
-                setCategories(res.data as any[]);
+                setCategories(res.data || []);
             }
         } catch (error) {
             console.error('Failed to fetch categories', error);

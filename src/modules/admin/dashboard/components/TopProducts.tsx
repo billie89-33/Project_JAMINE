@@ -1,10 +1,26 @@
+import React from 'react';
 import { TrendingUp, Package } from 'lucide-react';
+
+export interface TopProduct {
+    _id: string;
+    name?: string;
+    modelName?: string;
+    brand?: string;
+    price?: number;
+    sold?: number;
+    sales?: number;
+    image?: { url: string };
+}
+
+export interface TopProductsProps {
+    products: TopProduct[];
+}
 
 /**
  * 🔥 TopProducts Component
  * แสดงรายการสินค้าขายดี พร้อมลำดับความนิยม
  */
-const TopProducts = ({ products }) => {
+const TopProducts: React.FC<TopProductsProps> = ({ products }) => {
   return (
     <div className="bg-white rounded-[40px] p-8 shadow-2xl shadow-purple-100/50 border border-purple-50 h-full flex flex-col">
       <div className="flex justify-between items-center mb-10">

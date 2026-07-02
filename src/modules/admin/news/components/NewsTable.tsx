@@ -7,8 +7,16 @@ import {
     Loader2 
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { News } from '@/types';
 
-const NewsTable = ({ newsList, isLoading, onToggleStatus, onDelete }: any) => {
+interface NewsTableProps {
+    newsList: News[];
+    isLoading: boolean;
+    onToggleStatus: (id: string, currentStatus: boolean) => void;
+    onDelete: (id: string) => void;
+}
+
+const NewsTable = ({ newsList, isLoading, onToggleStatus, onDelete }: NewsTableProps) => {
     return (
         <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="overflow-x-auto">
@@ -40,7 +48,7 @@ const NewsTable = ({ newsList, isLoading, onToggleStatus, onDelete }: any) => {
                                 </td>
                             </tr>
                         ) : (
-                            newsList.map((news: any) => (
+                            newsList.map((news) => (
                                 <tr key={news._id} className="hover:bg-slate-50/50 transition-colors group">
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-4">
@@ -72,7 +80,7 @@ const NewsTable = ({ newsList, isLoading, onToggleStatus, onDelete }: any) => {
                                     </td>
                                     <td className="px-6 py-4">
                                         <button 
-                                            onClick={() => onToggleStatus(news._id, news.isPublished)}
+                                            onClick={() => onToggleStatus(news._id, news.isPublished ?? false)}
                                             className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider transition-all ${
                                                 news.isPublished 
                                                     ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100' 

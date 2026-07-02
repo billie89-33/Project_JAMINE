@@ -72,7 +72,7 @@ const NewsContainer = () => {
                             className="text-xs font-black text-slate-600 outline-none cursor-pointer bg-transparent"
                         >
                             <option value="">All Categories</option>
-                            {categories.map((cat: any) => (
+                            {categories.map((cat) => (
                                 <option key={cat._id} value={cat._id}>{cat.name}</option>
                             ))}
                         </select>

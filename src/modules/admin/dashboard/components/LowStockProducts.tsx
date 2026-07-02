@@ -1,11 +1,24 @@
+import React from 'react';
 import { AlertTriangle, PackageOpen } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+
+export interface LowStockProduct {
+    _id: string;
+    name: string;
+    brand?: string;
+    stock: number;
+    image?: { url: string };
+}
+
+export interface LowStockProductsProps {
+    products: LowStockProduct[];
+}
 
 /**
  * ⚠️ LowStockProducts Component
  * แสดงรายการสินค้าที่สต็อกเหลือน้อยกว่ากำหนด (Threshold)
  */
-const LowStockProducts = ({ products }) => {
+const LowStockProducts: React.FC<LowStockProductsProps> = ({ products }) => {
     const navigate = useNavigate();
 
     if (!products || products.length === 0) {

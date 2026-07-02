@@ -20,7 +20,7 @@ export const useDashboard = () => {
     // 🛡️ Memoize options to prevent stable dependency issues in useApi
     const apiOptions = useMemo(() => ({
         showToast: false,
-        onError: (msg) => console.error("Dashboard Fetch Error", msg)
+        onError: (msg: string | Error) => console.error("Dashboard Fetch Error", msg)
     }), []);
 
     const { 

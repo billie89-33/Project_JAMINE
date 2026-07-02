@@ -25,6 +25,7 @@ export interface PaginatedNews {
 export interface NewsCategory {
     _id: string;
     name: string;
+    slug?: string;
     description?: string;
     isActive?: boolean;
 }

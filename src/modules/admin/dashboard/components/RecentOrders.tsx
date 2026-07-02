@@ -1,14 +1,27 @@
+import React from 'react';
 import { ShoppingBag, Clock, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+
+export interface RecentOrder {
+    _id: string;
+    customerName: string;
+    date: string | Date;
+    amount: number;
+    status: string;
+}
+
+export interface RecentOrdersProps {
+    orders: RecentOrder[];
+}
 
 /**
  * 📋 RecentOrders Component
  * แสดงรายการออเดอร์ล่าสุดใน Dashboard
  */
-const RecentOrders = ({ orders }) => {
+const RecentOrders: React.FC<RecentOrdersProps> = ({ orders }) => {
   const navigate = useNavigate();
   
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: string) => {
     switch(status) {
         case 'Delivered': return 'text-emerald-600 bg-emerald-50 border-emerald-100';
         case 'Shipped': return 'text-blue-600 bg-blue-50 border-blue-100';

@@ -1,6 +1,15 @@
 import { Tag, Edit2, Trash2, Loader2 } from 'lucide-react';
+import { NewsCategory } from '@/modules/admin/services';
 
-const CategoryList = ({ categories, isLoading, onEdit, onDelete, editingId }) => {
+interface CategoryListProps {
+    categories: NewsCategory[];
+    isLoading: boolean;
+    onEdit: (cat: NewsCategory) => void;
+    onDelete: (id: string) => void;
+    editingId: string | null;
+}
+
+const CategoryList = ({ categories, isLoading, onEdit, onDelete, editingId }: CategoryListProps) => {
     return (
         <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm animate-in fade-in slide-in-from-right-4 duration-500">
             <div className="flex items-center gap-3 mb-6">

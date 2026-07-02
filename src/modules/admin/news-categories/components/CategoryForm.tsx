@@ -1,6 +1,15 @@
 import { Plus, Save, RotateCcw, Loader2 } from 'lucide-react';
 
-const CategoryForm = ({ formData, editingId, onChange, onSubmit, onReset, isActionLoading }) => {
+interface CategoryFormProps {
+    formData: { name: string; description: string };
+    editingId: string | null;
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    onSubmit: (e?: React.FormEvent) => void;
+    onReset: () => void;
+    isActionLoading: boolean;
+}
+
+const CategoryForm = ({ formData, editingId, onChange, onSubmit, onReset, isActionLoading }: CategoryFormProps) => {
     return (
         <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm animate-in fade-in slide-in-from-left-4 duration-500">
             <div className="flex items-center gap-3 mb-6">

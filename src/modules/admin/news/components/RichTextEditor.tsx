@@ -4,11 +4,17 @@ import 'react-quill-new/dist/quill.snow.css'; // สไตล์พื้นฐ�
 import { uploadNewsImageApi } from '@/modules/admin/services';
 import toast from 'react-hot-toast';
 
+interface RichTextEditorProps {
+    value: string;
+    onChange: (value: string) => void;
+    placeholder?: string;
+}
+
 /**
  * ✍️ RichTextEditor (v1.0)
  * ตัวครอบ React Quill พร้อมระบบ Custom Image Upload ตรงสู่ Cloudinary
  */
-const RichTextEditor = ({ value, onChange, placeholder }: any) => {
+const RichTextEditor = ({ value, onChange, placeholder }: RichTextEditorProps) => {
     const quillRef = useRef(null);
 
     // 🖼️ ระบบดักจับการกดปุ่ม "แทรกรูป"
@@ -28,8 +34,8 @@ const RichTextEditor = ({ value, onChange, placeholder }: any) => {
                     formData.append('image', file);
                     const res = await uploadNewsImageApi(formData) as { success: boolean; url: string };
                     
-                    if (quillRef.current && (quillRef.current as any).getEditor) {
-                        const quill = (quillRef.current as any).getEditor();
+                    if (quillRef.current && (quillRef.current as ReactQuill).getEditor) {
+                        const quill = (quillRef.current as ReactQuill).getEditor();
                         const range = quill.getSelection();
                         
                         // 2. แปะ URL ที่ได้ลงใน Editor แทนที่ Base64

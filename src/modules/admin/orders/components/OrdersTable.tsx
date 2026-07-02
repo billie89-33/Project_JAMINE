@@ -1,17 +1,26 @@
 import { useNavigate } from 'react-router-dom';
 import { Clock, CheckCircle2, XCircle, Truck, Package, Trash2, ExternalLink, User, ShoppingBag, Loader2 } from 'lucide-react';
 import { ORDER_STATUS, ORDER_TRANSITIONS } from '@/shared/constants';
+import { Order } from '@/types';
+
+interface OrdersTableProps {
+  orders: Order[];
+  onUpdateStatus: (orderId: string, status: string) => void;
+  onDelete: (orderId: string) => void;
+  isLoading: boolean;
+  isUpdating: boolean;
+}
 
 /**
  * 📦 OrdersTable Component
  * ตารางแสดงรายการออเดอร์สำหรับ Admin พร้อมระบบเปลี่ยนสถานะ
  */
-const OrdersTable = ({ orders, onUpdateStatus, onDelete, isLoading, isUpdating }: any) => {
+const OrdersTable = ({ orders, onUpdateStatus, onDelete, isLoading, isUpdating }: OrdersTableProps) => {
   const navigate = useNavigate();
 
   // Helper สำหรับดึงสถานะที่เปลี่ยนไปได้ (รวมสถานะปัจจุบันด้วยเพื่อให้ dropdown แสดงค่าถูก)
   const getAvailableStatuses = (currentStatus: string) => {
-    const nextPossible = (ORDER_TRANSITIONS as any)[currentStatus] || [];
+    const nextPossible = (ORDER_TRANSITIONS as Record<string, string[]>)[currentStatus] || [];
     return [currentStatus, ...nextPossible];
   };
 
@@ -70,7 +79,7 @@ const OrdersTable = ({ orders, onUpdateStatus, onDelete, isLoading, isUpdating }
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-50">
-            {orders.map((order: any) => {
+            {orders.map((order: Order) => {
               const style = getStatusStyle(order.status);
               return (
                 <tr key={order._id} className="hover:bg-slate-50/30 transition-all group">
@@ -129,8 +138,8 @@ const OrdersTable = ({ orders, onUpdateStatus, onDelete, isLoading, isUpdating }
                   {/* 5. Date */}
                   <td className="px-8 py-5 text-center">
                     <div className="flex flex-col text-slate-400">
-                      <span className="text-xs font-black text-slate-600">{new Date(order.createdAt).toLocaleDateString('th-TH')}</span>
-                      <span className="text-[9px] font-bold uppercase tracking-widest mt-0.5">{new Date(order.createdAt).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}</span>
+                      <span className="text-xs font-black text-slate-600">{new Date(order.createdAt as string).toLocaleDateString('th-TH')}</span>
+                      <span className="text-[9px] font-bold uppercase tracking-widest mt-0.5">{new Date(order.createdAt as string).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}</span>
                     </div>
                   </td>
 

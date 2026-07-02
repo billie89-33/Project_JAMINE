@@ -8,6 +8,25 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import RichTextEditor from './RichTextEditor';
+import { NewsCategory } from '@/modules/admin/services';
+
+interface NewsFormProps {
+    formData: {
+        title: string;
+        category: string;
+        content: string;
+        isPublished: boolean;
+    };
+    categories: NewsCategory[];
+    isLoading: boolean;
+    isSubmitting: boolean;
+    imagePreview: string | null;
+    handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | { target: { name: string; value: boolean | string; type?: string; checked?: boolean } }) => void;
+    handleContentChange: (value: string) => void;
+    handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleSubmit: (e: React.FormEvent) => void;
+    isEditMode: boolean;
+}
 
 /**
  * 📰 NewsForm Component (v2.1 - Critical Fix)
@@ -24,7 +43,7 @@ const NewsForm = ({
     handleFileChange, 
     handleSubmit,
     isEditMode 
-}: any) => {
+}: NewsFormProps) => {
     if (isLoading) {
         return (
             <div className="flex flex-col items-center justify-center py-20 bg-white rounded-[2.5rem] border border-slate-100 shadow-sm">

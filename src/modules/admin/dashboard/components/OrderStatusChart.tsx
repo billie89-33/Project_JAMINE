@@ -1,11 +1,21 @@
+import React from 'react';
 import { PackageSearch } from 'lucide-react';
 import { ORDER_STATUS } from '@/shared/constants';
+
+export interface OrderStatusData {
+    status: string;
+    count: number;
+}
+
+export interface OrderStatusChartProps {
+    data: OrderStatusData[];
+}
 
 /**
  * 📊 OrderStatusChart
  * กราฟแสดงสัดส่วนสถานะออเดอร์ เพื่อให้เห็นคอขวด (Bottleneck) ของการจัดส่ง
  */
-const OrderStatusChart = ({ data }) => {
+const OrderStatusChart: React.FC<OrderStatusChartProps> = ({ data }) => {
     // 1. เรียงลำดับสถานะให้ถูกต้องตาม Flow
     const STATUS_FLOW = [
         ORDER_STATUS.PENDING,
@@ -17,7 +27,7 @@ const OrderStatusChart = ({ data }) => {
     ];
 
     // 2. Map color to status
-    const getStatusStyle = (status) => {
+    const getStatusStyle = (status: string) => {
         switch (status) {
             case ORDER_STATUS.PENDING: return { bg: 'bg-amber-500', bgLight: 'bg-amber-100', text: 'text-amber-700' };
             case ORDER_STATUS.PAID: return { bg: 'bg-emerald-500', bgLight: 'bg-emerald-100', text: 'text-emerald-700' };
@@ -33,7 +43,7 @@ const OrderStatusChart = ({ data }) => {
     const totalOrders = data?.reduce((sum, item) => sum + (item.count || 0), 0) || 0;
     
     // สร้าง Object เพื่อ map count
-    const countMap = {};
+    const countMap: Record<string, number> = {};
     data?.forEach(item => {
         countMap[item.status] = item.count;
     });

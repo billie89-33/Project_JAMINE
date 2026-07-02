@@ -1,14 +1,21 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Image as ImageIcon, Upload, Loader2, Sparkles } from 'lucide-react';
+
+export interface CategoryCoverGridProps {
+  categories: string[];
+  coversMap: Record<string, string>;
+  onUpload: (categoryName: string, file: File) => Promise<boolean | void>;
+  isSubmitting: boolean;
+}
 
 /**
  * 🏷️ CategoryCoverGrid Component
  * แสดงการ์ดตารางภาพปกหมวดหมู่ทั้งหมด พร้อมฟังก์ชันอัปโหลดภาพ
  */
-export const CategoryCoverGrid = ({ categories, coversMap, onUpload, isSubmitting }) => {
-  const [uploadingCat, setUploadingCat] = useState(null);
+export const CategoryCoverGrid: React.FC<CategoryCoverGridProps> = ({ categories, coversMap, onUpload, isSubmitting }) => {
+  const [uploadingCat, setUploadingCat] = useState<string | null>(null);
 
-  const handleFileChange = async (categoryName, e) => {
+  const handleFileChange = async (categoryName: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const inputElement = e.target;
     const file = inputElement.files?.[0];
     if (!file) return;

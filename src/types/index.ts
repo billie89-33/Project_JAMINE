@@ -100,6 +100,8 @@ export interface News {
   content?: string;
   createdAt: string;
   isPublished?: boolean;
+  author?: string;
+  views?: number;
 }
 
 // 📦 Order Interfaces
