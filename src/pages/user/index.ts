@@ -4,6 +4,6 @@ export { default as ProductDetailPage } from './ProductDetailPage';
 export { default as CheckoutPage } from './CheckoutPage';
 export { default as PaymentPage } from './PaymentPage';
 export { default as CartPage } from './CartPage';
-export { default as ProfilePage } from './ProfilePage.jsx';
-export { default as NewsDetailPage } from './NewsDetailPage.jsx';
+export { default as ProfilePage } from './ProfilePage';
+export { default as NewsDetailPage } from './NewsDetailPage';
 
