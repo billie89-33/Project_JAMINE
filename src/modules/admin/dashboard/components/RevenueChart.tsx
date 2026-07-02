@@ -1,11 +1,18 @@
 import { LineChart as LineIcon, ArrowUpRight } from 'lucide-react';
 import ReactApexChart from 'react-apexcharts';
+import { ApexOptions } from 'apexcharts';
+
+export interface RevenueChartProps {
+    data: any[];
+    period: string;
+    onPeriodChange: (period: string) => void;
+}
 
 /**
  * 📈 RevenueChart Component (ApexCharts Edition)
  * กราฟแสดงแนวโน้มรายได้แบบ Interactive พร้อมระบบ Dynamic Scaling
  */
-const RevenueChart = ({ data, period, onPeriodChange }) => {
+const RevenueChart: React.FC<RevenueChartProps> = ({ data, period, onPeriodChange }) => {
   const periods = [
     { id: 'today', label: 'Today' },
     { id: 'week', label: 'Week' },
@@ -21,7 +28,7 @@ const RevenueChart = ({ data, period, onPeriodChange }) => {
     data: data?.map(item => Number(item.revenue) || 0) || []
   }];
 
-  const options = {
+  const options: ApexOptions = {
     chart: {
       type: 'area',
       height: '100%',

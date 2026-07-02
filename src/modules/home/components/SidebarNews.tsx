@@ -14,8 +14,8 @@ const SidebarNews: React.FC = () => {
     const fetchNews = async () => {
       try {
         const res = await getPublicNewsApi({ limit: 4, isPublished: true });
-        if (res.success) {
-          setNewsList(res.data || []);
+        if (res.success && res.data) {
+          setNewsList(res.data.news || []);
         }
       } catch (error) {
         console.error('Failed to fetch news', error);

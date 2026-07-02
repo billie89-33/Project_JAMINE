@@ -46,15 +46,19 @@ export const useUsers = () => {
     const fetchUsers = useCallback(async () => {
         setIsLoading(true);
         try {
-            const res = await getUsersApi({ 
+            const res: any = await getUsersApi({ 
                 page, 
                 limit: 10, 
                 keyword: keyword.trim(), 
                 status 
             });
             if (res.success) {
-                setUsers(res.data.customers || []);
-                setPagination(res.data.pagination);
+                setUsers(res.data.customers || res.data.users || []);
+                setPagination(res.data.pagination || {
+                    currentPage: 1,
+                    totalPages: 1,
+                    totalItems: 0
+                });
             }
         } catch (error) {
             toast.error(error.response?.data?.message || 'Failed to fetch users');
@@ -76,11 +80,11 @@ export const useUsers = () => {
         setActiveTab('summary');
         setIsEditMode(false);
         try {
-            const res = await getUserSummaryApi(id);
+            const res: any = await getUserSummaryApi(id);
             if (res.success) {
-                const profile = res.data.profile;
+                const profile = res.data.profile || res.data.user;
                 setSelectedUser(profile);
-                setSummary(res.data.orderSummary);
+                setSummary(res.data.orderSummary || res.data.stats);
                 setEditForm({
                     name: profile.name || '',
                     email: profile.email || '',
@@ -97,11 +101,12 @@ export const useUsers = () => {
     }, []);
 
     // 3. Update User (Full Edit)
-    const handleUpdateUser = async (e) => {
+    const handleUpdateUser = async (e: any) => {
         if (e) e.preventDefault();
         setIsActionLoading(true);
         try {
-            const res = await updateUserByAdminApi(selectedUser._id, editForm);
+            const updatePayload: any = { ...editForm };
+            const res = await updateUserByAdminApi((selectedUser as any)?._id, updatePayload);
             if (res.success) {
                 toast.success('User updated successfully');
                 setIsEditMode(false);
@@ -141,7 +146,7 @@ export const useUsers = () => {
     const exportToCSV = async () => {
         setIsActionLoading(true);
         try {
-            const res = await exportCustomersApi({ 
+            const res: any = await exportCustomersApi({ 
                 keyword: keyword.trim(), 
                 status 
             });

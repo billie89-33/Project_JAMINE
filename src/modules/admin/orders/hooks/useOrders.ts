@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useApi } from '@/shared/hooks/useApi';
-import { getAllOrders, updateOrderStatus, deleteOrder } from '@/modules/admin/services';
+import { getAllOrders, updateOrderStatus, deleteOrder, PaginatedOrders } from '@/modules/admin/services';
 import { toast } from 'react-hot-toast';
 import { ORDER_STATUS, ORDER_TRANSITIONS } from '@/shared/constants';
 
@@ -21,11 +21,11 @@ export const useOrders = () => {
     // 🚀 2. ดึงข้อมูลออเดอร์ (ใช้ useApi มาตรฐาน)
     const { 
         loading: isLoading, 
-        data: orderData, 
+        data, 
         execute: fetchOrders 
-    } = useApi(getAllOrders, {
-        transform: (res) => res
-    });
+    } = useApi<PaginatedOrders>(getAllOrders);
+
+    const orderData = data as PaginatedOrders | null | undefined;
 
     // 🔄 3. ฟังก์ชันดึงข้อมูลใหม่ (Stabilized with useCallback)
     const refreshOrders = useCallback(() => {
@@ -49,8 +49,7 @@ export const useOrders = () => {
     // 📦 5. Prepare Final Data (Ultra-Defensive Mapping as per doc/20)
     // 🛡️ ต้องประกาศข้อมูลก่อน Handlers เพื่อป้องกัน ReferenceError (Temporal Dead Zone)
     const orders = useMemo(() => {
-        // ดึงจาก orderData.data หรือถ้า orderData เป็น Array ก็เอามาเลย ถ้าไม่ใช่ให้เป็น []
-        return orderData?.data || (Array.isArray(orderData) ? orderData : []);
+        return orderData?.orders || [];
     }, [orderData]);
 
     const totalPages = useMemo(() => orderData?.totalPages || 1, [orderData]);
@@ -69,9 +68,9 @@ export const useOrders = () => {
         onSuccess: () => refreshOrders()
     });
 
-    const handleUpdateStatus = useCallback(async (orderId, newStatus) => {
+    const handleUpdateStatus = useCallback(async (orderId: string, newStatus: string) => {
         // ค้นหาออเดอร์ปัจจุบันเพื่อเช็คสถานะ
-        const currentOrder = orders.find(o => o._id === orderId);
+        const currentOrder = orders.find((o: any) => o._id === orderId);
         if (!currentOrder) return;
 
         // ✅ กฎเหล็ก: ตรวจสอบความถูกต้องของการเปลี่ยนสถานะ (Strict Flow Control)
@@ -81,7 +80,7 @@ export const useOrders = () => {
             return;
         }
 
-        const payload = { status: newStatus };
+        const payload: any = { status: newStatus };
 
         if (newStatus === ORDER_STATUS.SHIPPED) {
             const tracking = window.prompt('🚚 กรุณาระบุเลขพัสดุ (Tracking Number):');

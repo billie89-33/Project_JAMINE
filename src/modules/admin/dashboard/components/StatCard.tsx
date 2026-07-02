@@ -1,10 +1,20 @@
+import React, { ReactNode } from 'react';
+
+export interface StatCardProps {
+  title: string;
+  value: number | string;
+  trend?: string;
+  icon: ReactNode;
+  className?: string;
+  valueClassName?: string;
+}
 
 /**
  * 📊 StatCard Component
  * แสดงตัวเลขสถิติแบบย่อใน Dashboard (พรีเมียมเวอร์ชัน)
  * รองรับการปรับแต่งสีพื้นหลังและตัวเลขผ่าน props
  */
-const StatCard = ({ title, value, trend, icon, className = '', valueClassName = '' }) => {
+const StatCard: React.FC<StatCardProps> = ({ title, value, trend, icon, className = '', valueClassName = '' }) => {
   const isPositive = trend?.startsWith('+');
   const trendColor = isPositive ? 'text-emerald-500 bg-emerald-50' : 'text-rose-500 bg-rose-50';
 

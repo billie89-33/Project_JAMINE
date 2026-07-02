@@ -1,29 +1,34 @@
 import { PieChart as PieIcon } from 'lucide-react';
 import ReactApexChart from 'react-apexcharts';
+import { ApexOptions } from 'apexcharts';
+
+export interface SalesDonutProps {
+  data: { category: string; sales: number; color?: string }[];
+}
 
 /**
  * 🍩 SalesDonut Component (ApexCharts Edition)
  * กราฟวงกลมแสดงสัดส่วนยอดขายตามหมวดหมู่แบบพรีเมียม
  */
-const SalesDonut = ({ data }) => {
+const SalesDonut: React.FC<SalesDonutProps> = ({ data }) => {
   const total = data?.reduce((sum, item) => sum + (item.sales || 0), 0) || 0;
 
   // Helper to map tailwind color classes to hex for ApexCharts
-  const getColorHex = (twClass) => {
-    const map = {
+  const getColorHex = (twClass?: string) => {
+    const map: Record<string, string> = {
       'bg-purple-500': '#9333ea',
       'bg-indigo-500': '#6366f1',
       'bg-blue-400': '#60a5fa',
       'bg-cyan-400': '#22d3ee',
       'bg-rose-400': '#fb7185',
     };
-    return map[twClass] || '#cbd5e1';
+    return twClass && map[twClass] ? map[twClass] : '#cbd5e1';
   };
 
   // ⚙️ ApexCharts Configuration
   const series = data?.map(item => item.sales || 0) || [];
   
-  const options = {
+  const options: ApexOptions = {
     chart: {
       type: 'donut',
       fontFamily: 'inherit',
@@ -56,7 +61,7 @@ const SalesDonut = ({ data }) => {
                fontWeight: 900,
                color: '#1e293b',
                offsetY: 5,
-               formatter: (val) => parseInt(val).toLocaleString()
+               formatter: (val: string | number) => Number(val).toLocaleString()
             },
             total: {
               show: true,

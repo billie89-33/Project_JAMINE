@@ -4,6 +4,7 @@ import { useApi } from '@/shared/hooks/useApi';
 import { getOrderByIdApi, updateOrderStatus } from '@/modules/admin/services';
 import { toast } from 'react-hot-toast';
 import { ORDER_STATUS, ORDER_TRANSITIONS } from '@/shared/constants';
+import { Order } from '@/types';
 
 /**
  * 🎣 useOrderDetail Hook (Admin)
@@ -19,20 +20,22 @@ export const useOrderDetail = () => {
     // 🚀 ดึงข้อมูลรายละเอียดออเดอร์
     const { 
         loading: isLoading, 
-        data: orderData, 
+        data, 
         execute: fetchOrderDetails 
-    } = useApi(getOrderByIdApi, {
+    } = useApi<Order>(getOrderByIdApi, {
         onError: () => {
             toast.error('ไม่พบข้อมูลคำสั่งซื้อ หรือเกิดข้อผิดพลาด');
             navigate('/admin/order'); // กลับไปหน้าตารางถ้าหาไม่เจอ
         }
     });
 
+    const orderData = data as Order | null | undefined;
+
     useEffect(() => {
         if (orderId) {
-            fetchOrderDetails(orderId).then(res => {
+            fetchOrderDetails(orderId).then((res: any) => {
                 // ถ้าออเดอร์มีเลขพัสดุอยู่แล้ว ให้เซ็ตค่าใส่ช่อง Input เลย (Defensive Mapping)
-                const tracking = res?.data?.trackingNumber || res?.trackingNumber;
+                const tracking = res?.data?.trackingNumber;
                 if (tracking) {
                     setTrackingNumber(tracking);
                 }
@@ -44,19 +47,19 @@ export const useOrderDetail = () => {
     const { execute: updateStatusApi, loading: isUpdating } = useApi(updateOrderStatus, {
         showToast: true,
         successMessage: 'อัปเดตสถานะออเดอร์เรียบร้อยแล้ว',
-        onSuccess: (updatedData) => {
+        onSuccess: (updatedData: any) => {
             // โหลดข้อมูลใหม่เพื่ออัปเดต UI ให้ตรงกับ DB
             fetchOrderDetails(orderId);
-            const newTracking = updatedData?.data?.trackingNumber || updatedData?.trackingNumber;
+            const newTracking = updatedData?.data?.trackingNumber;
             if (newTracking) {
                 setTrackingNumber(newTracking);
             }
         }
     });
 
-    const handleUpdateStatus = async (newStatus) => {
+    const handleUpdateStatus = async (newStatus: string) => {
         // ✅ กฎเหล็ก: ตรวจสอบความถูกต้องของการเปลี่ยนสถานะ (Strict Flow Control)
-        const currentStatus = orderData?.data?.status || orderData?.status;
+        const currentStatus = orderData?.status || '';
         const allowedNext = ORDER_TRANSITIONS[currentStatus] || [];
         
         if (newStatus !== currentStatus && !allowedNext.includes(newStatus)) {
@@ -70,7 +73,7 @@ export const useOrderDetail = () => {
             return; 
         }
 
-        const payload = { status: newStatus };
+        const payload: any = { status: newStatus };
         
         // แนบเลขพัสดุไปถ้ามีการระบุไว้ (ไม่ว่าสถานะใด แต่สำคัญที่สุดคือ Shipped)
         if (trackingNumber.trim()) {
@@ -81,7 +84,7 @@ export const useOrderDetail = () => {
     };
 
     return {
-        order: orderData?.data || orderData || null,
+        order: orderData || null,
         isLoading,
         isUpdating,
         trackingNumber,

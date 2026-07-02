@@ -180,10 +180,10 @@ const OrderDetailContainer = () => {
                             <div>
                                 <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Customer Details</h4>
                                 <p className="text-sm font-bold text-slate-800">
-                                    {order.shippingAddress?.fullName || order.userId?.name || 'Guest User'}
+                                    {order.shippingAddress?.fullName || (order.userId as any)?.name || 'Guest User'}
                                 </p>
-                                <p className="text-xs text-slate-500">{order.userId?.email || '-'}</p>
-                                <p className="text-xs text-slate-500 mt-1">{order.shippingAddress?.phone || order.userId?.phone || '-'}</p>
+                                <p className="text-xs text-slate-500">{(order.userId as any)?.email || '-'}</p>
+                                <p className="text-xs text-slate-500 mt-1">{order.shippingAddress?.phone || (order.userId as any)?.phone || '-'}</p>
                             </div>
                         </div>
                         <div className="bg-white p-6 rounded-[32px] shadow-sm border border-slate-100 flex gap-4">

@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useApi } from '@/shared/hooks/useApi';
-import { getDashboardAll } from '@/modules/admin/services';
+import { getDashboardAll, DashboardAllData } from '@/modules/admin/services';
 
 /**
  * 🎣 useDashboard Hook (Optimized v2.1)
@@ -11,7 +11,7 @@ export const useDashboard = () => {
     const [period, setPeriod] = useState('week');
 
     // 🚀 Fetch unified dashboard data
-    const fetchDashboardData = useCallback(async (currentPeriod) => {
+    const fetchDashboardData = useCallback(async (currentPeriod: string) => {
         // console.log("🔍 Fetching Dashboard Data for period:", currentPeriod);
         const res = await getDashboardAll(currentPeriod);
         return res.data;
@@ -25,9 +25,11 @@ export const useDashboard = () => {
 
     const { 
         loading: isLoading, 
-        data: dashboardData, 
+        data, 
         execute 
-    } = useApi(fetchDashboardData, apiOptions);
+    } = useApi<DashboardAllData>(fetchDashboardData, apiOptions);
+
+    const dashboardData = data as DashboardAllData | null | undefined;
 
     // 🔄 Re-fetch when period changes
     useEffect(() => {

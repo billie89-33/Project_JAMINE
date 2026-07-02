@@ -16,7 +16,7 @@ export const useShipping = () => {
 
     // 1. Hook สำหรับดึงสถิติ
     const statsApi = useApi(getShippingStats, {
-        initialData: { toShip: 0, toProcess: 0, inTransit: 0, completed: 0 },
+        initialData: { toShip: 0, toProcess: 0, inTransit: 0, completed: 0 } as any,
         transform: (res) => res,
         showToast: true, // เปิดการแจ้งเตือน Error
         errorMessage: 'ไม่สามารถดึงข้อมูลสถิติการจัดส่งได้'
@@ -24,7 +24,7 @@ export const useShipping = () => {
 
     // 2. Hook สำหรับดึงรายการออเดอร์
     const ordersApi = useApi(getShippingOrders, {
-        initialData: { data: [], total: 0 },
+        initialData: { orders: [], total: 0, page: 1, totalPages: 1 } as any,
         transform: (res) => res,
         showToast: true, // เปิดการแจ้งเตือน Error
         errorMessage: 'ไม่สามารถดึงข้อมูลรายการจัดส่งได้'
@@ -64,14 +64,15 @@ export const useShipping = () => {
 
     return {
         // 📊 Mapping สถิติ (Ultra-Defensive Object Mapping)
-        stats: statsApi.data?.data?.stats || statsApi.data?.stats || statsApi.data?.data || statsApi.data || {},
+        stats: (statsApi.data as any)?.data?.stats || (statsApi.data as any)?.stats || (statsApi.data as any)?.data || statsApi.data || {},
         
         // 📦 Mapping ออเดอร์ (Ultra-Defensive Array Mapping)
-        orders: Array.isArray(ordersApi.data?.data?.data) ? ordersApi.data.data.data :
-                Array.isArray(ordersApi.data?.data) ? ordersApi.data.data :
+        orders: Array.isArray((ordersApi.data as any)?.data?.data) ? (ordersApi.data as any).data.data :
+                Array.isArray((ordersApi.data as any)?.data) ? (ordersApi.data as any).data :
+                Array.isArray((ordersApi.data as any)?.orders) ? (ordersApi.data as any).orders :
                 Array.isArray(ordersApi.data) ? ordersApi.data : [],
         
-        total: ordersApi.data?.total || 0,
+        total: (ordersApi.data as any)?.total || 0,
         loading: statsApi.loading || ordersApi.loading,
         updating: updateTrackingApi.loading,
         filters,

@@ -53,9 +53,9 @@ export const useAdminProducts = () => {
             ? response.data 
             : (response.data?.products || []);
             
-        setProducts(productsList);
-        setTotal(response.total || response.data?.total || productsList.length);
-        setTotalPages(response.totalPages || response.data?.totalPages || Math.ceil((response.total || productsList.length) / 10));
+        setProducts(productsList as any);
+        setTotal(response.data?.total || productsList.length);
+        setTotalPages(response.data?.totalPages || Math.ceil((response.data?.total || productsList.length) / 10));
       }
     } catch (error) {
       console.error('Failed to fetch products:', error);

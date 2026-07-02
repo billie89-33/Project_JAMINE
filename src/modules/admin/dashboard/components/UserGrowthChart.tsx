@@ -1,11 +1,18 @@
 import { Users, UserPlus } from 'lucide-react';
 import ReactApexChart from 'react-apexcharts';
+import { ApexOptions } from 'apexcharts';
+
+export interface UserGrowthChartProps {
+    data: any[];
+    period: string;
+    onPeriodChange: (period: string) => void;
+}
 
 /**
  * 📈 UserGrowthChart Component
  * กราฟแสดงสถิติการสมัครสมาชิกใหม่แบบ Area Chart
  */
-const UserGrowthChart = ({ data, period, onPeriodChange }) => {
+const UserGrowthChart: React.FC<UserGrowthChartProps> = ({ data, period, onPeriodChange }) => {
   const periods = [
     { id: 'today', label: 'Today' },
     { id: 'week', label: 'Week' },
@@ -21,7 +28,7 @@ const UserGrowthChart = ({ data, period, onPeriodChange }) => {
     data: data?.map(item => Number(item.count) || 0) || []
   }];
 
-  const options = {
+  const options: ApexOptions = {
     chart: {
       type: 'area',
       height: '100%',
@@ -72,7 +79,7 @@ const UserGrowthChart = ({ data, period, onPeriodChange }) => {
     },
     yaxis: {
       labels: {
-        formatter: (val) => Math.round(val),
+        formatter: (val: number) => Math.round(val).toString(),
         style: {
           colors: '#94a3b8',
           fontSize: '10px',

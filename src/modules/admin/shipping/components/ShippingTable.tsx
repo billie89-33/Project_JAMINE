@@ -44,7 +44,7 @@ const ShippingTable = ({ orders, loading, onUpdateTracking }) => {
                     <tbody className="divide-y divide-slate-50">
                         {orders.length === 0 ? (
                             <tr>
-                                <td colSpan="5" className="px-6 py-10 text-center text-slate-400">
+                                <td colSpan={7} className="px-6 py-10 text-center text-slate-400">
                                     No shipping orders found.
                                 </td>
                             </tr>

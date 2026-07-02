@@ -54,7 +54,7 @@ export const EditableMainInfo = ({ formData, setFormData, imagePreview, onFileSe
             <textarea 
               value={formData.description} 
               onChange={e => setFormData({...formData, description: e.target.value})} 
-              rows="4"
+              rows={4}
               className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-medium focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none transition-all shadow-sm resize-none" 
             />
           </div>

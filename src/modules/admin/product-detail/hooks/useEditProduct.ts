@@ -46,9 +46,10 @@ export const useEditProduct = () => {
     setIsLoading(true);
     try {
       const response = await getProductById(productId);
-      if (response.success) {
+      if (response.success && response.data) {
         // 🛡️ Defensive Check: ป้องกันกรณี Backend ส่งมาเป็น { product: {...} } แทนที่จะเป็น {...}
-        const product = response.data?.product || response.data || {};
+        const responseData = response.data as any;
+        const product = responseData.product || response.data || {};
         
         // 🛡️ Safe Parse Specifications: ดักกรณี Backend ส่งมาเป็น JSON String
         let parsedSpecs = {};
