@@ -25,7 +25,7 @@ const RichTextEditor = ({ value, onChange, placeholder }) => {
             const toastId = toast.loading('กำลังอัปโหลดรูปภาพลงบทความ...');
             try {
                 // 1. ส่งรูปขึ้น Cloudinary ผ่าน API ที่เราเพิ่งสร้าง
-                const res = await uploadNewsImageApi(file);
+                const res: any = await uploadNewsImageApi(file);
                 
                 if (res.success) {
                     const quill = quillRef.current.getEditor();

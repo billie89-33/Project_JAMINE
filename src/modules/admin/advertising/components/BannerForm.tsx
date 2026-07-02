@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ImageUploadBox } from '@/modules/admin/addproduct';
 import { Save, Info, Image as ImageIcon } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 /**
  * ✨ BannerForm Component
@@ -68,12 +69,12 @@ export const BannerForm = ({ initialData, onSubmit, onCancel, isSubmitting }) =>
       // สำหรับโหมดแก้ไข ตรวจสอบว่าค่าต่างจากเดิมไหม
       if (initialData) {
         if (value !== initialData[key]) {
-          submitData.append(key, value);
+          submitData.append(key, value as any);
           hasChanges = true;
         }
       } else {
         // โหมดสร้างใหม่ ส่งทั้งหมด
-        submitData.append(key, value);
+        submitData.append(key, value as any);
         hasChanges = true;
       }
     });

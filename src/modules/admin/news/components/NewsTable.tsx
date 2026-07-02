@@ -26,7 +26,7 @@ const NewsTable = ({ newsList, isLoading, onToggleStatus, onDelete }) => {
                     <tbody className="divide-y divide-slate-50">
                         {isLoading ? (
                             <tr>
-                                <td colSpan="6" className="px-6 py-20 text-center">
+                                <td colSpan={6} className="px-6 py-20 text-center">
                                     <div className="flex flex-col items-center gap-3">
                                         <Loader2 className="animate-spin text-purple-600" size={32} />
                                         <span className="text-sm font-bold text-slate-400">Loading articles...</span>
@@ -35,7 +35,7 @@ const NewsTable = ({ newsList, isLoading, onToggleStatus, onDelete }) => {
                             </tr>
                         ) : newsList.length === 0 ? (
                             <tr>
-                                <td colSpan="6" className="px-6 py-20 text-center text-slate-400 font-medium">
+                                <td colSpan={6} className="px-6 py-20 text-center text-slate-400 font-medium">
                                     No articles found.
                                 </td>
                             </tr>

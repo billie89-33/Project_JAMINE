@@ -27,16 +27,16 @@ export const useNews = () => {
     const fetchNews = useCallback(async () => {
         setIsLoading(true);
         try {
-            const params = {
+            const params: any = {
                 page,
                 limit: 10,
                 keyword: keyword.trim() || undefined,
                 categoryId: categoryId || undefined,
-                isPublished: isPublished === 'all' ? undefined : isPublished
+                isPublished: isPublished === 'all' ? undefined : isPublished === 'true'
             };
             const res = await getNewsApi(params);
             if (res.success) {
-                setNewsList(res.data || []);
+                setNewsList((res.data as any).news || res.data || []);
             }
         } catch (error) {
             toast.error(error.response?.data?.message || 'Failed to fetch news');

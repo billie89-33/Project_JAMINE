@@ -55,8 +55,8 @@ export const CategoryCoverGrid = ({ categories, coversMap, onUpload, isSubmittin
                   alt={catName} 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   onError={(e) => {
-                    e.target.style.display = 'none';
-                    e.target.nextSibling.style.display = 'flex';
+                    (e.target as HTMLElement).style.display = 'none';
+                    ((e.target as HTMLElement).nextSibling as HTMLElement).style.display = 'flex';
                   }}
                 />
               ) : null}

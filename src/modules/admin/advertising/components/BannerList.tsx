@@ -30,8 +30,8 @@ export const BannerList = ({ banners, onEdit, onDelete }) => {
                         alt={banner.title || 'Banner'} 
                         className="w-full h-full object-contain p-1"
                         onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.nextSibling.style.display = 'flex';
+                          (e.target as HTMLElement).style.display = 'none';
+                          ((e.target as HTMLElement).nextSibling as HTMLElement).style.display = 'flex';
                         }}
                       />
                     ) : null}

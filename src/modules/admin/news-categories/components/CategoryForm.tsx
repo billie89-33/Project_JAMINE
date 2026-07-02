@@ -33,7 +33,7 @@ const CategoryForm = ({ formData, editingId, onChange, onSubmit, onReset, isActi
                         value={formData.description}
                         onChange={onChange}
                         placeholder="Short description about this category..."
-                        rows="4"
+                        rows={4}
                         className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm font-bold resize-none"
                     />
                 </div>

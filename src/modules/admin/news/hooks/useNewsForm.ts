@@ -47,11 +47,11 @@ export const useNewsForm = () => {
         try {
             const res = await getNewsByIdApi(id);
             if (res.success) {
-                const data = res.data;
+                const data: any = res.data;
                 setFormData({
                     title: data.title,
-                    category: data.category?._id || data.category,
-                    content: data.content,
+                    category: data.category?._id || data.category || '',
+                    content: data.content || '',
                     isPublished: data.isPublished
                 });
                 setImagePreview(data.image?.url);
@@ -109,7 +109,7 @@ export const useNewsForm = () => {
             data.append('title', formData.title);
             data.append('category', formData.category);
             data.append('content', formData.content);
-            data.append('isPublished', formData.isPublished);
+            data.append('isPublished', String(formData.isPublished));
             
             if (selectedFile) {
                 data.append('image', selectedFile);

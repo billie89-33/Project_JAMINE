@@ -97,6 +97,7 @@ export interface News {
   title: string;
   category?: { name: string; _id?: string };
   image?: { url: string; public_id?: string };
+  content?: string;
   createdAt: string;
   isPublished?: boolean;
 }
