@@ -166,11 +166,23 @@ const DashboardContainer = () => {
             {/* 6. Detail Lists Row (Recent Orders, Low Stock) */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2">
-                    <RecentOrders orders={recentOrders} />
+                    <RecentOrders orders={recentOrders.map(o => ({
+                        _id: o._id,
+                        customerName: o.shippingAddress?.fullName || (o.userId as { name?: string })?.name || 'Unknown',
+                        date: o.createdAt || new Date().toISOString(),
+                        amount: o.total || o.totalAmount || 0,
+                        status: o.status
+                    }))} />
                 </div>
                 <div className="lg:col-span-1">
                     {lowStock.length > 0 ? (
-                        <LowStockProducts products={lowStock} />
+                        <LowStockProducts products={lowStock.map(p => ({
+                            _id: p._id,
+                            name: p.modelName || p.name || 'Unknown',
+                            brand: p.brand,
+                            stock: p.stock,
+                            image: p.image
+                        }))} />
                     ) : (
                         <div className="bg-white rounded-[32px] shadow-sm border border-slate-100 h-full flex flex-col items-center justify-center p-8 text-center text-slate-400">
                             <PackageOpen size={48} className="mb-4 text-emerald-200" />

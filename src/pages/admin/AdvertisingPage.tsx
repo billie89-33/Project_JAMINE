@@ -24,7 +24,7 @@ const AdvertisingPage = () => {
   } = useBanners();
 
   // จัดการการส่งข้อมูลฟอร์ม (ทั้งสร้างใหม่และแก้ไข)
-  const handleFormSubmit = async (formData: FormData | Record<string, unknown>, id?: string) => {
+  const handleFormSubmit = async (formData: FormData, id?: string) => {
     let success;
     if (id) {
       // โหมดแก้ไข (Surgical Patch)
@@ -112,7 +112,7 @@ const AdvertisingPage = () => {
             <BannerList 
               banners={banners} 
               onEdit={handleEditClick}
-              onDelete={handleDelete}
+              onDelete={(id) => { if (id) handleDelete(id); }}
             />
           </div>
         )}

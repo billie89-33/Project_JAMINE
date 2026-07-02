@@ -78,6 +78,7 @@ export interface Banner {
   _id: string;
   title?: string;
   image?: { url: string; public_id?: string };
+  order?: number;
   imageUrl?: string;
   link?: string;
   linkUrl?: string;

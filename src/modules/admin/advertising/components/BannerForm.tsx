@@ -3,11 +3,20 @@ import { ImageUploadBox } from '@/modules/admin/addproduct';
 import { Save, Info, Image as ImageIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
 
+import { Banner } from '@/types';
+
+export interface BannerFormProps {
+    initialData?: Banner;
+    onSubmit: (formData: FormData, id?: string) => void;
+    onCancel: () => void;
+    isSubmitting?: boolean;
+}
+
 /**
  * ✨ BannerForm Component
  * ฟอร์มเพิ่ม/แก้ไขแบนเนอร์ (Surgical Layout)
  */
-export const BannerForm = ({ initialData, onSubmit, onCancel, isSubmitting }) => {
+export const BannerForm = ({ initialData, onSubmit, onCancel, isSubmitting }: BannerFormProps) => {
   const [formData, setFormData] = useState({
     title: '',
     linkUrl: '',
@@ -15,11 +24,11 @@ export const BannerForm = ({ initialData, onSubmit, onCancel, isSubmitting }) =>
     order: 0,
     isActive: true
   });
-  const [imagePreview, setImagePreview] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   // 🖼️ กำหนด Aspect Ratio ตาม Placement
-  const placementRatios = {
+  const placementRatios: Record<string, string> = {
     'home_hero': '1920/600',
     'category_hero': '1600/400',
     'promotion_bar': '3/1',
@@ -43,16 +52,16 @@ export const BannerForm = ({ initialData, onSubmit, onCancel, isSubmitting }) =>
     }
   }, [initialData]);
 
-  const handleFileSelect = (file) => {
+  const handleFileSelect = (file: File) => {
     setSelectedFile(file);
     const reader = new FileReader();
     reader.onloadend = () => {
-      setImagePreview(reader.result);
+      setImagePreview(reader.result as string);
     };
     reader.readAsDataURL(file);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     // 🛡️ 1. Validation: ถ้าสร้างใหม่ ต้องมีรูป!
@@ -68,7 +77,7 @@ export const BannerForm = ({ initialData, onSubmit, onCancel, isSubmitting }) =>
     Object.entries(formData).forEach(([key, value]) => {
       // สำหรับโหมดแก้ไข ตรวจสอบว่าค่าต่างจากเดิมไหม
       if (initialData) {
-        if (value !== initialData[key]) {
+        if (value !== (initialData as any)[key]) {
           submitData.append(key, value as string | Blob);
           hasChanges = true;
         }

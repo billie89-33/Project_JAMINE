@@ -4,6 +4,7 @@ import { useApi } from '@/shared/hooks/useApi';
 import { getAllOrders, updateOrderStatus, deleteOrder, PaginatedOrders } from '@/modules/admin/services';
 import { toast } from 'react-hot-toast';
 import { ORDER_STATUS, ORDER_TRANSITIONS } from '@/shared/constants';
+import { Order } from '@/types';
 
 /**
  * 🎣 useOrders Hook (Refactored for Scalability)
@@ -70,11 +71,11 @@ export const useOrders = () => {
 
     const handleUpdateStatus = useCallback(async (orderId: string, newStatus: string) => {
         // ค้นหาออเดอร์ปัจจุบันเพื่อเช็คสถานะ
-        const currentOrder = orders.find((o: { _id: string; status: string }) => o._id === orderId);
+        const currentOrder = orders.find((o: Order) => o._id === orderId);
         if (!currentOrder) return;
 
         // ✅ กฎเหล็ก: ตรวจสอบความถูกต้องของการเปลี่ยนสถานะ (Strict Flow Control)
-        const allowedNext = ORDER_TRANSITIONS[currentOrder.status as keyof typeof ORDER_TRANSITIONS] || [];
+        const allowedNext = (ORDER_TRANSITIONS as unknown as Record<string, string[]>)[currentOrder.status] || [];
         if (newStatus !== currentOrder.status && !allowedNext.includes(newStatus)) {
             toast.error(`ไม่สามารถเปลี่ยนสถานะจาก ${currentOrder.status} เป็น ${newStatus} ได้`);
             return;

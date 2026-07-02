@@ -1,10 +1,26 @@
 import { Edit3, Trash2, ExternalLink, Image as ImageIcon, CheckCircle2, XCircle } from 'lucide-react';
 
+export interface Banner {
+  _id?: string;
+  id?: string;
+  image?: { url: string };
+  title?: string;
+  linkUrl?: string;
+  placement?: string;
+  isActive?: boolean;
+}
+
+interface BannerListProps {
+  banners: Banner[];
+  onEdit: (banner: Banner) => void;
+  onDelete: (id: string | undefined) => void;
+}
+
 /**
  * 📋 BannerList Component
  * แสดงรายการแบนเนอร์ทั้งหมดในรูปแบบตารางพรีเมียม
  */
-export const BannerList = ({ banners, onEdit, onDelete }) => {
+export const BannerList = ({ banners, onEdit, onDelete }: BannerListProps) => {
   return (
     <div className="bg-white rounded-[40px] shadow-2xl shadow-purple-100/50 border border-purple-50 overflow-hidden">
       <div className="overflow-x-auto">
@@ -60,7 +76,7 @@ export const BannerList = ({ banners, onEdit, onDelete }) => {
                 {/* 3. Placement */}
                 <td className="px-8 py-6">
                   <span className="px-3 py-1 bg-slate-100 text-slate-500 rounded-full text-[9px] font-black uppercase tracking-widest border border-slate-200">
-                    {(banner?.placement || 'unknown').replace('_', ' ')}
+                    {(banner?.placement || 'unassigned').replace('_', ' ')}
                   </span>
                 </td>
 

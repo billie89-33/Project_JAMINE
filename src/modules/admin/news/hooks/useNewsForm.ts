@@ -26,7 +26,8 @@ export const useNewsForm = () => {
         title: '',
         category: '',
         content: '',
-        isPublished: true
+        isPublished: true,
+        isFeatured: false
     });
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null);

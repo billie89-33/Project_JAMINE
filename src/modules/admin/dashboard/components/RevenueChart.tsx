@@ -79,7 +79,7 @@ const RevenueChart: React.FC<RevenueChartProps> = ({ data, period, onPeriodChang
     },
     yaxis: {
       // 🚀 Dynamic & Safe Scaling
-      min: (min) => {
+      min: (min: number) => {
          if (typeof min !== 'number' || isNaN(min)) return 0;
          return min > 1000 ? min * 0.98 : 0;
       },

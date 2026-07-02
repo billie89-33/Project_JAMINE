@@ -34,7 +34,7 @@ export const useBanners = () => {
   }, [fetchBanners]);
 
   // 2. จัดการการสร้างใหม่
-  const handleCreate = async (formData) => {
+  const handleCreateBanner = async (formData: FormData) => {
     setIsSubmitting(true);
     try {
       const res = await createBannerApi(formData);
@@ -44,7 +44,8 @@ export const useBanners = () => {
         return true;
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'สร้างแบนเนอร์ไม่สำเร็จ');
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || 'สร้างแบนเนอร์ไม่สำเร็จ');
       return false;
     } finally {
       setIsSubmitting(false);
@@ -52,7 +53,7 @@ export const useBanners = () => {
   };
 
   // 3. จัดการการอัปเดต
-  const handleUpdate = async (id, formData) => {
+  const handleUpdateBanner = async (id: string, formData: FormData) => {
     setIsSubmitting(true);
     try {
       const res = await updateBannerApi(id, formData);
@@ -62,7 +63,8 @@ export const useBanners = () => {
         return true;
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'อัปเดตไม่สำเร็จ');
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || 'อัปเดตไม่สำเร็จ');
       return false;
     } finally {
       setIsSubmitting(false);
@@ -70,7 +72,7 @@ export const useBanners = () => {
   };
 
   // 4. จัดการการลบ
-  const handleDelete = async (id) => {
+  const handleDeleteBanner = async (id: string) => {
     if (!window.confirm('คุณแน่ใจหรือไม่ว่าต้องการลบแบนเนอร์นี้?')) return;
     
     try {
@@ -88,9 +90,9 @@ export const useBanners = () => {
     banners,
     isLoading,
     isSubmitting,
-    handleCreate,
-    handleUpdate,
-    handleDelete,
+    handleCreate: handleCreateBanner,
+    handleUpdate: handleUpdateBanner,
+    handleDelete: handleDeleteBanner,
     refreshBanners: fetchBanners
   };
 };

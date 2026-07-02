@@ -7,6 +7,21 @@ import { useNavigate } from 'react-router-dom';
  * แยกส่วนการจัดการ API Action ของโมดูล AddProduct ออกมา
  * เพื่อลดความซับซ้อนใน Component และใช้มาตรฐาน useApi ร่วมกัน
  */
+export interface RawProductData {
+    modelName?: string;
+    brand?: string;
+    description?: string;
+    sku?: string;
+    tags?: string | string[];
+    stock?: number | string;
+    price?: string | number;
+    category?: string;
+    status?: string;
+    isFeatured?: boolean | string;
+    selectedFile?: File | null;
+    specifications?: Record<string, string | number | boolean | null | undefined>;
+}
+
 export const useProductActions = () => {
     const navigate = useNavigate();
 
@@ -22,9 +37,9 @@ export const useProductActions = () => {
 
     /**
      * ฟังก์ชันสำหรับเตรียมข้อมูล (Transform) และส่ง API
-     * @param {Object} rawData - ข้อมูลดิบจากฟอร์ม
+     * @param {RawProductData} rawData - ข้อมูลดิบจากฟอร์ม
      */
-    const handleAddProduct = async (rawData) => {
+    const handleAddProduct = async (rawData: RawProductData) => {
         const { 
             modelName, brand, description, sku, tags, 
             stock, price, category, status, isFeatured, 
@@ -33,10 +48,10 @@ export const useProductActions = () => {
 
         // 🧼 1. กรองข้อมูล Specifications: ตัดช่องที่ไม่ได้กรอก หรือมีแค่ช่องว่างทิ้ง
         const cleanSpecs = Object.entries(specifications || {})
-            .filter(([key, value]) => key.trim() !== "" && value !== undefined && value !== null && value.toString().trim() !== "")
+            .filter(([key, value]) => key.trim() !== "" && value !== undefined && value !== null && String(value).trim() !== "")
             .reduce((acc, [key, value]) => ({ 
                 ...acc, 
-                [key]: value.toString().trim() 
+                [key]: String(value).trim() 
             }), {});
 
         // 💡 2. บรรจุของลง FormData (สำหรับส่งไฟล์ภาพ)

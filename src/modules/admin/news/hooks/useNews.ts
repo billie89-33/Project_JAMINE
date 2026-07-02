@@ -74,7 +74,7 @@ export const useNews = () => {
     }, [fetchCategories]);
 
     // 3. Toggle Published Status
-    const handleToggleStatus = async (id: string, currentStatus: string) => {
+    const handleToggleStatus = async (id: string, currentStatus: boolean) => {
         setIsActionLoading(true);
         try {
             const res = await updateNewsApi(id, { isPublished: !currentStatus });

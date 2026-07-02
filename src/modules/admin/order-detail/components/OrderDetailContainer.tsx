@@ -29,7 +29,7 @@ const OrderDetailContainer = () => {
     } = useOrderDetail();
 
     const getAvailableStatuses = (currentStatus: string) => {
-        const nextPossible = (ORDER_TRANSITIONS as Record<string, string[]>)[currentStatus] || [];
+        const nextPossible = (ORDER_TRANSITIONS as unknown as Record<string, string[]>)[currentStatus] || [];
         return [currentStatus, ...nextPossible];
     };
 
@@ -271,7 +271,7 @@ const OrderDetailContainer = () => {
                                 <span>Shipping Fee</span>
                                 <span className="text-emerald-500 font-bold">฿{(order.shippingFee || 0).toLocaleString()}</span>
                             </div>
-                            {order.discount > 0 && (
+                            {(order.discount || 0) > 0 && (
                                 <div className="flex justify-between text-rose-500">
                                     <span>Discount</span>
                                     <span>- ฿{(order.discount || 0).toLocaleString()}</span>

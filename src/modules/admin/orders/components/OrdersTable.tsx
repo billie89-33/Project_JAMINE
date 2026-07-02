@@ -20,7 +20,7 @@ const OrdersTable = ({ orders, onUpdateStatus, onDelete, isLoading, isUpdating }
 
   // Helper สำหรับดึงสถานะที่เปลี่ยนไปได้ (รวมสถานะปัจจุบันด้วยเพื่อให้ dropdown แสดงค่าถูก)
   const getAvailableStatuses = (currentStatus: string) => {
-    const nextPossible = (ORDER_TRANSITIONS as Record<string, string[]>)[currentStatus] || [];
+    const nextPossible = (ORDER_TRANSITIONS as unknown as Record<string, string[]>)[currentStatus] || [];
     return [currentStatus, ...nextPossible];
   };
 
@@ -99,9 +99,9 @@ const OrdersTable = ({ orders, onUpdateStatus, onDelete, isLoading, isUpdating }
                       </div>
                       <div className="flex flex-col">
                         <span className="text-sm font-black text-slate-700">
-                          {order.shippingAddress?.fullName || order.userId?.name || 'Guest User'}
+                          {order.shippingAddress?.fullName || (order.userId as { name?: string })?.name || 'Guest User'}
                         </span>
-                        <span className="text-[10px] text-slate-400 font-bold">{order.userId?.email || '-'}</span>
+                        <span className="text-[10px] text-slate-400 font-bold">{(order.userId as { email?: string })?.email || '-'}</span>
                       </div>
                     </div>
                   </td>

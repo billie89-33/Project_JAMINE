@@ -30,17 +30,17 @@ const RichTextEditor = ({ value, onChange, placeholder }: RichTextEditorProps) =
                 const toastId = toast.loading('กำลังอัปโหลดรูปภาพลงบทความ...');
                 try {
                     // 1. ส่งรูปขึ้น Cloudinary ผ่าน API ที่เราเพิ่งสร้าง
-                    const formData = new FormData();
-                    formData.append('image', file);
-                    const res = await uploadNewsImageApi(formData) as { success: boolean; url: string };
+                    const res = await uploadNewsImageApi(file);
                     
                     if (quillRef.current && (quillRef.current as ReactQuill).getEditor) {
                         const quill = (quillRef.current as ReactQuill).getEditor();
                         const range = quill.getSelection();
                         
                         // 2. แปะ URL ที่ได้ลงใน Editor แทนที่ Base64
-                        quill.insertEmbed(range.index, 'image', res.url);
-                        toast.success('อัปโหลดรูปภาพสำเร็จ', { id: toastId });
+                        if (range && res.data?.url) {
+                            quill.insertEmbed(range.index, 'image', res.data.url);
+                            toast.success('อัปโหลดรูปภาพสำเร็จ', { id: toastId });
+                        }
                     }
                 } catch (error) {
                     toast.error('อัปโหลดรูปภาพล้มเหลว', { id: toastId });

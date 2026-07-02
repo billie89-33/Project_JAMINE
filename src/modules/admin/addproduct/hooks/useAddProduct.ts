@@ -21,7 +21,7 @@ export const useAddProduct = () => {
     const [stock, setStock] = useState(1); 
     const [price, setPrice] = useState(''); 
     const [category, setCategory] = useState(''); // เริ่มต้นเป็นค่าว่าง ให้พิมพ์หรือเลือกเอง
-    const [status, setStatus] = useState(PRODUCT_STATUS.ACTIVE); 
+    const [status, setStatus] = useState<string>(PRODUCT_STATUS.ACTIVE);
     const [isFeatured, setIsFeatured] = useState(false); 
 
     // 💾 2. State คุมข้อมูลไฟล์ภาพ
@@ -35,8 +35,8 @@ export const useAddProduct = () => {
     const { handleAddProduct, isSubmitting } = useProductActions();
 
     // 🌐 5. ดึงข้อมูล Master Data สำหรับ Auto-suggest (Datalist)
-    const { data: categoriesList, execute: fetchCategories } = useApi(getCategoriesApi);
-    const { data: brandsList, execute: fetchBrands } = useApi(getBrandsApi);
+    const { data: categoriesList, execute: fetchCategories } = useApi<Array<{ name: string } | string>>(getCategoriesApi);
+    const { data: brandsList, execute: fetchBrands } = useApi<string[]>(getBrandsApi);
 
     // ดึงหมวดหมู่ทั้งหมดครั้งแรกที่โหลดหน้า
     useEffect(() => {

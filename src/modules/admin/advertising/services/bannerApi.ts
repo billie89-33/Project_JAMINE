@@ -1,4 +1,5 @@
 import { apiClient } from '@/shared/api';
+import { ApiResponse, Banner } from '@/types';
 
 /**
  * 📢 Advertising & Banner API Service
@@ -18,7 +19,7 @@ export const getAdminBannersApi = async () => {
  * สร้าง Banner ใหม่
  * @param {FormData} formData - ข้อมูล banner พร้อมไฟล์รูปภาพ
  */
-export const createBannerApi = async (formData) => {
+export const createBannerApi = async (formData: FormData): Promise<ApiResponse<Banner>> => {
     // 🛡️ ตาม Spec v2: POST /admin/banners (ปล่อยให้ Axios จัดการ Boundary อัตโนมัติ)
     const response = await apiClient.post('/admin/banners', formData);
     return response.data;
@@ -29,7 +30,7 @@ export const createBannerApi = async (formData) => {
  * @param {string} id - ไอดี banner
  * @param {FormData} formData - ข้อมูลที่ต้องการแก้ไข
  */
-export const updateBannerApi = async (id, formData) => {
+export const updateBannerApi = async (id: string, formData: FormData): Promise<ApiResponse<Banner>> => {
     // 🛡️ ตาม Spec v2: PATCH /admin/banners/:id
     const response = await apiClient.patch(`/admin/banners/${id}`, formData);
     return response.data;
@@ -39,7 +40,7 @@ export const updateBannerApi = async (id, formData) => {
  * ลบ Banner ออกจากระบบ
  * @param {string} id - ไอดี banner
  */
-export const deleteBannerApi = async (id) => {
+export const deleteBannerApi = async (id: string): Promise<ApiResponse<{ id: string }>> => {
     // 🛡️ ตาม Spec v2: DELETE /admin/banners/:id
     const response = await apiClient.delete(`/admin/banners/${id}`);
     return response.data;

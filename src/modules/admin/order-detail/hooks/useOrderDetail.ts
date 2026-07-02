@@ -12,7 +12,13 @@ import { Order } from '@/types';
  */
 export const useOrderDetail = () => {
     const { orderId } = useParams();
+    const id = orderId ?? '';
     const navigate = useNavigate();
+
+    const handlePrintInvoice = () => {
+        if (!id) return;
+        window.open(`/admin/invoice/${id}`, '_blank');
+    };
 
     // 💾 State สำหรับเลขพัสดุ (Tracking Number)
     const [trackingNumber, setTrackingNumber] = useState('');
@@ -32,10 +38,13 @@ export const useOrderDetail = () => {
     const orderData = data as Order | null | undefined;
 
     useEffect(() => {
-        if (orderId) {
-            fetchOrderDetails(orderId).then((res: { data?: Order }) => {
-                // ถ้าออเดอร์มีเลขพัสดุอยู่แล้ว ให้เซ็ตค่าใส่ช่อง Input เลย (Defensive Mapping)
-                const tracking = res?.data?.trackingNumber;
+        if (id) {
+            new Promise<Order>((resolve, reject) => {
+                getOrderByIdApi(id).then((res) => {
+                    resolve(res.data as Order);
+                }).catch(reject);
+            }).then((order) => {
+                const tracking = order?.trackingNumber;
                 if (tracking) {
                     setTrackingNumber(tracking);
                 }
@@ -49,7 +58,7 @@ export const useOrderDetail = () => {
         successMessage: 'อัปเดตสถานะออเดอร์เรียบร้อยแล้ว',
         onSuccess: (updatedData: { data?: Order }) => {
             // โหลดข้อมูลใหม่เพื่ออัปเดต UI ให้ตรงกับ DB
-            fetchOrderDetails(orderId);
+            fetchOrderDetails(id);
             const newTracking = updatedData?.data?.trackingNumber;
             if (newTracking) {
                 setTrackingNumber(newTracking);
@@ -80,7 +89,7 @@ export const useOrderDetail = () => {
             payload.trackingNumber = trackingNumber.trim();
         }
 
-        await updateStatusApi(orderId, payload);
+        await updateStatusApi(id, payload);
     };
 
     return {
