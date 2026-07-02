@@ -3,7 +3,7 @@ import ReactApexChart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
 
 export interface RevenueChartProps {
-    data: any[];
+    data: { date: string; revenue: number }[];
     period: string;
     onPeriodChange: (period: string) => void;
 }

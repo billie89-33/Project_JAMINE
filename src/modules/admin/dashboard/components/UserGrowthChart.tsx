@@ -3,7 +3,7 @@ import ReactApexChart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
 
 export interface UserGrowthChartProps {
-    data: any[];
+    data: { date: string; count: number }[];
     period: string;
     onPeriodChange: (period: string) => void;
 }

@@ -16,6 +16,20 @@ import {
  * 👥 CustomerList Component
  * ส่วนแสดงผลตารางรายชื่อลูกค้าพร้อมระบบ Filter
  */
+interface CustomerListProps {
+    users: any[];
+    isLoading: boolean;
+    pagination: { totalItems: number; totalPages: number; currentPage: number };
+    page: number;
+    setPage: (p: any) => void;
+    keyword: string;
+    setKeyword: (k: string) => void;
+    status: string;
+    setStatus: (s: string) => void;
+    onViewDetail: (id: string) => void;
+    onToggleStatus: (id: string, status: string) => void;
+}
+
 const CustomerList = ({ 
     users, 
     isLoading, 
@@ -28,7 +42,7 @@ const CustomerList = ({
     setStatus,
     onViewDetail,
     onToggleStatus
-}) => {
+}: CustomerListProps) => {
     return (
         <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
             
@@ -96,7 +110,7 @@ const CustomerList = ({
                                 </td>
                             </tr>
                         ) : (
-                            users.map((user) => (
+                            users.map((user: any) => (
                                 <tr key={user._id} className="hover:bg-slate-50/50 transition-colors group">
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3">
@@ -174,7 +188,7 @@ const CustomerList = ({
                     <div className="flex items-center gap-2">
                         <button 
                             disabled={page === 1}
-                            onClick={() => setPage(p => p - 1)}
+                            onClick={() => setPage((p: number) => p - 1)}
                             className="p-2 rounded-xl border border-slate-200 bg-white text-slate-600 disabled:opacity-30 transition-all"
                         >
                             <ChevronLeft size={18} />
@@ -196,7 +210,7 @@ const CustomerList = ({
                         </div>
                         <button 
                             disabled={page === pagination.totalPages}
-                            onClick={() => setPage(p => p + 1)}
+                            onClick={() => setPage((p: number) => p + 1)}
                             className="p-2 rounded-xl border border-slate-200 bg-white text-slate-600 disabled:opacity-30 transition-all"
                         >
                             <ChevronRight size={18} />

@@ -5,7 +5,7 @@ import { PRODUCT_STATUS } from '@/shared/constants';
  * 📝 EditableMainInfo
  * ส่วนจัดการข้อมูลพื้นฐานและสื่อ สำหรับหน้าแก้ไขสินค้า
  */
-export const EditableMainInfo = ({ formData, setFormData, imagePreview, onFileSelect, categoriesList }) => {
+export const EditableMainInfo = ({ formData, setFormData, imagePreview, onFileSelect, categoriesList }: any) => {
   return (
     <div className="flex flex-col lg:flex-row gap-10">
       
@@ -117,7 +117,7 @@ export const EditableMainInfo = ({ formData, setFormData, imagePreview, onFileSe
                 className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-bold focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none shadow-sm"
               />
               <datalist id="categories-list">
-                {(categoriesList || []).map(cat => {
+                {categoriesList.map((cat: any) => {
                   const name = typeof cat === 'object' ? cat.name : cat;
                   return <option key={name} value={name} />;
                 })}

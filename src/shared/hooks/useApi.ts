@@ -7,7 +7,7 @@ export interface UseApiOptions<TData = unknown, TResponse = unknown> {
   successMessage?: string;
   errorMessage?: string;
   onSuccess?: (data: TData, response: TResponse) => void;
-  onError?: (message: string, error: unknown) => void;
+  onError?: (message: string, error: Error) => void;
   onFinally?: () => void;
   transform?: (res: TResponse) => TData;
 }
@@ -16,7 +16,7 @@ export interface UseApiOptions<TData = unknown, TResponse = unknown> {
  * 🛠️ useApi - Advanced Global Hook (Standard Edition)
  * ออกแบบมาให้ยืดหยุ่นสูง เพื่อใช้ในโปรเจกต์นี้และนำไปใช้ต่อในโปรเจกต์อื่นได้ง่าย
  */
-export const useApi = <TData = unknown, TArgs extends unknown[] = unknown[], TResponse = unknown>(
+export const useApi = <TData = unknown, TArgs extends any[] = any[], TResponse = unknown>(
   apiFunc: (...args: TArgs) => Promise<TResponse>,
   options: UseApiOptions<TData, TResponse> = {}
 ) => {
@@ -58,7 +58,7 @@ export const useApi = <TData = unknown, TArgs extends unknown[] = unknown[], TRe
       if (showToast && successMessage) toast.success(successMessage);
       
       return res;
-    } catch (err: unknown) {
+    } catch (err) {
       // ❌ Handle Error
       const errObj = err as Error & { response?: { data?: { message?: string, error?: string } } };
       const responseData = errObj.response?.data;

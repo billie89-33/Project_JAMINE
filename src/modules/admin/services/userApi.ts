@@ -25,7 +25,7 @@ export interface PaginatedUsers {
 export interface UserSummary {
     user?: User;
     profile?: User;
-    orderSummary?: any;
+    orderSummary?: Record<string, number | string>;
     stats?: {
         totalOrders: number;
         totalSpent: number;
@@ -52,8 +52,8 @@ export const updateUserByAdminApi = async (id: string, data: Partial<User>): Pro
 };
 
 // 4. ส่งออกข้อมูลลูกค้า
-export const exportCustomersApi = async (params: GetUsersParams = {}): Promise<ApiResponse<any>> => {
-    const response = await apiClient.get<ApiResponse<any>>('/admin/users/export', { params });
+export const exportCustomersApi = async (params: GetUsersParams = {}): Promise<ApiResponse<User[]>> => {
+    const response = await apiClient.get<ApiResponse<User[]>>('/admin/users/export', { params });
     return response.data;
 };
 

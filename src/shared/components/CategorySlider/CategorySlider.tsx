@@ -25,9 +25,9 @@ const CategorySlider: React.FC = () => {
 
   // 👑 ชั้นที่ 1: ระบบภาพปกพรีเมียมจาก Database (Admin Dedicated Covers)
   const premiumCoversMap: Record<string, string> = {};
-  const coversList = Array.isArray(apiCovers) ? apiCovers : ((apiCovers as any)?.data || []);
+  const coversList = Array.isArray(apiCovers) ? apiCovers : ((apiCovers as { data?: CategoryCover[] })?.data || []);
   coversList.forEach((item: CategoryCover) => {
-    if (item.image?.url) {
+    if (item.image?.url && item.categoryName) {
       premiumCoversMap[item.categoryName] = item.image.url;
     }
   });
@@ -46,10 +46,10 @@ const CategorySlider: React.FC = () => {
   };
 
   // สร้างออบเจกต์หมวดหมู่จาก API (ตอนนี้ API ส่งมาเป็น [{ name, image }, ...])
-  const categoriesList = Array.isArray(apiCategories) ? apiCategories : ((apiCategories as any)?.data || []);
+  const categoriesList = Array.isArray(apiCategories) ? apiCategories : ((apiCategories as { data?: CategoryItem[] })?.data || []);
   const categories = categoriesList.map((catData: CategoryItem, index: number) => {
     const name = typeof catData === 'object' ? catData.name : catData;
-    const apiImage = typeof catData === 'object' ? (catData as any).image : null;
+    const apiImage = typeof catData === 'object' ? (catData as Exclude<CategoryItem, string>).image : null;
 
     return {
       id: index + 1,
@@ -57,7 +57,7 @@ const CategorySlider: React.FC = () => {
       type: name,
       // 🚀 The Hybrid Smart Engine (ระบบลำดับความสำคัญ 3 ชั้น):
       // 1. ภาพปกพรีเมียมจาก Database (Admin Category Covers) -> 2. ภาพจากสินค้าล่าสุด (API Dynamic) -> 3. ภาพ Default สำรอง
-      image: premiumCoversMap[name] || apiImage || categoryFallbackImages[name] || 'https://images.unsplash.com/photo-1588702547919-26089e690ecc?q=80&w=300&auto=format&fit=crop'
+      image: premiumCoversMap[name] || (typeof apiImage === 'object' ? apiImage?.url : apiImage as unknown as string) || categoryFallbackImages[name] || 'https://images.unsplash.com/photo-1588702547919-26089e690ecc?q=80&w=300&auto=format&fit=crop'
     };
   });
 
@@ -66,7 +66,7 @@ const CategorySlider: React.FC = () => {
     if (scrollRef.current) {
       const { scrollLeft, clientWidth } = scrollRef.current;
       const scrollAmount = clientWidth * 0.4;
-      scrollRef.current.scrollTo({
+      (scrollRef.current as HTMLElement).scrollTo({
         left: direction === 'left' ? scrollLeft - scrollAmount : scrollLeft + scrollAmount,
         behavior: 'smooth'
       });

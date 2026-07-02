@@ -75,7 +75,7 @@ const ProductForm = () => {
                                     className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-bold focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none transition-all shadow-sm" 
                                 />
                                 <datalist id="brands-list">
-                                    {((brandsList as any[]) || []).map(b => (
+                                    {((brandsList as unknown as string[]) || []).map(b => (
                                         <option key={b} value={b} />
                                     ))}
                                 </datalist>
@@ -168,7 +168,7 @@ const ProductForm = () => {
                                     className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-bold focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none shadow-sm"
                                 />
                                 <datalist id="categories-list">
-                                    {((categoriesList as any[]) || []).map(cat => {
+                                    {((categoriesList as unknown as Array<{ name: string } | string>) || []).map(cat => {
                                         const name = typeof cat === 'object' ? cat.name : cat;
                                         return <option key={name} value={name} />;
                                     })}
@@ -179,7 +179,7 @@ const ProductForm = () => {
                                 <select 
                                     value={status} 
                                     onChange={e => setStatus(e.target.value as any)} 
-                                    className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-bold focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none cursor-pointer shadow-sm"
+                                    className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-bold focus:ring-4 focus:ring-purple-500/10 focus:border-purple-50 outline-none cursor-pointer shadow-sm"
                                 >
                                     <option value={PRODUCT_STATUS.ACTIVE}>Active</option>
                                     <option value={PRODUCT_STATUS.INACTIVE}>Inactive</option>

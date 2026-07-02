@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { ShoppingBag, ExternalLink, Clock, CheckCircle2, XCircle, Package, Truck, CreditCard } from 'lucide-react';
+import { Order } from '@/types';
 import { useOrderHistory } from '../hooks/useOrderHistory';
 import { ORDER_STATUS } from '@/shared/constants';
 import OrderDetailsModal from './OrderDetailsModal';
 
 const OrderHistoryList: React.FC = () => {
-  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const { 
     orders, 
     isLoading, 
@@ -24,7 +25,7 @@ const OrderHistoryList: React.FC = () => {
     { id: 'cancelled', label: 'ยกเลิก', icon: <XCircle size={14} /> },
   ];
 
-  const getStatusStyle = (status) => {
+  const getStatusStyle = (status: string) => {
     switch (status) {
       case ORDER_STATUS.PAID:
         return 'text-emerald-500 bg-emerald-50 border-emerald-100';
@@ -110,7 +111,7 @@ const OrderHistoryList: React.FC = () => {
                            </span>
                          </div>
                          <p className="text-[10px] text-slate-400 font-bold">
-                           {order.items?.length || 0} รายการ • สั่งซื้อเมื่อ {new Date(order.createdAt).toLocaleDateString()}
+                           {order.items?.length || 0} รายการ • สั่งซื้อเมื่อ {new Date(order.createdAt as string).toLocaleDateString()}
                          </p>
                          
                          {/* ⏳ Expiry Timer for Awaiting Payment */}
@@ -144,7 +145,7 @@ const OrderHistoryList: React.FC = () => {
                          {/* 🚚 Primary Action: Track Order */}
                          {order.status === ORDER_STATUS.SHIPPED && order.trackingNumber && (
                            <button 
-                             onClick={() => handleTrackOrder(order.trackingNumber)}
+                             onClick={() => handleTrackOrder(order.trackingNumber as string)}
                              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-lg shadow-blue-200 hover:scale-105 active:scale-95 transition-all"
                            >
                              <Truck size={14} /> Track Order

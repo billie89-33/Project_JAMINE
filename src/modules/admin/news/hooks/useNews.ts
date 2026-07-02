@@ -15,7 +15,7 @@ export const useNews = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isActionLoading, setIsActionLoading] = useState(false);
     const [newsList, setNewsList] = useState([]);
-    const [categories, setCategories] = useState([]);
+    const [categories, setCategories] = useState<any[]>([]);
     
     // Filters
     const [page, setPage] = useState(1);
@@ -27,7 +27,7 @@ export const useNews = () => {
     const fetchNews = useCallback(async () => {
         setIsLoading(true);
         try {
-            const params: any = {
+            const params: Record<string, string | number | boolean | undefined> = {
                 page,
                 limit: 10,
                 keyword: keyword.trim() || undefined,
@@ -38,7 +38,7 @@ export const useNews = () => {
             if (res.success) {
                 setNewsList((res.data as any).news || res.data || []);
             }
-        } catch (error) {
+        } catch (error: any) {
             toast.error(error.response?.data?.message || 'Failed to fetch news');
         } finally {
             setIsLoading(false);
@@ -58,7 +58,7 @@ export const useNews = () => {
         try {
             const res = await getNewsCategoriesApi();
             if (res.success) {
-                setCategories(res.data || []);
+                setCategories(res.data as any[]);
             }
         } catch (error) {
             console.error('Failed to fetch categories', error);
@@ -71,7 +71,7 @@ export const useNews = () => {
     }, [fetchCategories]);
 
     // 3. Toggle Published Status
-    const togglePublished = async (id, currentStatus) => {
+    const handleToggleStatus = async (id: string, currentStatus: string) => {
         setIsActionLoading(true);
         try {
             const res = await updateNewsApi(id, { isPublished: !currentStatus });
@@ -87,7 +87,7 @@ export const useNews = () => {
     };
 
     // 4. Delete News
-    const handleDeleteNews = async (id) => {
+    const handleDeleteNews = async (id: string) => {
         if (!window.confirm('Are you sure you want to delete this news article?')) return;
         
         setIsActionLoading(true);
@@ -113,7 +113,7 @@ export const useNews = () => {
         categoryId, setCategoryId,
         isPublished, setIsPublished,
         keyword, setKeyword,
-        togglePublished,
+        togglePublished: handleToggleStatus,
         handleDeleteNews,
         refresh: fetchNews
     };

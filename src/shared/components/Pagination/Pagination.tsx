@@ -50,7 +50,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage = 1, totalPages = 1
     return pages;
   };
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = (newPage: number) => {
     if (loading) return; // ป้องกันการกดซ้ำขณะโหลด
     if (newPage >= 1 && newPage <= totalPages && newPage !== currentPage) {
       onPageChange(newPage);
@@ -97,7 +97,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage = 1, totalPages = 1
               aria-label={`Go to page ${page}`}
               aria-current={isCurrent ? 'page' : undefined}
               disabled={loading}
-              onClick={() => handlePageChange(page)}
+              onClick={() => typeof page === 'number' && handlePageChange(page)}
               className={`w-10 h-10 rounded-xl font-bold text-sm border transition-all shrink-0 active:scale-90 ${
                 isCurrent
                   ? 'bg-purple-600 border-purple-600 text-white shadow-lg shadow-purple-200' 

@@ -108,12 +108,12 @@ const OrderDetailsModal: React.FC<{ order: Order; onClose: () => void }> = ({ or
                             <span>Shipping</span>
                             <span className="text-emerald-500">Free</span>
                         </div>
-                        {order.discount > 0 && (
+                        {order.discount && order.discount > 0 ? (
                             <div className="flex justify-between text-rose-500">
                                 <span>Discount</span>
                                 <span>- ฿{(order.discount || 0).toLocaleString()}</span>
                             </div>
-                        )}
+                        ) : null}
                     </div>
                     <div className="flex justify-between items-center pt-4 border-t border-slate-200">
                         <span className="text-sm font-black text-slate-800 uppercase tracking-widest">Total Paid</span>

@@ -3,8 +3,7 @@ import generatePayload from 'promptpay-qr';
 import QRCodeComp from 'react-qr-code'; 
 
 // 🛡️ Fix for potential CJS/ESM interop issues with react-qr-code
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const QRCode = (QRCodeComp as any).default || QRCodeComp;
+const QRCode = (QRCodeComp as { default?: typeof QRCodeComp }).default || QRCodeComp;
 
 interface PromptPayQRBoxProps {
   totalAmount?: number;

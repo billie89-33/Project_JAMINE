@@ -17,14 +17,13 @@ export interface PaginatedProductsResponse extends ApiResponse<Product[]> {
     totalPages: number;
 }
 
-export type CategoryItem = { name: string; _id?: string; image?: any } | string;
+export type CategoryItem = { name: string; _id?: string; image?: { url: string; public_id?: string } } | string;
 
 export interface CategoryCover {
     _id?: string;
     category?: string;
     categoryName?: string;
     image?: { url: string; public_id?: string };
-    [key: string]: unknown;
 }
 
 /**
@@ -88,7 +87,7 @@ export const getProductByIdApi = async (id: string): Promise<ApiResponse<Product
 /**
  * ดึงรายการภาพปกหมวดหมู่ทั้งหมด (Public Category Covers)
  */
-export const getCategoryCoversApi = async (): Promise<ApiResponse<unknown[]>> => {
+export const getCategoryCoversApi = async (): Promise<ApiResponse<CategoryCover[]>> => {
     const response = await apiClient.get('/category-covers');
     return response.data;
 };

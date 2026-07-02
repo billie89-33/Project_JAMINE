@@ -60,7 +60,7 @@ const PromotionBanner: React.FC = () => {
       {/* ชั้นหลัง: พื้นหลังเบลอคุมโทน */}
       <div className="absolute inset-0 opacity-30">
         <img
-          src={promo.image.url}
+          src={typeof promo.image === 'string' ? promo.image : promo.image?.url || ''}
           alt=""
           className="w-full h-full object-cover blur-2xl scale-125"
         />
@@ -68,8 +68,8 @@ const PromotionBanner: React.FC = () => {
 
       {/* ชั้นหน้า: รูปภาพแบนเนอร์จริงแบบ Contain */}
       <div className="relative w-full h-full flex items-center justify-center p-3 sm:p-5">
-        <img
-          src={promo.image.url}
+        <img 
+          src={typeof promo.image === 'string' ? promo.image : promo.image?.url || ''}
           alt={promo.title}
           className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-[1500ms] drop-shadow-xl"
         />

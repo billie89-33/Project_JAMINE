@@ -1,13 +1,19 @@
+import React from 'react';
 
+interface ImageUploadBoxProps {
+    imagePreview: string | null;
+    onFileSelect: (file: File) => void;
+    aspectRatio?: string;
+}
 
-const ImageUploadBox = ({ imagePreview, onFileSelect, aspectRatio = '1/1' }) => {
+const ImageUploadBox = ({ imagePreview, onFileSelect, aspectRatio = '1/1' }: ImageUploadBoxProps) => {
     
-    const handleFileChange = (e) => {
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
         if (files && files[0]) onFileSelect(files[0]);
     };
 
-    const handleDrop = (e) => {
+    const handleDrop = (e: React.DragEvent) => {
         e.preventDefault();
         const files = e.dataTransfer.files;
         if (files && files[0]) onFileSelect(files[0]);

@@ -70,17 +70,17 @@ export const useOrders = () => {
 
     const handleUpdateStatus = useCallback(async (orderId: string, newStatus: string) => {
         // ค้นหาออเดอร์ปัจจุบันเพื่อเช็คสถานะ
-        const currentOrder = orders.find((o: any) => o._id === orderId);
+        const currentOrder = orders.find((o: { _id: string; status: string }) => o._id === orderId);
         if (!currentOrder) return;
 
         // ✅ กฎเหล็ก: ตรวจสอบความถูกต้องของการเปลี่ยนสถานะ (Strict Flow Control)
-        const allowedNext = ORDER_TRANSITIONS[currentOrder.status] || [];
+        const allowedNext = ORDER_TRANSITIONS[currentOrder.status as keyof typeof ORDER_TRANSITIONS] || [];
         if (newStatus !== currentOrder.status && !allowedNext.includes(newStatus)) {
             toast.error(`ไม่สามารถเปลี่ยนสถานะจาก ${currentOrder.status} เป็น ${newStatus} ได้`);
             return;
         }
 
-        const payload: any = { status: newStatus };
+        const payload: { status: string; trackingNumber?: string } = { status: newStatus };
 
         if (newStatus === ORDER_STATUS.SHIPPED) {
             const tracking = window.prompt('🚚 กรุณาระบุเลขพัสดุ (Tracking Number):');
@@ -95,23 +95,23 @@ export const useOrders = () => {
         await updateStatusApi(orderId, payload);
     }, [updateStatusApi, orders]);
 
-    const handleDeleteOrder = useCallback(async (orderId) => {
+    const handleDeleteOrder = useCallback(async (orderId: string) => {
         if (window.confirm('คุณแน่ใจหรือไม่ว่าต้องการลบออเดอร์นี้?')) {
             await deleteOrderApi(orderId);
         }
     }, [deleteOrderApi]);
 
-    const handlePageChange = useCallback((newPage) => {
+    const handlePageChange = useCallback((newPage: number) => {
         setPage(newPage);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, []);
 
-    const handleStatusFilterChange = useCallback((newStatus) => {
+    const handleStatusFilterChange = useCallback((newStatus: string) => {
         setStatus(newStatus);
         setPage(1);
     }, []);
 
-    const handleSearchChange = useCallback((value) => {
+    const handleSearchChange = useCallback((value: string) => {
         setKeyword(value);
         setPage(1);
     }, []);

@@ -1,6 +1,6 @@
 import { Package, Truck, CheckCircle, Clock } from 'lucide-react';
 
-const StatCard = ({ title, value, icon: Icon, colorClass }) => (
+const StatCard = ({ title, value, icon: Icon, colorClass }: any) => (
     <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
         <div className="flex items-center justify-between">
             <div>
@@ -14,7 +14,7 @@ const StatCard = ({ title, value, icon: Icon, colorClass }) => (
     </div>
 );
 
-const ShippingStats = ({ stats }) => {
+const ShippingStats = ({ stats }: any) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <StatCard 

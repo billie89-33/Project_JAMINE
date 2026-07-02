@@ -4,6 +4,7 @@ import { PRODUCT_STATUS } from '@/shared/constants';
 import { useApi } from '@/shared/hooks/useApi';
 import { getCategoriesApi, getBrandsApi, getProductsApi } from '@/modules/products/services/productApi';
 import { toast } from 'react-hot-toast';
+import { SpecItem } from '../components/SpecFields';
 
 /**
  * 🎣 useAddProduct Hook (Smart Logic)
@@ -24,11 +25,11 @@ export const useAddProduct = () => {
     const [isFeatured, setIsFeatured] = useState(false); 
 
     // 💾 2. State คุมข้อมูลไฟล์ภาพ
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [imagePreview, setImagePreview] = useState(null);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
     
     // 💾 3. State คุม Specs เป็น Array ของ Object เพื่อการ Render UI ที่เสถียร (ป้องกัน Input เสีย Focus)
-    const [specifications, setSpecifications] = useState([]);
+    const [specifications, setSpecifications] = useState<SpecItem[]>([]);
 
     // 🚀 4. เรียกใช้ Action Hook สำหรับการส่ง API
     const { handleAddProduct, isSubmitting } = useProductActions();
@@ -63,7 +64,7 @@ export const useAddProduct = () => {
                     
                     if (res.success && res.data && res.data.length > 0) {
                         const latestProduct = res.data[0];
-                        let parsedSpecs = {};
+                        let parsedSpecs: Record<string, string> = {};
                         
                         // จัดการเรื่อง Parse JSON (ป้องกัน Double Stringify ที่อาจหลงเหลือในระบบเก่า)
                         if (typeof latestProduct.specifications === 'string') {
@@ -106,7 +107,7 @@ export const useAddProduct = () => {
 
     // --- Handlers ---
 
-    const handleFileSelect = (file) => {
+    const handleFileSelect = (file: File) => {
         setSelectedFile(file);
         setImagePreview(URL.createObjectURL(file)); 
     };
@@ -118,13 +119,13 @@ export const useAddProduct = () => {
         ]);
     };
 
-    const handleSpecChange = (id, field, newValue) => {
+    const handleSpecChange = (id: string, field: 'key' | 'value', newValue: string) => {
         setSpecifications(prev => prev.map(spec => 
             spec.id === id ? { ...spec, [field]: newValue } : spec
         ));
     };
 
-    const handleRemoveSpec = (id) => {
+    const handleRemoveSpec = (id: string) => {
         setSpecifications(prev => prev.filter(spec => spec.id !== id));
     };
 
@@ -150,7 +151,7 @@ export const useAddProduct = () => {
     /**
      * จัดการการส่งฟอร์ม
      */
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e?: React.FormEvent) => {
         if (e) e.preventDefault();
         
         if (!selectedFile) {
@@ -158,7 +159,7 @@ export const useAddProduct = () => {
         }
 
         // แปลง Array เป็น Object เพื่อส่งให้ Action Hook (ตัดแถวที่ไม่มี Key ทิ้ง)
-        const specsObject = {};
+        const specsObject: Record<string, string> = {};
         specifications.forEach(spec => {
             const trimmedKey = spec.key.trim();
             if (trimmedKey) {

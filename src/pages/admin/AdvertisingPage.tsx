@@ -12,7 +12,7 @@ import { Megaphone, Plus, ArrowLeft } from 'lucide-react';
  */
 const AdvertisingPage = () => {
   const [isAdding, setIsAdding] = useState(false);
-  const [editingBanner, setEditingBanner] = useState(null);
+  const [editingBanner, setEditingBanner] = useState<any>(null);
   const { 
     banners, 
     isLoading, 
@@ -24,7 +24,7 @@ const AdvertisingPage = () => {
   } = useBanners();
 
   // จัดการการส่งข้อมูลฟอร์ม (ทั้งสร้างใหม่และแก้ไข)
-  const handleFormSubmit = async (formData, id) => {
+  const handleFormSubmit = async (formData: FormData | Record<string, unknown>, id?: string) => {
     let success;
     if (id) {
       // โหมดแก้ไข (Surgical Patch)
@@ -40,7 +40,7 @@ const AdvertisingPage = () => {
     }
   };
 
-  const handleEditClick = (banner) => {
+  const handleEditClick = (banner: any) => {
     setEditingBanner(banner);
     setIsAdding(true);
   };

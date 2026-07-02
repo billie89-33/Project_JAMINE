@@ -15,7 +15,7 @@ export const useEditProduct = () => {
   const navigate = useNavigate();
 
   const [originalProduct, setOriginalProduct] = useState(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<any>({
     brand: '',
     modelName: '',
     description: '',
@@ -29,8 +29,8 @@ export const useEditProduct = () => {
     specifications: [] // เปลี่ยนเป็น Array เพื่อใช้กับ SpecFields
   });
 
-  const [imagePreview, setImagePreview] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState<any>(null);
+  const [selectedFile, setSelectedFile] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -45,10 +45,10 @@ export const useEditProduct = () => {
   const fetchProduct = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await getProductById(productId);
+      const response = await getProductById(productId as string);
       if (response.success && response.data) {
         // 🛡️ Defensive Check: ป้องกันกรณี Backend ส่งมาเป็น { product: {...} } แทนที่จะเป็น {...}
-        const responseData = response.data as any;
+        const responseData = response.data as { product?: Record<string, string | number | boolean | object> };
         const product = responseData.product || response.data || {};
         
         // 🛡️ Safe Parse Specifications: ดักกรณี Backend ส่งมาเป็น JSON String
@@ -67,7 +67,7 @@ export const useEditProduct = () => {
 
         // อัปเดตข้อมูลในออบเจกต์ต้นฉบับให้เป็น Object จริงๆ เพื่อใช้ทำ Dirty Check (JSON.stringify เทียบกัน)
         product.specifications = parsedSpecs;
-        setOriginalProduct(product);
+        setOriginalProduct(product as any);
         
         // แปลง Specs Object เป็น Array สำหรับ UI
         const specsArray = Object.entries(parsedSpecs)
@@ -92,8 +92,8 @@ export const useEditProduct = () => {
           specifications: specsArray
         });
         
-        if (product.image?.url) {
-          setImagePreview(product.image.url);
+        if ((product as any).image?.url) {
+          setImagePreview((product as any).image.url);
         }
       }
     } catch (error) {
@@ -110,7 +110,7 @@ export const useEditProduct = () => {
   }, [fetchProduct]);
 
   // 2. จัดการการเปลี่ยนรูปภาพ
-  const handleFileSelect = (file) => {
+  const handleFileSelect = (file: any) => {
     setSelectedFile(file);
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -120,17 +120,17 @@ export const useEditProduct = () => {
   };
 
   // 3. จัดการการเปลี่ยน Specifications (ใช้ pattern เดียวกับ addproduct)
-  const handleSpecChange = (id, field, value) => {
-    setFormData(prev => ({
+  const handleSpecChange = (id: string, field: string, value: any) => {
+    setFormData((prev: any) => ({
       ...prev,
-      specifications: prev.specifications.map(spec => 
+      specifications: prev.specifications.map((spec: any) => 
         spec.id === id ? { ...spec, [field]: value } : spec
       )
     }));
   };
 
   const handleAddSpecRow = () => {
-    setFormData(prev => ({
+    setFormData((prev: any) => ({
       ...prev,
       specifications: [
         ...prev.specifications,
@@ -139,15 +139,15 @@ export const useEditProduct = () => {
     }));
   };
 
-  const handleRemoveSpec = (id) => {
-    setFormData(prev => ({
+  const handleRemoveSpec = (id: string) => {
+    setFormData((prev: any) => ({
       ...prev,
-      specifications: prev.specifications.filter(spec => spec.id !== id)
+      specifications: prev.specifications.filter((spec: any) => spec.id !== id)
     }));
   };
 
   // 4. Surgical PATCH Logic: ตรวจสอบเฉพาะฟิลด์ที่เปลี่ยน (Dirty Check)
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e?: any) => {
     if (e) e.preventDefault();
     setIsSubmitting(true);
 
@@ -166,29 +166,29 @@ export const useEditProduct = () => {
           value = Number(String(value).replace(/,/g, '')) || 0;
         }
 
-        if (value !== originalProduct[field]) {
+        if (value !== (originalProduct as any)?.[field]) {
           patchData.append(field, value);
           hasChanges = true;
         }
       });
 
       // 🏷️ Tag Processing Pattern: จัดการ Tags ให้เป็น Array ที่คลีน
-      const currentTags = (formData.tags || '').split(',').map(t => t.trim()).filter(Boolean);
-      const originalTags = Array.isArray(originalProduct.tags) ? originalProduct.tags : [];
+      const currentTags = (formData.tags || '').split(',').map((t: string) => t.trim()).filter(Boolean);
+      const originalTags = Array.isArray((originalProduct as any)?.tags) ? (originalProduct as any).tags : [];
       if (JSON.stringify(currentTags) !== JSON.stringify(originalTags)) {
         patchData.append('tags', JSON.stringify(currentTags));
         hasChanges = true;
       }
 
       // แปลง Specs Array กลับเป็น Object เพื่อเช็คการเปลี่ยนแปลง
-      const currentSpecsObj = formData.specifications.reduce((acc, spec) => {
+      const currentSpecsObj = formData.specifications.reduce((acc: any, spec: any) => {
         if (spec.key.trim()) {
           acc[spec.key.trim()] = spec.value;
         }
         return acc;
       }, {});
 
-      if (JSON.stringify(currentSpecsObj) !== JSON.stringify(originalProduct.specifications)) {
+      if (JSON.stringify(currentSpecsObj) !== JSON.stringify((originalProduct as any)?.specifications)) {
         patchData.append('specifications', JSON.stringify(currentSpecsObj));
         hasChanges = true;
       }
@@ -205,7 +205,7 @@ export const useEditProduct = () => {
         return;
       }
 
-      const response = await updateProduct(productId, patchData);
+      const response = await updateProduct(productId as string, patchData);
       
       if (response.success) {
         toast.success('อัปเดตสินค้าเรียบร้อยแล้ว');
@@ -213,7 +213,7 @@ export const useEditProduct = () => {
         await fetchProduct();
         setSelectedFile(null); 
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Update Product Error:", error);
       toast.error(error.response?.data?.message || 'อัปเดตไม่สำเร็จ');
     } finally {

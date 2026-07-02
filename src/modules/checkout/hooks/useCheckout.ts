@@ -101,7 +101,7 @@ export const useCheckout = () => {
         const updatedUser = await refreshUser();
         if (updatedUser && updatedUser.addresses) {
            const newAddr = updatedUser.addresses[updatedUser.addresses.length - 1];
-           if (newAddr) setSelectedAddressId(newAddr._id || newAddr.id);
+           if (newAddr) setSelectedAddressId(newAddr._id || newAddr.id || null);
         }
         toast.success("เพิ่มที่อยู่สำเร็จ");
       }

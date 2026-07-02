@@ -2,15 +2,15 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Truck, ExternalLink } from 'lucide-react';
 
-const ShippingTable = ({ orders, loading, onUpdateTracking }) => {
+const ShippingTable = ({ orders, loading, onUpdateTracking }: any) => {
     const navigate = useNavigate();
-    const [trackingInput, setTrackingInput] = useState({});
+    const [trackingInput, setTrackingInput] = useState<Record<string, string>>({});
 
-    const handleInputChange = (orderId, value) => {
+    const handleInputChange = (orderId: string, value: string) => {
         setTrackingInput(prev => ({ ...prev, [orderId]: value }));
     };
 
-    const handleSubmit = (orderId) => {
+    const handleSubmit = (orderId: string) => {
         const trackingNumber = trackingInput[orderId];
         if (!trackingNumber) return;
         
@@ -49,7 +49,7 @@ const ShippingTable = ({ orders, loading, onUpdateTracking }) => {
                                 </td>
                             </tr>
                         ) : (
-                            orders.map((order) => (
+                            orders.map((order: any) => (
                                 <tr key={order._id} className="hover:bg-slate-50 transition-colors">
                                     <td className="px-6 py-4">
                                         <div className="font-medium text-slate-900">#{order.orderNumber}</div>

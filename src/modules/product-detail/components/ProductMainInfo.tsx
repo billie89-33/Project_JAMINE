@@ -20,7 +20,7 @@ const ProductMainInfo: React.FC<{ product: Product }> = ({ product }) => {
   
   const hasMultipleImages = product?.images && product.images.length > 0;
   const currentImage = hasMultipleImages
-    ? product.images[activeImgIndex]
+    ? product.images?.[activeImgIndex]
     : product?.image?.url || 'https://via.placeholder.com/600';
 
   const handleQuantity = (type: string) => {
@@ -31,12 +31,12 @@ const ProductMainInfo: React.FC<{ product: Product }> = ({ product }) => {
 
   const onAddToCartClick = async () => {
     if (isOutOfStock) return;
-    await addToCart(product._id || product.id, quantity);
+    await addToCart((product._id || product.id) as string, quantity);
   };
 
   const onBuyNowClick = async () => {
     if (isOutOfStock) return;
-    await addToCart(product._id || product.id, quantity);
+    await addToCart((product._id || product.id) as string, quantity);
     navigate('/cart');
   };
 
@@ -68,9 +68,9 @@ const ProductMainInfo: React.FC<{ product: Product }> = ({ product }) => {
         </div>
 
         {/* Thumbnails */}
-        {hasMultipleImages && product.images.length > 1 && (
+        {hasMultipleImages && product.images && product.images.length > 1 && (
           <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-            {product.images.map((img, index) => (
+            {product.images?.map((img, index) => (
               <button
                 key={index}
                 onClick={() => setActiveImgIndex(index)}

@@ -61,7 +61,7 @@ const AddressSelector: React.FC<AddressSelectorProps> = ({
       province: addr.province || '',
       postalCode: addr.postalCode || ''
     });
-    setEditingAddressId(addr._id || addr.id);
+    setEditingAddressId(addr._id || addr.id || null);
     setIsAdding(true);
   };
 
@@ -168,7 +168,6 @@ const AddressSelector: React.FC<AddressSelectorProps> = ({
                   </button>
                 )}
                 
-                {onUpdateAddress && (
                   <button 
                     type="button" 
                     onClick={() => handleEdit(addr)}
@@ -177,7 +176,6 @@ const AddressSelector: React.FC<AddressSelectorProps> = ({
                   >
                     <Edit3 size={16} />
                   </button>
-                )}
 
                 <button 
                   type="button" 

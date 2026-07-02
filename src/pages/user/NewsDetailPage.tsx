@@ -6,14 +6,14 @@ import toast from 'react-hot-toast';
 
 const NewsDetailPage = () => {
     const { id } = useParams();
-    const [news, setNews] = useState(null);
+    const [news, setNews] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchNewsDetail = async () => {
             setIsLoading(true);
             try {
-                const res = await getNewsByIdApi(id);
+                const res = await getNewsByIdApi(id as string);
                 if (res.success) {
                     setNews(res.data);
                 }

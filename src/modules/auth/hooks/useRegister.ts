@@ -30,7 +30,7 @@ export const useRegister = () => {
 
   // 🧹 Status State: ใช้ useApi จัดการ (เปิดใช้ Toast อัตโนมัติ)
   // 🧹 Status State: ใช้ useApi จัดการ (เปิดใช้ Toast อัตโนมัติ)
-  const { loading, error, setError, execute: registerRequest } = useApi<User, [RegisterPayload], unknown>(registerApi, {
+  const { loading, error, setError, execute: registerRequest } = useApi<User, [RegisterPayload], ApiResponse<User>>(registerApi, {
     showToast: true,
     successMessage: 'สมัครสมาชิกสำเร็จ! ยินดีต้อนรับสู่ Jamine',
     onSuccess: (data: User, res: ApiResponse<User>) => {
@@ -38,7 +38,7 @@ export const useRegister = () => {
       // 🛡️ Resilient Success Check: รองรับทั้งแบบมี res.success, มี res._id หรือ res.message
       if (res.success !== false) {
         // ทำการ Login อัตโนมัติทันทีโดยไม่ต้องเสียเวลากลับไปหน้า Login
-        const userPayload = res.data || data || (res as unknown as User);
+        const userPayload = res.data || data || (res as ApiResponse<User> & User);
         setAuthUser(userPayload);
 
         // 🚀 Auto-Return / Seamless Redirect: กลับไปจุดที่กดมา หรือไปหน้า Home
@@ -112,8 +112,9 @@ export const useRegister = () => {
       await registerRequest(payload);
     } catch (err) {
       // 🔍 Debug: พิมพ์ Error ทั้งหมดออกมาดูเพื่อหาสาเหตุ 400 Bad Request
-      if (err && (err as { response?: { data?: unknown } }).response) {
-        console.error('Registration Backend Error:', (err as { response?: { data?: unknown } }).response?.data);
+      const apiErr = err as { response?: { data?: object } };
+      if (apiErr?.response) {
+        console.error('Registration Backend Error:', apiErr.response.data);
       }
       console.error('Registration flow error:', err);
     }

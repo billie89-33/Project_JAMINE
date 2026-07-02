@@ -22,7 +22,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ isMobileSearchOpen, setIsMobileSe
   const [isFocused, setIsFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const debounceRef = useRef(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // 🔍 ค้นหาคำแนะนำ (Suggestions) แบบ Real-time พร้อม Debounce
   useEffect(() => {

@@ -27,7 +27,7 @@ export const usePayment = () => {
       }
 
       try {
-        const res = await getOrderDetailsApi(orderId);
+        const res = await getOrderDetailsApi(orderId as string);
         if (res.success) {
           setOrder(res.data);
         }
@@ -49,7 +49,7 @@ export const usePayment = () => {
     setIsVerifying(true);
     try {
       // 🛡️ ยืนยันยอดโอนจำลองไปยัง Backend
-      const res = await mockPaymentApi(order._id || order.id);
+      const res = await mockPaymentApi((order._id || order.id) as string);
       
       if (res.success) {
         toast.success(`ชำระเงินออเดอร์ ${order.orderNumber} สำเร็จ! ✨`);

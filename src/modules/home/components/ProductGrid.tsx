@@ -22,7 +22,7 @@ const ProductGrid: React.FC = () => {
         if (res.success) {
           // 🛡️ ป้องกันบัคสินค้าใหม่มาเนียน: กรองเอาเฉพาะสินค้าที่มียอดขายจริง (> 0) 
           // เพื่อให้เป็นส่วน "Best Seller" ที่แท้จริง
-          const bestSellers = res.data.filter(p => p.soldCount > 0);
+          const bestSellers = res.data.filter(p => (p.soldCount || 0) > 0);
           
           if (bestSellers.length > 0) {
             // ถ้ามีสินค้าที่ขายได้จริง ให้เอาเฉพาะกลุ่มนั้น (สูงสุด 8 ชิ้น)

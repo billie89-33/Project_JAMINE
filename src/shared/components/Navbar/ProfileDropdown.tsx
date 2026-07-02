@@ -17,8 +17,8 @@ const ProfileDropdown = () => {
   const { user, logout } = useAuth();
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !(dropdownRef.current as unknown as HTMLElement).contains(event.target as Node)) {
         setIsOpen(false);
       }
     };

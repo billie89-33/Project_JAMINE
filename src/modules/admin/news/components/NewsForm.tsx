@@ -24,7 +24,7 @@ const NewsForm = ({
     handleFileChange, 
     handleSubmit,
     isEditMode 
-}) => {
+}: any) => {
     if (isLoading) {
         return (
             <div className="flex flex-col items-center justify-center py-20 bg-white rounded-[2.5rem] border border-slate-100 shadow-sm">

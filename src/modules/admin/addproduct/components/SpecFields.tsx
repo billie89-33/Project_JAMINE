@@ -4,7 +4,21 @@ import { Plus, X } from 'lucide-react';
  * 🛠️ SpecFields Component (Dynamic Builder)
  * ระบบเพิ่ม/ลดคุณสมบัติสินค้าแบบ Key-Value อย่างอิสระ
  */
-const SpecFields = ({ category, specifications, onAddRow, onSpecChange, onRemoveSpec }) => {
+export interface SpecItem {
+    id: string;
+    key: string;
+    value: string;
+}
+
+interface SpecFieldsProps {
+    category: string;
+    specifications: SpecItem[];
+    onAddRow: () => void;
+    onSpecChange: (id: string, field: 'key' | 'value', val: string) => void;
+    onRemoveSpec: (id: string) => void;
+}
+
+const SpecFields = ({ category, specifications, onAddRow, onSpecChange, onRemoveSpec }: SpecFieldsProps) => {
     return (
         <div className="bg-white p-6 rounded-[24px] border border-slate-100 shadow-sm">
             <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-50">

@@ -69,12 +69,12 @@ export const BannerForm = ({ initialData, onSubmit, onCancel, isSubmitting }) =>
       // สำหรับโหมดแก้ไข ตรวจสอบว่าค่าต่างจากเดิมไหม
       if (initialData) {
         if (value !== initialData[key]) {
-          submitData.append(key, value as any);
+          submitData.append(key, value as string | Blob);
           hasChanges = true;
         }
       } else {
         // โหมดสร้างใหม่ ส่งทั้งหมด
-        submitData.append(key, value as any);
+        submitData.append(key, value as string | Blob);
         hasChanges = true;
       }
     });

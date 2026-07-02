@@ -17,6 +17,24 @@ import {
  * 🔍 CustomerDetailModal Component (v2.0)
  * หน้าต่างแสดงรายละเอียดเชิงลึก พร้อมโหมดแก้ไขและจัดการที่อยู่
  */
+interface CustomerDetailModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    user: any;
+    summary: any;
+    onToggleStatus: (id: string, status: string) => void;
+    onDelete: (id: string) => void;
+    onUpdate: (e?: unknown) => void;
+    onViewOrders: (id: string) => void;
+    isActionLoading: boolean;
+    isEditMode: boolean;
+    setIsEditMode: (v: boolean) => void;
+    editForm: { name?: string; email?: string; phone?: string; status?: string };
+    setEditForm: (v: any) => void;
+    activeTab: string;
+    setActiveTab: (v: string) => void;
+}
+
 const CustomerDetailModal = ({ 
     isOpen, 
     onClose, 
@@ -33,7 +51,7 @@ const CustomerDetailModal = ({
     setEditForm,
     activeTab,
     setActiveTab
-}) => {
+}: CustomerDetailModalProps) => {
     if (!isOpen || !user) return null;
 
     const tabs = [
@@ -238,7 +256,7 @@ const CustomerDetailModal = ({
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-1 gap-4">
-                                    {user.addresses.map((addr, idx) => (
+                                    {user.addresses.map((addr: any, idx: number) => (
                                         <div key={idx} className={`p-6 rounded-3xl border transition-all ${
                                             addr.isDefault 
                                                 ? 'bg-white border-purple-200 shadow-md ring-1 ring-purple-100' 

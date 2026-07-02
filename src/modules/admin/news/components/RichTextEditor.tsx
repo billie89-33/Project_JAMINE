@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
  * ✍️ RichTextEditor (v1.0)
  * ตัวครอบ React Quill พร้อมระบบ Custom Image Upload ตรงสู่ Cloudinary
  */
-const RichTextEditor = ({ value, onChange, placeholder }) => {
+const RichTextEditor = ({ value, onChange, placeholder }: any) => {
     const quillRef = useRef(null);
 
     // 🖼️ ระบบดักจับการกดปุ่ม "แทรกรูป"
@@ -19,25 +19,27 @@ const RichTextEditor = ({ value, onChange, placeholder }) => {
         input.click();
 
         input.onchange = async () => {
-            const file = input.files[0];
-            if (!file) return;
-
-            const toastId = toast.loading('กำลังอัปโหลดรูปภาพลงบทความ...');
-            try {
-                // 1. ส่งรูปขึ้น Cloudinary ผ่าน API ที่เราเพิ่งสร้าง
-                const res: any = await uploadNewsImageApi(file);
-                
-                if (res.success) {
-                    const quill = quillRef.current.getEditor();
-                    const range = quill.getSelection();
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const toastId = toast.loading('กำลังอัปโหลดรูปภาพลงบทความ...');
+                try {
+                    // 1. ส่งรูปขึ้น Cloudinary ผ่าน API ที่เราเพิ่งสร้าง
+                    const formData = new FormData();
+                    formData.append('image', file);
+                    const res = await uploadNewsImageApi(formData) as { success: boolean; url: string };
                     
-                    // 2. แปะ URL ที่ได้ลงใน Editor แทนที่ Base64
-                    quill.insertEmbed(range.index, 'image', res.url);
-                    toast.success('อัปโหลดรูปภาพสำเร็จ', { id: toastId });
+                    if (quillRef.current && (quillRef.current as any).getEditor) {
+                        const quill = (quillRef.current as any).getEditor();
+                        const range = quill.getSelection();
+                        
+                        // 2. แปะ URL ที่ได้ลงใน Editor แทนที่ Base64
+                        quill.insertEmbed(range.index, 'image', res.url);
+                        toast.success('อัปโหลดรูปภาพสำเร็จ', { id: toastId });
+                    }
+                } catch (error) {
+                    toast.error('อัปโหลดรูปภาพล้มเหลว', { id: toastId });
+                    console.error(error);
                 }
-            } catch (error) {
-                toast.error('อัปโหลดรูปภาพล้มเหลว', { id: toastId });
-                console.error(error);
             }
         };
     };

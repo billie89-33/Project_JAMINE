@@ -6,16 +6,16 @@ import { ORDER_STATUS, ORDER_TRANSITIONS } from '@/shared/constants';
  * 📦 OrdersTable Component
  * ตารางแสดงรายการออเดอร์สำหรับ Admin พร้อมระบบเปลี่ยนสถานะ
  */
-const OrdersTable = ({ orders, onUpdateStatus, onDelete, isLoading, isUpdating }) => {
+const OrdersTable = ({ orders, onUpdateStatus, onDelete, isLoading, isUpdating }: any) => {
   const navigate = useNavigate();
 
   // Helper สำหรับดึงสถานะที่เปลี่ยนไปได้ (รวมสถานะปัจจุบันด้วยเพื่อให้ dropdown แสดงค่าถูก)
-  const getAllowedOptions = (currentStatus) => {
-    const nextPossible = ORDER_TRANSITIONS[currentStatus] || [];
+  const getAvailableStatuses = (currentStatus: string) => {
+    const nextPossible = (ORDER_TRANSITIONS as any)[currentStatus] || [];
     return [currentStatus, ...nextPossible];
   };
 
-  const getStatusStyle = (status) => {
+  const getStatusStyle = (status: string) => {
     switch (status) {
       case ORDER_STATUS.PAID:
         return { color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-100', icon: <CheckCircle2 size={12} /> };
@@ -70,7 +70,7 @@ const OrdersTable = ({ orders, onUpdateStatus, onDelete, isLoading, isUpdating }
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-50">
-            {orders.map((order) => {
+            {orders.map((order: any) => {
               const style = getStatusStyle(order.status);
               return (
                 <tr key={order._id} className="hover:bg-slate-50/30 transition-all group">
@@ -119,7 +119,7 @@ const OrdersTable = ({ orders, onUpdateStatus, onDelete, isLoading, isUpdating }
                         onChange={(e) => onUpdateStatus(order._id, e.target.value)}
                         className="bg-white text-slate-500 text-[10px] font-black px-3 py-1.5 rounded-xl border border-slate-200 outline-none cursor-pointer hover:border-purple-300 hover:text-purple-600 transition-all uppercase disabled:opacity-50"
                       >
-                        {getAllowedOptions(order.status).map(s => (
+                        {getAvailableStatuses(order.status).map((s: string) => (
                           <option key={s} value={s}>{s}</option>
                         ))}
                       </select>

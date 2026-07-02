@@ -1,7 +1,14 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
-const SidebarSubMenu = ({ item }: { item: any }) => {
+export interface SidebarMenuItem {
+  title: string;
+  path?: string;
+  icon?: React.ReactNode;
+  subNav?: { title: string; path: string }[];
+}
+
+const SidebarSubMenu = ({ item }: { item: SidebarMenuItem }) => {
   const [subnav, setSubnav] = useState(false);
   const showSubnav = () => setSubnav(!subnav);
 
@@ -25,7 +32,7 @@ const SidebarSubMenu = ({ item }: { item: any }) => {
       {/* รายการเมนูย่อย (แสดงผลเมื่อกดเปิดกางออกมา) */}
       {subnav && (
         <div className="pl-9 space-y-1 animate-in fade-in slide-in-from-top-1 duration-150">
-          {item.subNav.map((subItem, index) => (
+          {item.subNav?.map((subItem, index) => (
             <NavLink
               key={index}
               to={subItem.path}

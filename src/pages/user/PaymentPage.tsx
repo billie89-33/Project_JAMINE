@@ -75,7 +75,7 @@ const PaymentPage = () => {
             {/* ✨ Doc 12.3: Trust the Backend Snapshot (No client-side calculation) */}
             <OrderSummaryCard 
               subtotal={order.subtotal} 
-              shipping={order.shippingFee || (order as any).shipping || 0}
+              shipping={order.shippingFee || (order as { shipping?: number }).shipping || 0}
               discount={order.discount || 0}
               total={order.totalAmount || order.total}
               buttonText="Confirm Payment" 

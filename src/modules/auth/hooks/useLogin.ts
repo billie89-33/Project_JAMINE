@@ -24,12 +24,12 @@ export const useLogin = () => {
   
   // 🧹 Status State: ใช้ onSuccess option เพื่อลด Logic ใน Submit function
   // 🧹 Status State: ใช้ onSuccess option เพื่อลด Logic ใน Submit function
-  const { loading, error, setError, execute: loginRequest } = useApi<User, [string, string], unknown>(loginApi, {
+  const { loading, error, setError, execute: loginRequest } = useApi<User, [string, string], ApiResponse<User>>(loginApi, {
     onSuccess: (userData: User, res: ApiResponse<User>) => {
       console.log('✅ Login successful:', { userData, res });
       // 🛡️ Resilient Success Check: รองรับทั้งแบบมี res.success หรือส่ง User Object มาตรงๆ
       if (res.success !== false) {
-        const userPayload = res.data || userData || (res as unknown as User);
+        const userPayload = res.data || userData || (res as ApiResponse<User> & User);
         setAuthUser(userPayload);
 
         // 🚀 Auto-Return / Seamless Redirect: กลับไปจุดที่กดมา หรือไปหน้า Home

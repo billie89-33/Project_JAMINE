@@ -59,7 +59,7 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ placement = 'home_hero' }) => {
       {/* 1. ชั้นหลัง: บรรยากาศฟุ้งกระจาย (Blurred Atmosphere) */}
       <div className="absolute inset-0 w-full h-full overflow-hidden opacity-40">
         <img
-          src={currentBanner.image.url}
+          src={typeof currentBanner.image === 'string' ? currentBanner.image : currentBanner.image?.url || ''}
           alt=""
           className="w-full h-full object-cover blur-3xl scale-125"
         />
@@ -71,7 +71,7 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ placement = 'home_hero' }) => {
         onClick={() => currentBanner.linkUrl && navigate(currentBanner.linkUrl)}
       >
         <img
-          src={currentBanner.image.url}
+          src={typeof currentBanner.image === 'string' ? currentBanner.image : currentBanner.image?.url || ''}
           alt={currentBanner.title}
           className="w-full h-full object-contain transition-transform duration-[2000ms] group-hover:scale-105 drop-shadow-2xl"
         />

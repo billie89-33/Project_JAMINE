@@ -16,16 +16,16 @@ export const useShipping = () => {
 
     // 1. Hook สำหรับดึงสถิติ
     const statsApi = useApi(getShippingStats, {
-        initialData: { toShip: 0, toProcess: 0, inTransit: 0, completed: 0 } as any,
-        transform: (res) => res,
+        initialData: { toShip: 0, toProcess: 0, inTransit: 0, completed: 0 } as { toShip: number; toProcess: number; inTransit: number; completed: number },
+        transform: (res) => res as any,
         showToast: true, // เปิดการแจ้งเตือน Error
         errorMessage: 'ไม่สามารถดึงข้อมูลสถิติการจัดส่งได้'
     });
 
     // 2. Hook สำหรับดึงรายการออเดอร์
     const ordersApi = useApi(getShippingOrders, {
-        initialData: { orders: [], total: 0, page: 1, totalPages: 1 } as any,
-        transform: (res) => res,
+        initialData: { orders: [], total: 0, page: 1, totalPages: 1 } as { orders: Record<string, string | number | boolean | object | undefined>[]; total: number; page: number; totalPages: number },
+        transform: (res) => res as any,
         showToast: true, // เปิดการแจ้งเตือน Error
         errorMessage: 'ไม่สามารถดึงข้อมูลรายการจัดส่งได้'
     });
@@ -49,15 +49,15 @@ export const useShipping = () => {
         refreshData();
     }, [filters]);
 
-    const handleFilterChange = (newFilters) => {
+    const handleFilterChange = (newFilters: any) => {
         setFilters(prev => ({ ...prev, ...newFilters, page: 1 }));
     };
 
-    const handlePageChange = (page) => {
+    const handlePageChange = (page: number) => {
         setFilters(prev => ({ ...prev, page }));
     };
 
-    const handleUpdateTracking = async (orderId, trackingData) => {
+    const handleUpdateTracking = async (orderId: string, trackingData: any) => {
         await updateTrackingApi.execute(orderId, trackingData);
         refreshData(); // โหลดข้อมูลใหม่หลังจากอัปเดต
     };
@@ -72,7 +72,7 @@ export const useShipping = () => {
                 Array.isArray((ordersApi.data as any)?.orders) ? (ordersApi.data as any).orders :
                 Array.isArray(ordersApi.data) ? ordersApi.data : [],
         
-        total: (ordersApi.data as any)?.total || 0,
+        total: (ordersApi.data as { total?: number })?.total || 0,
         loading: statsApi.loading || ordersApi.loading,
         updating: updateTrackingApi.loading,
         filters,

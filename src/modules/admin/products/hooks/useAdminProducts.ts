@@ -9,7 +9,7 @@ import { toast } from 'react-hot-toast';
  * จัดการข้อมูลรายการสินค้าสำหรับหน้า Admin
  */
 export const useAdminProducts = () => {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -53,7 +53,7 @@ export const useAdminProducts = () => {
             ? response.data 
             : (response.data?.products || []);
             
-        setProducts(productsList as any);
+        setProducts(productsList as any[]);
         setTotal(response.data?.total || productsList.length);
         setTotalPages(response.data?.totalPages || Math.ceil((response.data?.total || productsList.length) / 10));
       }
@@ -71,7 +71,7 @@ export const useAdminProducts = () => {
   }, [fetchProducts]);
 
   // Handler สำหรับการเปลี่ยนหมวดหมู่
-  const handleCategoryChange = (category) => {
+  const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
     setCurrentPage(1); 
   };
@@ -84,7 +84,7 @@ export const useAdminProducts = () => {
   };
 
   // Handler สำหรับการลบสินค้า
-  const handleDeleteProduct = async (id) => {
+  const handleDeleteProduct = async (id: string) => {
     if (window.confirm('คุณแน่ใจหรือไม่ว่าต้องการลบสินค้าชิ้นนี้?')) {
       try {
         const response = await deleteProduct(id);

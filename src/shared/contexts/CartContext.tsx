@@ -93,7 +93,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       const finalId = productObj?._id || productObj?.id || (typeof productObj === 'string' ? productObj : null);
       
       return {
-        id: finalId, // 🔑 คีย์สำคัญสำหรับกด เพิ่ม/ลด/ลบ ต้องห้ามเป็น undefined
+        id: finalId as string, // 🔑 คีย์สำคัญสำหรับกด เพิ่ม/ลด/ลบ ต้องห้ามเป็น undefined
         cartItemId: it._id,
         name: productObj?.modelName || productObj?.name || 'Unknown Product',
         brand: productObj?.brand || '',

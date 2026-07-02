@@ -29,8 +29,8 @@ const OrderDetailContainer = () => {
     } = useOrderDetail();
 
     // Helper สำหรับดึงสถานะที่เปลี่ยนไปได้
-    const getAllowedOptions = (currentStatus) => {
-        const nextPossible = ORDER_TRANSITIONS[currentStatus] || [];
+    const getAvailableStatuses = (currentStatus: string) => {
+        const nextPossible = (ORDER_TRANSITIONS as any)[currentStatus] || [];
         return [currentStatus, ...nextPossible];
     };
 
@@ -43,7 +43,7 @@ const OrderDetailContainer = () => {
         );
     }
 
-    const getStatusStyle = (status) => {
+    const getStatusBadge = (status: string) => {
         switch (status) {
             case ORDER_STATUS.PAID: return 'text-emerald-600 bg-emerald-50 border-emerald-100';
             case ORDER_STATUS.PENDING: return 'text-amber-600 bg-amber-50 border-amber-100';
@@ -82,12 +82,12 @@ const OrderDetailContainer = () => {
                             <h1 className="text-2xl font-black text-slate-800 uppercase tracking-tighter">
                                 {order.orderNumber || order._id.slice(-8)}
                             </h1>
-                            <span className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full border ${getStatusStyle(order.status)}`}>
+                            <span className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full border ${getStatusBadge(order.status)}`}>
                                 {order.status}
                             </span>
                         </div>
                         <p className="text-xs font-bold text-slate-400 flex items-center gap-2">
-                            <Clock size={12}/> สั่งซื้อเมื่อ: {new Date(order.createdAt).toLocaleString('th-TH')}
+                            <Clock size={12}/> สั่งซื้อเมื่อ: <p className="font-semibold text-slate-800">{new Date(order.createdAt as string).toLocaleString('th-TH')}</p>
                         </p>
                     </div>
                 </div>
@@ -101,7 +101,7 @@ const OrderDetailContainer = () => {
                         disabled={isUpdating}
                         className="bg-white text-purple-600 text-xs font-black px-4 py-2.5 rounded-xl border border-slate-100 shadow-sm outline-none cursor-pointer hover:border-purple-200 transition-colors uppercase"
                     >
-                        {getAllowedOptions(order.status).map(s => (
+                        {getAvailableStatuses(order.status).map((s: string) => (
                             <option key={s} value={s}>{s}</option>
                         ))}
                     </select>
@@ -180,10 +180,10 @@ const OrderDetailContainer = () => {
                             <div>
                                 <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Customer Details</h4>
                                 <p className="text-sm font-bold text-slate-800">
-                                    {order.shippingAddress?.fullName || (order.userId as any)?.name || 'Guest User'}
+                                    {order.shippingAddress?.fullName || (order.userId as { name?: string; email?: string; phone?: string })?.name || 'Guest User'}
                                 </p>
-                                <p className="text-xs text-slate-500">{(order.userId as any)?.email || '-'}</p>
-                                <p className="text-xs text-slate-500 mt-1">{order.shippingAddress?.phone || (order.userId as any)?.phone || '-'}</p>
+                                <p className="text-xs text-slate-500">{(order.userId as { name?: string; email?: string; phone?: string })?.email || '-'}</p>
+                                <p className="text-xs text-slate-500 mt-1">{order.shippingAddress?.phone || (order.userId as { name?: string; email?: string; phone?: string })?.phone || '-'}</p>
                             </div>
                         </div>
                         <div className="bg-white p-6 rounded-[32px] shadow-sm border border-slate-100 flex gap-4">

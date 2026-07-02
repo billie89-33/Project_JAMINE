@@ -11,9 +11,9 @@ const FilterBar = ({
   onCategoryChange, 
   onClear,
   categoriesList
-}) => {
+}: any) => {
   // สร้าง Array ของชื่อหมวดหมู่ที่ดึงมาจาก API (รองรับข้อมูลทั้งแบบ String และ Object)
-  const categoryNames = (categoriesList || []).map(cat => typeof cat === 'object' ? cat.name : cat);
+  const categoryNames = (categoriesList || []).map((cat: any) => typeof cat === 'object' ? cat.name : cat);
   const categories = ['All', ...categoryNames];
 
   return (

@@ -43,7 +43,7 @@ export interface DashboardAllData {
     topProducts: Product[];
     lowStock: Product[];
     orderStatus: OrderStatusStat[];
-    userGrowth: any; // Or specific type if we know it
+    userGrowth: { date: string; count: number }[];
 }
 
 /**

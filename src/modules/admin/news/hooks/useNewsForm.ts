@@ -18,7 +18,7 @@ export const useNewsForm = () => {
     const { id } = useParams();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isLoading, setIsLoading] = useState(!!id);
-    const [categories, setCategories] = useState([]);
+    const [categories, setCategories] = useState<any[]>([]);
 
     const [formData, setFormData] = useState({
         title: '',
@@ -47,14 +47,15 @@ export const useNewsForm = () => {
         try {
             const res = await getNewsByIdApi(id);
             if (res.success) {
-                const data: any = res.data;
+                const originalNews = res.data as any;
                 setFormData({
-                    title: data.title,
-                    category: data.category?._id || data.category || '',
-                    content: data.content || '',
-                    isPublished: data.isPublished
+                    title: originalNews.title,
+                    category: (originalNews.category as any)?._id || originalNews.category || '',
+                    content: originalNews.content || '',
+                    isFeatured: !!originalNews.isFeatured,
+                    isPublished: !!originalNews.isPublished,
                 });
-                setImagePreview(data.image?.url);
+                setImagePreview((originalNews.image as any)?.url || null);
             }
         } catch (error) {
             toast.error('Failed to load news article');
@@ -65,13 +66,13 @@ export const useNewsForm = () => {
     }, [id, navigate]);
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         fetchCategories();
         fetchNewsData();
     }, [fetchCategories, fetchNewsData]);
 
     // 3. Handle Inputs
-    const handleChange = useCallback((e) => {
+    const handleChange = useCallback((e: any) => {
         const { name, value, type, checked } = e.target;
         setFormData(prev => ({
             ...prev,
@@ -79,20 +80,20 @@ export const useNewsForm = () => {
         }));
     }, []);
 
-    const handleContentChange = useCallback((value) => {
+    const handleContentChange = useCallback((value: string) => {
         setFormData(prev => ({ ...prev, content: value }));
     }, []);
 
-    const handleFileChange = useCallback((e) => {
+    const handleFileChange = useCallback((e: any) => {
         const file = e.target.files[0];
         if (file) {
             setSelectedFile(file);
-            setImagePreview(URL.createObjectURL(file));
+            setImagePreview(URL.createObjectURL(file) as any);
         }
     }, []);
 
     // 4. Submit Form
-    const handleSubmit = useCallback(async (e) => {
+    const handleSubmit = useCallback(async (e: any) => {
         if (e) e.preventDefault();
         
         if (!formData.title || !formData.category || !formData.content) {
@@ -127,7 +128,7 @@ export const useNewsForm = () => {
             if (res.success) {
                 navigate('/admin/news');
             }
-        } catch (error) {
+        } catch (error: any) {
             toast.error(error.response?.data?.message || 'Failed to save article');
         } finally {
             setIsSubmitting(false);

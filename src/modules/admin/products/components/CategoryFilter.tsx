@@ -4,7 +4,7 @@ import { CATEGORIES } from '@/shared/constants';
  * 🏷️ CategoryFilter Component
  * แถบเลือกหมวดหมู่สินค้าแบบเม็ดยา (Pills)
  */
-const CategoryFilter = ({ selectedCategory, onCategoryChange }) => {
+const CategoryFilter = ({ selectedCategory, onCategoryChange }: any) => {
   // รวม 'All' เข้ากับหมวดหมู่มาตรฐานจาก Constants
   const categories = ['All', ...CATEGORIES];
 

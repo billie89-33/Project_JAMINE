@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
  * 📦 ProductTable Component
  * ตารางแสดงรายการสินค้าแบบ Full-width พรีเมียม
  */
-const ProductTable = ({ products, onDelete, isLoading }) => {
+const ProductTable = ({ products, onDelete, isLoading }: any) => {
   const navigate = useNavigate();
 
   if (isLoading) {
@@ -67,7 +67,7 @@ const ProductTable = ({ products, onDelete, isLoading }) => {
             </tr>
           </thead>
           <tbody className="divide-y divide-purple-50">
-            {products.map((product) => (
+            {products.map((product: any) => (
               <tr key={product._id} className="hover:bg-purple-50/30 transition-colors group">
                 {/* 1. ข้อมูลสินค้า (รูป + ชื่อ) */}
                 <td className="px-6 py-4">

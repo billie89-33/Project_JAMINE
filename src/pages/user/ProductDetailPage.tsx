@@ -8,7 +8,7 @@ const ProductDetailPage = () => {
   
   // 🎣 ใช้ Custom Hook ที่เราแยกออกมา (Business Logic)
   // หมายเหตุ: ในตอนนี้เรายังรองรับการรับข้อมูลจาก location.state เพื่อความเร็ว
-  const { product: apiProduct, loading: apiLoading } = useProductDetail(productId);
+  const { product: apiProduct, loading: apiLoading } = useProductDetail(productId as string);
   
   const sharedProductData = location.state?.productData;
   const product = sharedProductData || apiProduct;

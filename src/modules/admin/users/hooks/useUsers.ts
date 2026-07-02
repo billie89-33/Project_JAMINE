@@ -17,7 +17,7 @@ export const useUsers = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
     const [isActionLoading, setIsActionLoading] = useState(false);
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState<any[]>([]);
     const [pagination, setPagination] = useState({
         currentPage: 1,
         totalPages: 1,
@@ -30,8 +30,8 @@ export const useUsers = () => {
     const [status, setStatus] = useState('all');
 
     // Detail Modal & Edit State
-    const [selectedUser, setSelectedUser] = useState(null);
-    const [summary, setSummary] = useState(null);
+    const [selectedUser, setSelectedUser] = useState<any>(null);
+    const [summary, setSummary] = useState<any>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [activeTab, setActiveTab] = useState('summary'); // 'summary' | 'addresses' | 'orders'
@@ -54,13 +54,13 @@ export const useUsers = () => {
             });
             if (res.success) {
                 setUsers(res.data.customers || res.data.users || []);
-                setPagination(res.data.pagination || {
-                    currentPage: 1,
-                    totalPages: 1,
-                    totalItems: 0
+                setPagination({
+                    currentPage: res.data.page || 1,
+                    totalPages: res.data.totalPages || 1,
+                    totalItems: res.data.total || 0
                 });
             }
-        } catch (error) {
+        } catch (error: any) {
             toast.error(error.response?.data?.message || 'Failed to fetch users');
         } finally {
             setIsLoading(false);
@@ -75,7 +75,7 @@ export const useUsers = () => {
     }, [fetchUsers]);
 
     // 2. View Detail & Summary
-    const viewDetail = useCallback(async (id) => {
+    const viewDetail = useCallback(async (id: string) => {
         setIsActionLoading(true);
         setActiveTab('summary');
         setIsEditMode(false);
@@ -93,7 +93,7 @@ export const useUsers = () => {
                 });
                 setIsModalOpen(true);
             }
-        } catch (error) {
+        } catch (error: any) {
             toast.error(error.response?.data?.message || 'Failed to fetch user details');
         } finally {
             setIsActionLoading(false);
@@ -111,9 +111,9 @@ export const useUsers = () => {
                 toast.success('User updated successfully');
                 setIsEditMode(false);
                 fetchUsers(); // Refresh list
-                setSelectedUser(prev => ({ ...prev, ...res.data }));
+                setSelectedUser((prev: any) => ({ ...prev, ...res.data }));
             }
-        } catch (error) {
+        } catch (error: any) {
             toast.error(error.response?.data?.message || 'Update failed');
         } finally {
             setIsActionLoading(false);
@@ -121,7 +121,7 @@ export const useUsers = () => {
     };
 
     // 4. Toggle Status (Surgical Update)
-    const toggleStatus = useCallback(async (id, currentStatus) => {
+    const toggleStatus = useCallback(async (id: string, currentStatus: string) => {
         const newStatus = currentStatus === 'active' ? 'banned' : 'active';
         if (!window.confirm(`Are you sure you want to ${newStatus.toUpperCase()} this user?`)) return;
 
@@ -132,11 +132,11 @@ export const useUsers = () => {
                 toast.success(`User status updated to ${newStatus}`);
                 fetchUsers();
                 if (selectedUser?._id === id) {
-                    setSelectedUser(prev => ({ ...prev, status: newStatus }));
-                    setEditForm(prev => ({ ...prev, status: newStatus }));
+                    setSelectedUser((prev: any) => ({ ...prev, status: newStatus }));
+                    setEditForm((prev: any) => ({ ...prev, status: newStatus }));
                 }
             }
-        } catch (error) {
+        } catch (error: any) {
             toast.error(error.response?.data?.message || 'Status update failed');
         } finally {
             setIsActionLoading(false);
@@ -153,7 +153,7 @@ export const useUsers = () => {
             if (res.success) {
                 const data = res.data;
                 const headers = ['Name', 'Username', 'Email', 'Phone', 'Status', 'Joined Date'];
-                const csvRows = data.map(u => [
+                const csvRows = data.map((u: any) => [
                     u.name || 'N/A',
                     u.username,
                     u.email,
@@ -181,7 +181,7 @@ export const useUsers = () => {
     };
 
     // 6. Delete User
-    const deleteUser = useCallback(async (id) => {
+    const deleteUser = useCallback(async (id: string) => {
         if (!window.confirm('CRITICAL: Delete this user permanently? This cannot be undone.')) return;
 
         setIsActionLoading(true);
@@ -192,7 +192,7 @@ export const useUsers = () => {
                 fetchUsers();
                 setIsModalOpen(false);
             }
-        } catch (error) {
+        } catch (error: any) {
             toast.error(error.response?.data?.message || 'Delete failed');
         } finally {
             setIsActionLoading(false);
@@ -200,7 +200,7 @@ export const useUsers = () => {
     }, [fetchUsers]);
 
     // 7. Deep Link to Orders
-    const viewCustomerOrders = (userId) => {
+    const viewCustomerOrders = (userId: string) => {
         setIsModalOpen(false);
         navigate('/admin/order', { state: { userId } });
     };

@@ -33,7 +33,7 @@ export const useOrderDetail = () => {
 
     useEffect(() => {
         if (orderId) {
-            fetchOrderDetails(orderId).then((res: any) => {
+            fetchOrderDetails(orderId).then((res: { data?: Order }) => {
                 // ถ้าออเดอร์มีเลขพัสดุอยู่แล้ว ให้เซ็ตค่าใส่ช่อง Input เลย (Defensive Mapping)
                 const tracking = res?.data?.trackingNumber;
                 if (tracking) {
@@ -47,7 +47,7 @@ export const useOrderDetail = () => {
     const { execute: updateStatusApi, loading: isUpdating } = useApi(updateOrderStatus, {
         showToast: true,
         successMessage: 'อัปเดตสถานะออเดอร์เรียบร้อยแล้ว',
-        onSuccess: (updatedData: any) => {
+        onSuccess: (updatedData: { data?: Order }) => {
             // โหลดข้อมูลใหม่เพื่ออัปเดต UI ให้ตรงกับ DB
             fetchOrderDetails(orderId);
             const newTracking = updatedData?.data?.trackingNumber;
@@ -60,9 +60,9 @@ export const useOrderDetail = () => {
     const handleUpdateStatus = async (newStatus: string) => {
         // ✅ กฎเหล็ก: ตรวจสอบความถูกต้องของการเปลี่ยนสถานะ (Strict Flow Control)
         const currentStatus = orderData?.status || '';
-        const allowedNext = ORDER_TRANSITIONS[currentStatus] || [];
+        const allowedNext = ORDER_TRANSITIONS[currentStatus as keyof typeof ORDER_TRANSITIONS] || [];
         
-        if (newStatus !== currentStatus && !allowedNext.includes(newStatus)) {
+        if (newStatus !== currentStatus && !allowedNext.includes(newStatus as never)) {
             toast.error(`ไม่สามารถเปลี่ยนสถานะจาก ${currentStatus} เป็น ${newStatus} ได้`);
             return;
         }
@@ -73,7 +73,7 @@ export const useOrderDetail = () => {
             return; 
         }
 
-        const payload: any = { status: newStatus };
+        const payload: { status: string; trackingNumber?: string } = { status: newStatus };
         
         // แนบเลขพัสดุไปถ้ามีการระบุไว้ (ไม่ว่าสถานะใด แต่สำคัญที่สุดคือ Shipped)
         if (trackingNumber.trim()) {

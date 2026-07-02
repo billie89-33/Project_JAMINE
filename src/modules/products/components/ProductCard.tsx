@@ -19,12 +19,12 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.stopPropagation(); // ป้องกันการ navigate ไปหน้า detail
     if (isOutOfStock) return;
-    await addToCart(product._id || product.id, 1);
+    await addToCart((product._id || product.id) as string, 1);
   };
 
   return (
     <div 
-      onClick={() => navigate(`/product/${product._id || product.id}`)}
+      onClick={() => navigate(`/product/${(product._id || product.id) as string}`)}
       className={`group bg-white rounded-[24px] sm:rounded-[32px] border border-purple-50 shadow-sm transition-all duration-500 overflow-hidden flex flex-col h-full relative cursor-pointer ${isOutOfStock ? 'opacity-80 grayscale-[20%]' : 'hover:shadow-[0_20px_50px_rgba(124,58,237,0.15)] hover:-translate-y-1'}`}
     >
       

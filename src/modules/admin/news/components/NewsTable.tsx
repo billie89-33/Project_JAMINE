@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const NewsTable = ({ newsList, isLoading, onToggleStatus, onDelete }) => {
+const NewsTable = ({ newsList, isLoading, onToggleStatus, onDelete }: any) => {
     return (
         <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="overflow-x-auto">
@@ -40,7 +40,7 @@ const NewsTable = ({ newsList, isLoading, onToggleStatus, onDelete }) => {
                                 </td>
                             </tr>
                         ) : (
-                            newsList.map((news) => (
+                            newsList.map((news: any) => (
                                 <tr key={news._id} className="hover:bg-slate-50/50 transition-colors group">
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-4">

@@ -31,8 +31,7 @@ export const useOrderHistory = () => {
   // 1.1 สกัดข้อมูลออเดอร์ออกมาอย่างระมัดระวัง (Ultra-Defensive)
   const orders = useMemo(() => {
     if (!apiResponse) return [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const res = apiResponse as any;
+    const res = apiResponse as { data?: Order[]; orders?: Order[] } | Order[];
     // ถ้าเป็น Array โดยตรง
     if (Array.isArray(res)) return res;
     // ถ้าห่อมาใน .data (ตามมาตรฐาน useApi/Axios)
@@ -61,7 +60,7 @@ export const useOrderHistory = () => {
       cancelled: [ORDER_STATUS.CANCELLED]
     };
 
-    return orders.filter(order => filterMap[activeFilter]?.includes(order.status));
+    return orders.filter(order => filterMap[activeFilter as keyof typeof filterMap]?.includes(order.status as never));
   }, [orders, activeFilter]);
 
   const getRemainingTime = useCallback((expiresAt: string | Date | undefined) => {

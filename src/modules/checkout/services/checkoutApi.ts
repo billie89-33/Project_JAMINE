@@ -8,10 +8,16 @@ import { ApiResponse, Order, Address } from '@/types';
 
 // --- REAL API ENDPOINTS ---
 
+export interface CheckoutSummary {
+    // TODO: BLINDSPOT - Need Backend Schema
+    cart?: object;
+    addresses?: Address[];
+}
+
 /**
  * ดึงข้อมูลสรุปสำหรับการเช็คเอาต์ (Cart + Addresses + Final Prices)
  */
-export const getCheckoutSummaryApi = async (): Promise<ApiResponse<unknown>> => {
+export const getCheckoutSummaryApi = async (): Promise<ApiResponse<CheckoutSummary>> => {
     const response = await apiClient.get('/checkout/summary');
     return response.data;
 };
