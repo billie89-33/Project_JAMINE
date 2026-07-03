@@ -3,13 +3,14 @@ import { getAdminProducts, deleteProduct } from '@/modules/admin/services/produc
 import { getCategoriesApi } from '@/modules/products/services/productApi';
 import { useApi } from '@/shared/hooks/useApi';
 import { toast } from 'react-hot-toast';
+import { Product } from '@/types';
 
 /**
  * 🎣 useAdminProducts Hook (Smart Logic)
  * จัดการข้อมูลรายการสินค้าสำหรับหน้า Admin
  */
 export const useAdminProducts = () => {
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -49,15 +50,16 @@ export const useAdminProducts = () => {
       
       if (response.success) {
         // 🛡️ Defensive Check: รองรับทั้งข้อมูลที่ส่งมาเป็น Array ตรงๆ หรือครอบใน Object
+        const responseData = response.data as unknown as Record<string, unknown>;
         const productsList = Array.isArray(response.data) 
-            ? response.data 
-            : (response.data?.products || []);
+            ? (response.data as Product[]) 
+            : (Array.isArray(responseData?.products) ? responseData.products as Product[] : []);
             
-        setProducts(productsList as any[]);
-        setTotal(response.data?.total || productsList.length);
-        setTotalPages(response.data?.totalPages || Math.ceil((response.data?.total || productsList.length) / 10));
+        setProducts(productsList);
+        setTotal(Number(responseData?.total) || productsList.length);
+        setTotalPages(Number(responseData?.totalPages) || Math.ceil((Number(responseData?.total) || productsList.length) / 10));
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Failed to fetch products:', error);
       toast.error('ไม่สามารถโหลดข้อมูลสินค้าได้');
     } finally {
@@ -92,7 +94,7 @@ export const useAdminProducts = () => {
           toast.success('ลบสินค้าสำเร็จ');
           fetchProducts(); 
         }
-      } catch (error) {
+      } catch {
         toast.error('ลบสินค้าไม่สำเร็จ');
       }
     }

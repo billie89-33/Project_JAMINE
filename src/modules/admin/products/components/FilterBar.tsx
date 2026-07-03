@@ -4,6 +4,15 @@ import { Search, X, Filter } from 'lucide-react';
  * 🔍 FilterBar Component
  * แถบเครื่องมือรวมศูนย์: ค้นหาสินค้า + กรองตามหมวดหมู่
  */
+interface FilterBarProps {
+  searchTerm: string;
+  onSearchChange: (term: string) => void;
+  selectedCategory: string;
+  onCategoryChange: (category: string) => void;
+  onClear: () => void;
+  categoriesList?: (string | { name: string })[];
+}
+
 const FilterBar = ({ 
   searchTerm, 
   onSearchChange, 
@@ -11,9 +20,9 @@ const FilterBar = ({
   onCategoryChange, 
   onClear,
   categoriesList
-}: any) => {
+}: FilterBarProps) => {
   // สร้าง Array ของชื่อหมวดหมู่ที่ดึงมาจาก API (รองรับข้อมูลทั้งแบบ String และ Object)
-  const categoryNames = (categoriesList || []).map((cat: any) => typeof cat === 'object' ? cat.name : cat);
+  const categoryNames = (categoriesList || []).map((cat) => typeof cat === 'object' && cat !== null ? cat.name : String(cat));
   const categories = ['All', ...categoryNames];
 
   return (

@@ -16,7 +16,7 @@ export interface UseApiOptions<TData = unknown, TResponse = unknown> {
  * 🛠️ useApi - Advanced Global Hook (Standard Edition)
  * ออกแบบมาให้ยืดหยุ่นสูง เพื่อใช้ในโปรเจกต์นี้และนำไปใช้ต่อในโปรเจกต์อื่นได้ง่าย
  */
-export const useApi = <TData = unknown, TArgs extends any[] = any[], TResponse = unknown>(
+export const useApi = <TData = unknown, TArgs extends unknown[] = unknown[], TResponse = unknown>(
   apiFunc: (...args: TArgs) => Promise<TResponse>,
   options: UseApiOptions<TData, TResponse> = {}
 ) => {

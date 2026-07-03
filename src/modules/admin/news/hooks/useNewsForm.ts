@@ -6,7 +6,6 @@ import {
     getNewsCategoriesApi,
     NewsCategory
 } from '@/modules/admin/services';
-import { News } from '@/types';
 import toast from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -38,8 +37,8 @@ export const useNewsForm = () => {
         try {
             const res = await getNewsCategoriesApi();
             if (res.success) setCategories(res.data || []);
-        } catch (error) {
-            console.error(error);
+        } catch (err) {
+            console.error(err);
         }
     }, []);
 
@@ -60,7 +59,8 @@ export const useNewsForm = () => {
                 });
                 setImagePreview(originalNews.image?.url || null);
             }
-        } catch (error) {
+        } catch (err) {
+            console.error(err);
             toast.error('Failed to load news article');
             navigate('/admin/news');
         } finally {
@@ -69,9 +69,11 @@ export const useNewsForm = () => {
     }, [id, navigate]);
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        fetchCategories();
-        fetchNewsData();
+        const initData = async () => {
+            await fetchCategories();
+            await fetchNewsData();
+        };
+        initData();
     }, [fetchCategories, fetchNewsData]);
 
     // 3. Handle Inputs

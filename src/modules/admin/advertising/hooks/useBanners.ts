@@ -81,7 +81,7 @@ export const useBanners = () => {
         toast.success('ลบแบนเนอร์เรียบร้อยแล้ว');
         fetchBanners();
       }
-    } catch (error) {
+    } catch {
       toast.error('ลบไม่สำเร็จ');
     }
   };

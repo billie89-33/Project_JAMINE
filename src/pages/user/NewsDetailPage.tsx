@@ -3,10 +3,11 @@ import { useParams, Link } from 'react-router-dom';
 import { getNewsByIdApi } from '@/modules/admin/services';
 import { Calendar, User, Eye, ChevronLeft, Loader2, Share2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { News } from '@/types';
 
 const NewsDetailPage = () => {
     const { id } = useParams();
-    const [news, setNews] = useState<any>(null);
+    const [news, setNews] = useState<News | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -17,7 +18,8 @@ const NewsDetailPage = () => {
                 if (res.success) {
                     setNews(res.data);
                 }
-            } catch (error) {
+            } catch (err) {
+                console.error(err);
                 toast.error('Failed to load news content');
             } finally {
                 setIsLoading(false);

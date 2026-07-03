@@ -1,10 +1,19 @@
 import SpecFields from '@/modules/admin/addproduct/components/SpecFields';
+import { SpecRow } from '../hooks/useEditProduct';
+
+interface EditableSpecsProps {
+  category: string;
+  specifications: SpecRow[];
+  onSpecChange: (index: number, key: keyof SpecRow, value: string) => void;
+  onAddRow: () => void;
+  onRemoveSpec: (index: number) => void;
+}
 
 /**
  * 🛠️ EditableSpecs
  * ส่วนจัดการคุณสมบัติสินค้าแบบ Dynamic ตามหมวดหมู่
  */
-export const EditableSpecs = ({ category, specifications, onSpecChange, onAddRow, onRemoveSpec }: any) => {
+export const EditableSpecs = ({ category, specifications, onSpecChange, onAddRow, onRemoveSpec }: EditableSpecsProps) => {
   return (
     <div className="bg-white p-8 rounded-[40px] shadow-2xl shadow-purple-100/50 border border-purple-50">
       <div className="flex items-center gap-3 mb-8">

@@ -14,8 +14,7 @@ const ProductTabs: React.FC<{ product: Product }> = ({ product }) => {
     try {
       productSpecs = JSON.parse(product.specifications);
       // รองรับเคส double stringify
-      if (typeof productSpecs === 'string') productSpecs = JSON.parse(productSpecs);
-    } catch (e) {
+    } catch {
       productSpecs = {};
     }
   } else if (product.specifications && typeof product.specifications === 'object') {

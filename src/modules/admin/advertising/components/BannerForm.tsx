@@ -77,7 +77,7 @@ export const BannerForm = ({ initialData, onSubmit, onCancel, isSubmitting }: Ba
     Object.entries(formData).forEach(([key, value]) => {
       // สำหรับโหมดแก้ไข ตรวจสอบว่าค่าต่างจากเดิมไหม
       if (initialData) {
-        if (value !== (initialData as any)[key]) {
+        if (value !== (initialData as unknown as Record<string, unknown>)[key]) {
           submitData.append(key, value as string | Blob);
           hasChanges = true;
         }

@@ -105,7 +105,7 @@ export const useCheckout = () => {
         }
         toast.success("เพิ่มที่อยู่สำเร็จ");
       }
-    } catch (error) {
+    } catch {
       toast.error("ไม่สามารถเพิ่มที่อยู่ได้");
     }
   };
@@ -118,7 +118,7 @@ export const useCheckout = () => {
         await refreshUser();
         toast.success("อัปเดตที่อยู่สำเร็จ");
       }
-    } catch (error) {
+    } catch {
       toast.error("ไม่สามารถอัปเดตที่อยู่ได้");
     }
   };
@@ -131,7 +131,7 @@ export const useCheckout = () => {
         await refreshUser();
         toast.success("ตั้งเป็นที่อยู่หลักเรียบร้อย");
       }
-    } catch (error) {
+    } catch {
       toast.error("ไม่สามารถตั้งที่อยู่หลักได้");
     }
   };
@@ -145,7 +145,7 @@ export const useCheckout = () => {
         if (selectedAddressId === addressId) setSelectedAddressId(null);
         toast.success("ลบที่อยู่เรียบร้อย");
       }
-    } catch (error) {
+    } catch {
       toast.error("ไม่สามารถลบที่อยู่ได้");
     }
   };

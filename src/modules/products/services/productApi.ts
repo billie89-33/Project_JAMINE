@@ -69,7 +69,7 @@ export const getSpecKeysApi = async (category: string): Promise<ApiResponse<stri
 /**
  * ดึงข้อมูลตัวเลือกสเปคสำหรับทำ Advance Filter
  */
-export const getSpecFiltersApi = async (category: string): Promise<ApiResponse<Record<string, string[]>> | {}> => {
+export const getSpecFiltersApi = async (category: string): Promise<ApiResponse<Record<string, string[]>> | Record<string, never>> => {
     if (!category || category === 'All') return {};
     const response = await apiClient.get('/products/spec-filters', { params: { category } });
     return response.data;

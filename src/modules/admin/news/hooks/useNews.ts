@@ -82,7 +82,7 @@ export const useNews = () => {
                 toast.success('News status updated');
                 fetchNews();
             }
-        } catch (error) {
+        } catch {
             toast.error('Failed to update status');
         } finally {
             setIsActionLoading(false);
@@ -100,7 +100,7 @@ export const useNews = () => {
                 toast.success('News article deleted');
                 fetchNews();
             }
-        } catch (error) {
+        } catch {
             toast.error('Failed to delete news');
         } finally {
             setIsActionLoading(false);

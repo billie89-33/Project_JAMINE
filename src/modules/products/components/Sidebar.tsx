@@ -27,7 +27,6 @@ const Sidebar: React.FC<SidebarProps> = ({
   brands = [], 
   specFilters = {}, 
   selectedCategory, 
-  setSelectedCategory,
   selectedBrands = [], 
   onBrandToggle, 
   selectedSpecs = {}, 

@@ -11,17 +11,19 @@ import {
     Loader2,
     User as UserIcon 
 } from 'lucide-react';
+import { User } from '@/types';
+import React from 'react';
 
 /**
  * 👥 CustomerList Component
  * ส่วนแสดงผลตารางรายชื่อลูกค้าพร้อมระบบ Filter
  */
 interface CustomerListProps {
-    users: any[];
+    users: User[];
     isLoading: boolean;
     pagination: { totalItems: number; totalPages: number; currentPage: number };
     page: number;
-    setPage: (p: any) => void;
+    setPage: React.Dispatch<React.SetStateAction<number>>;
     keyword: string;
     setKeyword: (k: string) => void;
     status: string;
@@ -110,7 +112,7 @@ const CustomerList = ({
                                 </td>
                             </tr>
                         ) : (
-                            users.map((user: any) => (
+                            users.map((user: User) => (
                                 <tr key={user._id} className="hover:bg-slate-50/50 transition-colors group">
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3">
@@ -138,7 +140,7 @@ const CustomerList = ({
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-2 text-xs font-medium text-slate-600">
                                             <Calendar size={14} className="text-slate-400" />
-                                            {new Date(user.createdAt).toLocaleDateString()}
+                                            {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
@@ -153,14 +155,14 @@ const CustomerList = ({
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex items-center justify-end gap-2">
                                             <button 
-                                                onClick={() => onViewDetail(user._id)}
+                                                onClick={() => user._id && onViewDetail(user._id)}
                                                 className="p-2 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition-all"
                                                 title="View Detail"
                                             >
                                                 <Eye size={18} />
                                             </button>
                                             <button 
-                                                onClick={() => onToggleStatus(user._id, user.status)}
+                                                onClick={() => user._id && user.status && onToggleStatus(user._id, user.status)}
                                                 className={`p-2 rounded-xl transition-all ${
                                                     user.status === 'active' 
                                                         ? 'text-slate-400 hover:text-rose-600 hover:bg-rose-50' 

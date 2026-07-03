@@ -1,6 +1,15 @@
 import { Package, Truck, CheckCircle, Clock } from 'lucide-react';
+import { ShippingStats as ShippingStatsData } from '../../services';
+import React from 'react';
 
-const StatCard = ({ title, value, icon: Icon, colorClass }: any) => (
+interface StatCardProps {
+    title: string;
+    value: number;
+    icon: React.ElementType;
+    colorClass: string;
+}
+
+const StatCard = ({ title, value, icon: Icon, colorClass }: StatCardProps) => (
     <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
         <div className="flex items-center justify-between">
             <div>
@@ -14,7 +23,11 @@ const StatCard = ({ title, value, icon: Icon, colorClass }: any) => (
     </div>
 );
 
-const ShippingStats = ({ stats }: any) => {
+interface ShippingStatsProps {
+    stats: ShippingStatsData;
+}
+
+const ShippingStats = ({ stats }: ShippingStatsProps) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <StatCard 

@@ -104,7 +104,7 @@ export const useProducts = (rawInitialCategory: string = '', initialKeyword: str
         setProducts(response.data);
         setTotalPages(response.totalPages);
       }
-    } catch (error) {
+    } catch {
       toast.error("ไม่สามารถดึงข้อมูลสินค้าได้");
     } finally {
       setLoading(false);

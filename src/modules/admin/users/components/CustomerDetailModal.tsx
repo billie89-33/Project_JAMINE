@@ -12,6 +12,15 @@ import {
     ExternalLink,
     Clock
 } from 'lucide-react';
+import { User, Address } from '@/types';
+import React from 'react';
+
+export interface CustomerEditForm {
+    name?: string;
+    email?: string;
+    phone?: string;
+    status?: string;
+}
 
 /**
  * 🔍 CustomerDetailModal Component (v2.0)
@@ -20,8 +29,8 @@ import {
 interface CustomerDetailModalProps {
     isOpen: boolean;
     onClose: () => void;
-    user: any;
-    summary: any;
+    user: User | null;
+    summary: Record<string, number | string> | null;
     onToggleStatus: (id: string, status: string) => void;
     onDelete: (id: string) => void;
     onUpdate: (e?: unknown) => void;
@@ -29,8 +38,8 @@ interface CustomerDetailModalProps {
     isActionLoading: boolean;
     isEditMode: boolean;
     setIsEditMode: (v: boolean) => void;
-    editForm: { name?: string; email?: string; phone?: string; status?: string };
-    setEditForm: (v: any) => void;
+    editForm: CustomerEditForm;
+    setEditForm: (v: CustomerEditForm) => void;
     activeTab: string;
     setActiveTab: (v: string) => void;
 }
@@ -146,7 +155,7 @@ const CustomerDetailModal = ({
                                         {isEditMode ? (
                                             <input 
                                                 type="text" 
-                                                value={editForm.name}
+                                                value={editForm.name || ''}
                                                 onChange={(e) => setEditForm({...editForm, name: e.target.value})}
                                                 className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 text-sm font-bold"
                                             />
@@ -165,7 +174,7 @@ const CustomerDetailModal = ({
                                                         <div className="p-2.5 text-slate-400"><Mail size={16} /></div>
                                                         <input 
                                                             type="email" 
-                                                            value={editForm.email}
+                                                            value={editForm.email || ''}
                                                             onChange={(e) => setEditForm({...editForm, email: e.target.value})}
                                                             className="bg-transparent border-none outline-none flex-1 text-xs font-bold text-slate-700 pr-4"
                                                         />
@@ -174,7 +183,7 @@ const CustomerDetailModal = ({
                                                         <div className="p-2.5 text-slate-400"><Phone size={16} /></div>
                                                         <input 
                                                             type="text" 
-                                                            value={editForm.phone}
+                                                            value={editForm.phone || ''}
                                                             onChange={(e) => setEditForm({...editForm, phone: e.target.value})}
                                                             className="bg-transparent border-none outline-none flex-1 text-xs font-bold text-slate-700 pr-4"
                                                         />
@@ -201,12 +210,12 @@ const CustomerDetailModal = ({
                                     <div className="bg-gradient-to-br from-purple-50 to-indigo-50/50 p-6 rounded-[2rem] border border-purple-100/50 flex items-center justify-between group">
                                         <div>
                                             <span className="text-[10px] font-black text-purple-400 uppercase tracking-widest block mb-1">Total Spent</span>
-                                            <div className="text-2xl font-black text-slate-800">฿{(summary?.totalSpent || 0).toLocaleString()}</div>
+                                            <div className="text-2xl font-black text-slate-800">฿{(Number(summary?.totalSpent) || 0).toLocaleString()}</div>
                                         </div>
                                         <div className="p-4 bg-white rounded-2xl text-purple-600 shadow-sm"><CreditCard size={24} /></div>
                                     </div>
                                     <button 
-                                        onClick={() => onViewOrders(user._id)}
+                                        onClick={() => user._id && onViewOrders(user._id)}
                                         className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md hover:border-purple-200 transition-all text-left flex items-center justify-between group"
                                     >
                                         <div>
@@ -229,14 +238,14 @@ const CustomerDetailModal = ({
                                         Status: {user.status}
                                     </span>
                                     <button 
-                                        onClick={() => onToggleStatus(user._id, user.status)}
+                                        onClick={() => user._id && user.status && onToggleStatus(user._id, user.status)}
                                         className="text-xs font-black text-slate-400 hover:text-purple-600 transition-colors underline underline-offset-4"
                                     >
                                         {user.status === 'active' ? 'Ban this user' : 'Activate user'}
                                     </button>
                                 </div>
                                 <button 
-                                    onClick={() => onDelete(user._id)}
+                                    onClick={() => user._id && onDelete(user._id)}
                                     className="flex items-center gap-2 px-4 py-2 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl text-xs font-black transition-all"
                                 >
                                     <Trash2 size={14} />
@@ -256,7 +265,7 @@ const CustomerDetailModal = ({
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-1 gap-4">
-                                    {user.addresses.map((addr: any, idx: number) => (
+                                    {user.addresses.map((addr: Address, idx: number) => (
                                         <div key={idx} className={`p-6 rounded-3xl border transition-all ${
                                             addr.isDefault 
                                                 ? 'bg-white border-purple-200 shadow-md ring-1 ring-purple-100' 

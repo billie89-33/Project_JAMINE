@@ -8,6 +8,10 @@ import {
 } from '@/modules/admin/services';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { User } from '@/types';
+import React from 'react';
+
+export type UserStats = Record<string, number | string>;
 
 /**
  * 🎣 useUsers Hook
@@ -17,7 +21,7 @@ export const useUsers = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
     const [isActionLoading, setIsActionLoading] = useState(false);
-    const [users, setUsers] = useState<any[]>([]);
+    const [users, setUsers] = useState<User[]>([]);
     const [pagination, setPagination] = useState({
         currentPage: 1,
         totalPages: 1,
@@ -30,8 +34,8 @@ export const useUsers = () => {
     const [status, setStatus] = useState('all');
 
     // Detail Modal & Edit State
-    const [selectedUser, setSelectedUser] = useState<any>(null);
-    const [summary, setSummary] = useState<any>(null);
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const [summary, setSummary] = useState<UserStats | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [activeTab, setActiveTab] = useState('summary'); // 'summary' | 'addresses' | 'orders'
@@ -46,22 +50,27 @@ export const useUsers = () => {
     const fetchUsers = useCallback(async () => {
         setIsLoading(true);
         try {
-            const res: any = await getUsersApi({ 
+            const res = await getUsersApi({ 
                 page, 
                 limit: 10, 
                 keyword: keyword.trim(), 
                 status 
             });
             if (res.success) {
-                setUsers(res.data.customers || res.data.users || []);
+                // Defensive mapping in case backend returns 'customers' instead of 'users'
+                const responseData = res.data as unknown as Record<string, unknown>;
+                const userList = (responseData.customers as User[]) || (responseData.users as User[]) || [];
+                setUsers(userList);
+                
                 setPagination({
-                    currentPage: res.data.page || 1,
-                    totalPages: res.data.totalPages || 1,
-                    totalItems: res.data.total || 0
+                    currentPage: Number(responseData.page) || 1,
+                    totalPages: Number(responseData.totalPages) || 1,
+                    totalItems: Number(responseData.total) || 0
                 });
             }
-        } catch (error: any) {
-            toast.error(error.response?.data?.message || 'Failed to fetch users');
+        } catch (error: unknown) {
+            const errObj = error as { response?: { data?: { message?: string } } };
+            toast.error(errObj.response?.data?.message || 'Failed to fetch users');
         } finally {
             setIsLoading(false);
         }
@@ -80,41 +89,49 @@ export const useUsers = () => {
         setActiveTab('summary');
         setIsEditMode(false);
         try {
-            const res: any = await getUserSummaryApi(id);
+            const res = await getUserSummaryApi(id);
             if (res.success) {
-                const profile = res.data.profile || res.data.user;
+                const responseData = res.data as unknown as Record<string, unknown>;
+                const profile = (responseData.profile as User) || (responseData.user as User);
                 setSelectedUser(profile);
-                setSummary(res.data.orderSummary || res.data.stats);
+                
+                const stats = (responseData.orderSummary as UserStats) || (responseData.stats as UserStats);
+                setSummary(stats);
+                
                 setEditForm({
-                    name: profile.name || '',
-                    email: profile.email || '',
-                    phone: profile.phone || '',
-                    status: profile.status || 'active'
+                    name: profile?.name || '',
+                    email: profile?.email || '',
+                    phone: profile?.phone || '',
+                    status: profile?.status || 'active'
                 });
                 setIsModalOpen(true);
             }
-        } catch (error: any) {
-            toast.error(error.response?.data?.message || 'Failed to fetch user details');
+        } catch (error: unknown) {
+            const errObj = error as { response?: { data?: { message?: string } } };
+            toast.error(errObj.response?.data?.message || 'Failed to fetch user details');
         } finally {
             setIsActionLoading(false);
         }
     }, []);
 
     // 3. Update User (Full Edit)
-    const handleUpdateUser = async (e: any) => {
+    const handleUpdateUser = async (e?: React.FormEvent) => {
         if (e) e.preventDefault();
+        if (!selectedUser?._id) return;
+        
         setIsActionLoading(true);
         try {
-            const updatePayload: any = { ...editForm };
-            const res = await updateUserByAdminApi((selectedUser as any)?._id, updatePayload);
+            const updatePayload = { ...editForm };
+            const res = await updateUserByAdminApi(selectedUser._id, updatePayload);
             if (res.success) {
                 toast.success('User updated successfully');
                 setIsEditMode(false);
                 fetchUsers(); // Refresh list
-                setSelectedUser((prev: any) => ({ ...prev, ...res.data }));
+                setSelectedUser((prev) => prev ? { ...prev, ...res.data } : null);
             }
-        } catch (error: any) {
-            toast.error(error.response?.data?.message || 'Update failed');
+        } catch (error: unknown) {
+            const errObj = error as { response?: { data?: { message?: string } } };
+            toast.error(errObj.response?.data?.message || 'Update failed');
         } finally {
             setIsActionLoading(false);
         }
@@ -127,17 +144,18 @@ export const useUsers = () => {
 
         setIsActionLoading(true);
         try {
-            const res = await updateUserByAdminApi(id, { status: newStatus });
+            const res = await updateUserByAdminApi(id, { status: newStatus as User['status'] });
             if (res.success) {
                 toast.success(`User status updated to ${newStatus}`);
                 fetchUsers();
                 if (selectedUser?._id === id) {
-                    setSelectedUser((prev: any) => ({ ...prev, status: newStatus }));
-                    setEditForm((prev: any) => ({ ...prev, status: newStatus }));
+                    setSelectedUser((prev) => prev ? { ...prev, status: newStatus as User['status'] } : null);
+                    setEditForm((prev) => ({ ...prev, status: newStatus }));
                 }
             }
-        } catch (error: any) {
-            toast.error(error.response?.data?.message || 'Status update failed');
+        } catch (error: unknown) {
+            const errObj = error as { response?: { data?: { message?: string } } };
+            toast.error(errObj.response?.data?.message || 'Status update failed');
         } finally {
             setIsActionLoading(false);
         }
@@ -146,20 +164,20 @@ export const useUsers = () => {
     const exportToCSV = async () => {
         setIsActionLoading(true);
         try {
-            const res: any = await exportCustomersApi({ 
+            const res = await exportCustomersApi({ 
                 keyword: keyword.trim(), 
                 status 
             });
             if (res.success) {
                 const data = res.data;
                 const headers = ['Name', 'Username', 'Email', 'Phone', 'Status', 'Joined Date'];
-                const csvRows = data.map((u: any) => [
+                const csvRows = data.map((u: User) => [
                     u.name || 'N/A',
                     u.username,
                     u.email,
                     u.phone || 'N/A',
                     u.status,
-                    new Date(u.createdAt).toLocaleDateString()
+                    u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A'
                 ].join(','));
                 
                 const csvContent = [headers.join(','), ...csvRows].join('\n');
@@ -174,6 +192,7 @@ export const useUsers = () => {
                 toast.success('Export started!');
             }
         } catch (error) {
+            console.error("Export failed:", error);
             toast.error('Export failed');
         } finally {
             setIsActionLoading(false);
@@ -192,8 +211,9 @@ export const useUsers = () => {
                 fetchUsers();
                 setIsModalOpen(false);
             }
-        } catch (error: any) {
-            toast.error(error.response?.data?.message || 'Delete failed');
+        } catch (error: unknown) {
+            const errObj = error as { response?: { data?: { message?: string } } };
+            toast.error(errObj.response?.data?.message || 'Delete failed');
         } finally {
             setIsActionLoading(false);
         }

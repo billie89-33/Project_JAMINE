@@ -1,8 +1,16 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Truck, ExternalLink } from 'lucide-react';
+import { Order, User } from '@/types';
+import { QuickTrackingPayload } from '../../services';
 
-const ShippingTable = ({ orders, loading, onUpdateTracking }: any) => {
+interface ShippingTableProps {
+    orders: Order[];
+    loading: boolean;
+    onUpdateTracking: (orderId: string, trackingData: QuickTrackingPayload) => void;
+}
+
+const ShippingTable = ({ orders, loading, onUpdateTracking }: ShippingTableProps) => {
     const navigate = useNavigate();
     const [trackingInput, setTrackingInput] = useState<Record<string, string>>({});
 
@@ -49,21 +57,21 @@ const ShippingTable = ({ orders, loading, onUpdateTracking }: any) => {
                                 </td>
                             </tr>
                         ) : (
-                            orders.map((order: any) => (
+                            orders.map((order: Order) => (
                                 <tr key={order._id} className="hover:bg-slate-50 transition-colors">
                                     <td className="px-6 py-4">
                                         <div className="font-medium text-slate-900">#{order.orderNumber}</div>
                                         <div className="text-xs text-slate-500 mt-1">
-                                            {new Date(order.createdAt).toLocaleDateString()}
+                                            {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'N/A'}
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
                                         {/* 🧼 Clean Mode: แสดงเฉพาะชื่อผู้รับ (Recipient Name) */}
                                         <div className="text-sm font-black text-slate-800 uppercase tracking-tight">
-                                            {order.shippingAddress?.fullName || order.userId?.name || 'Unknown'}
+                                            {order.shippingAddress?.fullName || (order.userId as User)?.name || 'Unknown'}
                                         </div>
                                         <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">
-                                            {order.userId?.email || 'Guest Customer'}
+                                            {(order.userId as User)?.email || 'Guest Customer'}
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">

@@ -1,13 +1,14 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useApi } from '@/shared/hooks/useApi';
-import { getShippingOrders, getShippingStats, updateQuickTracking } from '../../services';
+import { getShippingOrders, getShippingStats, updateQuickTracking, GetShippingOrdersParams, PaginatedShippingOrders, ShippingStats, QuickTrackingPayload } from '../../services';
+import { Order, ApiResponse } from '@/types';
 
 /**
  * ⚓ useShipping Hook
  * จัดการ Logic การดึงข้อมูลออเดอร์และสถิติการจัดส่ง
  */
 export const useShipping = () => {
-    const [filters, setFilters] = useState({
+    const [filters, setFilters] = useState<GetShippingOrdersParams>({
         status: '',
         search: '',
         page: 1,
@@ -15,23 +16,21 @@ export const useShipping = () => {
     });
 
     // 1. Hook สำหรับดึงสถิติ
-    const statsApi = useApi(getShippingStats, {
-        initialData: { toShip: 0, toProcess: 0, inTransit: 0, completed: 0 } as { toShip: number; toProcess: number; inTransit: number; completed: number },
-        transform: (res) => res as any,
-        showToast: true, // เปิดการแจ้งเตือน Error
+    const statsApi = useApi<ShippingStats, [], ApiResponse<ShippingStats>>(getShippingStats, {
+        initialData: { toShip: 0, toProcess: 0, inTransit: 0, completed: 0 },
+        showToast: true,
         errorMessage: 'ไม่สามารถดึงข้อมูลสถิติการจัดส่งได้'
     });
 
     // 2. Hook สำหรับดึงรายการออเดอร์
-    const ordersApi = useApi(getShippingOrders, {
-        initialData: { orders: [], total: 0, page: 1, totalPages: 1 } as { orders: Record<string, string | number | boolean | object | undefined>[]; total: number; page: number; totalPages: number },
-        transform: (res) => res as any,
-        showToast: true, // เปิดการแจ้งเตือน Error
+    const ordersApi = useApi<PaginatedShippingOrders, [GetShippingOrdersParams?], ApiResponse<PaginatedShippingOrders>>(getShippingOrders, {
+        initialData: { orders: [], total: 0, page: 1, totalPages: 1 },
+        showToast: true,
         errorMessage: 'ไม่สามารถดึงข้อมูลรายการจัดส่งได้'
     });
 
     // 3. Hook สำหรับอัปเดต Tracking ด่วน
-    const updateTrackingApi = useApi(updateQuickTracking, {
+    const updateTrackingApi = useApi<Order, [string, QuickTrackingPayload], ApiResponse<Order>>(updateQuickTracking, {
         showToast: true,
         successMessage: 'อัปเดตข้อมูลการจัดส่งสำเร็จ'
     });
@@ -42,14 +41,15 @@ export const useShipping = () => {
             statsApi.execute(),
             ordersApi.execute(filters)
         ]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filters, statsApi.execute, ordersApi.execute]);
 
     // ดึงข้อมูลเมื่อ filters เปลี่ยน
     useEffect(() => {
         refreshData();
-    }, [filters]);
+    }, [refreshData]);
 
-    const handleFilterChange = (newFilters: any) => {
+    const handleFilterChange = (newFilters: Partial<GetShippingOrdersParams>) => {
         setFilters(prev => ({ ...prev, ...newFilters, page: 1 }));
     };
 
@@ -57,22 +57,25 @@ export const useShipping = () => {
         setFilters(prev => ({ ...prev, page }));
     };
 
-    const handleUpdateTracking = async (orderId: string, trackingData: any) => {
+    const handleUpdateTracking = async (orderId: string, trackingData: QuickTrackingPayload) => {
         await updateTrackingApi.execute(orderId, trackingData);
         refreshData(); // โหลดข้อมูลใหม่หลังจากอัปเดต
     };
 
+    // Defensive helper variables to ensure safe mapping
+    const rawStats = statsApi.data as unknown as Record<string, unknown>;
+    const rawOrdersData = ordersApi.data as unknown as Record<string, unknown>;
+
     return {
-        // 📊 Mapping สถิติ (Ultra-Defensive Object Mapping)
-        stats: (statsApi.data as any)?.data?.stats || (statsApi.data as any)?.stats || (statsApi.data as any)?.data || statsApi.data || {},
+        // 📊 Mapping สถิติ (Ultra-Defensive Object Mapping with type safety)
+        stats: (rawStats?.stats as ShippingStats) || (rawStats?.data as ShippingStats) || statsApi.data || {},
         
-        // 📦 Mapping ออเดอร์ (Ultra-Defensive Array Mapping)
-        orders: Array.isArray((ordersApi.data as any)?.data?.data) ? (ordersApi.data as any).data.data :
-                Array.isArray((ordersApi.data as any)?.data) ? (ordersApi.data as any).data :
-                Array.isArray((ordersApi.data as any)?.orders) ? (ordersApi.data as any).orders :
-                Array.isArray(ordersApi.data) ? ordersApi.data : [],
+        // 📦 Mapping ออเดอร์ (Ultra-Defensive Array Mapping with type safety)
+        orders: Array.isArray(rawOrdersData?.data) ? rawOrdersData.data as Order[] :
+                Array.isArray(rawOrdersData?.orders) ? rawOrdersData.orders as Order[] :
+                Array.isArray(ordersApi.data) ? ordersApi.data as Order[] : [],
         
-        total: (ordersApi.data as { total?: number })?.total || 0,
+        total: ordersApi.data?.total || 0,
         loading: statsApi.loading || ordersApi.loading,
         updating: updateTrackingApi.loading,
         filters,

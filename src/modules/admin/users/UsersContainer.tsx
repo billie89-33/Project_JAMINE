@@ -26,7 +26,6 @@ const UsersContainer = () => {
         handleUpdateUser,
         toggleStatus,
         deleteUser,
-        exportToCSV,
         viewCustomerOrders
     } = useUsers();
 

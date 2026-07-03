@@ -212,7 +212,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         if (pendingUpdates.current[productId] === 0) {
           syncCartState(res); // สวมทับข้อมูลจาก Backend เพื่อรับรองความถูกต้อง 100%
         }
-      } catch (error) {
+      } catch {
         pendingUpdates.current[productId] -= 1;
         if (pendingUpdates.current[productId] === 0) {
           toast.error("อัปเดตจำนวนไม่สำเร็จ ระบบกำลังซิงค์ข้อมูลใหม่");
@@ -233,7 +233,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         toast.success("ลบสินค้าออกจากตะกร้าแล้ว");
         syncCartState(res); // 🚀 เร็วขึ้น 2 เท่า
       }
-    } catch (error) {
+    } catch {
       toast.error("ลบสินค้าไม่สำเร็จ");
     } finally {
       setLoading(false);

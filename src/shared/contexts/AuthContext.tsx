@@ -48,7 +48,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const checkAuthStatus = async () => {
             try {
                 await refreshUser();
-            } catch (error) {
+            } catch {
                 console.warn('User not authenticated (Initial check)');
 
                 // 🧪 Safe Dev Mock

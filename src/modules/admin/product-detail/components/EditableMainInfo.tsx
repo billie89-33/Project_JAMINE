@@ -1,11 +1,21 @@
 import ImageUploadBox from '@/modules/admin/addproduct/components/ImageUploadBox';
 import { PRODUCT_STATUS } from '@/shared/constants';
+import { ProductFormData } from '../hooks/useEditProduct';
+import React from 'react';
+
+interface EditableMainInfoProps {
+  formData: ProductFormData;
+  setFormData: React.Dispatch<React.SetStateAction<ProductFormData>>;
+  imagePreview: string | null;
+  onFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  categoriesList: (string | { name: string })[];
+}
 
 /**
  * 📝 EditableMainInfo
  * ส่วนจัดการข้อมูลพื้นฐานและสื่อ สำหรับหน้าแก้ไขสินค้า
  */
-export const EditableMainInfo = ({ formData, setFormData, imagePreview, onFileSelect, categoriesList }: any) => {
+export const EditableMainInfo = ({ formData, setFormData, imagePreview, onFileSelect, categoriesList }: EditableMainInfoProps) => {
   return (
     <div className="flex flex-col lg:flex-row gap-10">
       
@@ -117,8 +127,8 @@ export const EditableMainInfo = ({ formData, setFormData, imagePreview, onFileSe
                 className="w-full p-4 bg-white border border-slate-200 rounded-2xl text-slate-700 text-sm font-bold focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none shadow-sm"
               />
               <datalist id="categories-list">
-                {categoriesList.map((cat: any) => {
-                  const name = typeof cat === 'object' ? cat.name : cat;
+                {categoriesList.map((cat) => {
+                  const name = typeof cat === 'object' && cat !== null ? cat.name : String(cat);
                   return <option key={name} value={name} />;
                 })}
               </datalist>

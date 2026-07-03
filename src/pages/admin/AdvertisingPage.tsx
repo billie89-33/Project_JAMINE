@@ -5,6 +5,7 @@ import {
   useBanners 
 } from '@/modules/admin/advertising';
 import { Megaphone, Plus, ArrowLeft } from 'lucide-react';
+import { Banner } from '@/types';
 
 /**
  * 🚀 AdvertisingPage (Admin)
@@ -12,15 +13,14 @@ import { Megaphone, Plus, ArrowLeft } from 'lucide-react';
  */
 const AdvertisingPage = () => {
   const [isAdding, setIsAdding] = useState(false);
-  const [editingBanner, setEditingBanner] = useState<any>(null);
+  const [editingBanner, setEditingBanner] = useState<Banner | null>(null);
   const { 
     banners, 
     isLoading, 
     isSubmitting, 
     handleCreate,
     handleUpdate,
-    handleDelete, 
-    refreshBanners 
+    handleDelete
   } = useBanners();
 
   // จัดการการส่งข้อมูลฟอร์ม (ทั้งสร้างใหม่และแก้ไข)
@@ -40,7 +40,7 @@ const AdvertisingPage = () => {
     }
   };
 
-  const handleEditClick = (banner: any) => {
+  const handleEditClick = (banner: Banner) => {
     setEditingBanner(banner);
     setIsAdding(true);
   };

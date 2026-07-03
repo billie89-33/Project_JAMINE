@@ -1,11 +1,18 @@
 import { Edit3, Trash2, Calendar, Box, Tag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Product } from '@/types';
+
+interface ProductTableProps {
+  products: Product[];
+  onDelete: (id: string) => void;
+  isLoading: boolean;
+}
 
 /**
  * 📦 ProductTable Component
  * ตารางแสดงรายการสินค้าแบบ Full-width พรีเมียม
  */
-const ProductTable = ({ products, onDelete, isLoading }: any) => {
+const ProductTable = ({ products, onDelete, isLoading }: ProductTableProps) => {
   const navigate = useNavigate();
 
   if (isLoading) {
@@ -67,14 +74,14 @@ const ProductTable = ({ products, onDelete, isLoading }: any) => {
             </tr>
           </thead>
           <tbody className="divide-y divide-purple-50">
-            {products.map((product: any) => (
+            {products.map((product: Product) => (
               <tr key={product._id} className="hover:bg-purple-50/30 transition-colors group">
                 {/* 1. ข้อมูลสินค้า (รูป + ชื่อ) */}
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-4">
                     <div className="w-16 h-16 rounded-2xl bg-slate-100 overflow-hidden border border-purple-50 shadow-sm flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
                       <img 
-                        src={product.image?.url || product.image || 'https://via.placeholder.com/150'} 
+                        src={product.image?.url || (typeof product.image === 'string' ? product.image : 'https://via.placeholder.com/150')} 
                         alt={product.modelName} 
                         className="w-full h-full object-cover"
                       />
@@ -97,7 +104,7 @@ const ProductTable = ({ products, onDelete, isLoading }: any) => {
 
                 {/* 3. สต็อก */}
                 <td className="px-6 py-4 text-center">
-                  <div className={`text-sm font-black ${product.stock <= 5 ? 'text-rose-500' : 'text-slate-600'}`}>
+                  <div className={`text-sm font-black ${(product.stock || 0) <= 5 ? 'text-rose-500' : 'text-slate-600'}`}>
                     {(product.stock || 0).toLocaleString()}
                     <p className="text-[10px] text-slate-300 font-medium">UNIT</p>
                   </div>
@@ -127,14 +134,14 @@ const ProductTable = ({ products, onDelete, isLoading }: any) => {
                 <td className="px-6 py-4 text-center">
                   <div className="flex items-center justify-center gap-2">
                     <button 
-                      onClick={() => navigate(`/admin/product/${product._id}`)}
+                      onClick={() => product._id && navigate(`/admin/product/${product._id}`)}
                       className="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-600 hover:text-white hover:shadow-lg hover:shadow-indigo-100 transition-all active:scale-90"
                       title="แก้ไขสินค้า"
                     >
                       <Edit3 size={18} />
                     </button>
                     <button 
-                      onClick={() => onDelete(product._id)}
+                      onClick={() => product._id && onDelete(product._id)}
                       className="p-2.5 bg-rose-50 text-rose-600 rounded-xl hover:bg-rose-600 hover:text-white hover:shadow-lg hover:shadow-rose-100 transition-all active:scale-90"
                       title="ลบสินค้า"
                     >

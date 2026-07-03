@@ -15,11 +15,6 @@ export const useOrderDetail = () => {
     const id = orderId ?? '';
     const navigate = useNavigate();
 
-    const handlePrintInvoice = () => {
-        if (!id) return;
-        window.open(`/admin/invoice/${id}`, '_blank');
-    };
-
     // 💾 State สำหรับเลขพัสดุ (Tracking Number)
     const [trackingNumber, setTrackingNumber] = useState('');
 
@@ -50,7 +45,7 @@ export const useOrderDetail = () => {
                 }
             });
         }
-    }, [orderId, fetchOrderDetails]);
+    }, [id, fetchOrderDetails]);
 
     // 🛠️ อัปเดตสถานะ (รวมการใส่เลขพัสดุ)
     const { execute: updateStatusApi, loading: isUpdating } = useApi(updateOrderStatus, {

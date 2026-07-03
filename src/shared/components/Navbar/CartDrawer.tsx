@@ -9,7 +9,7 @@ interface CartDrawerProps {
 }
 
 const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
-  const { cartItems, summary, updateQuantity, removeItem, loading } = useCart();
+  const { cartItems, summary, updateQuantity, removeItem } = useCart();
 
   if (!isOpen) return null;
 
