@@ -30,7 +30,23 @@ export const useOrderDetail = () => {
         }
     });
 
-    const orderData = data as Order | null | undefined;
+    const orderData = useMemo(() => {
+        if (!data) return null;
+        const o = data as Order;
+        return {
+            ...o,
+            items: o.items?.map(item => {
+                const productObj = typeof item.productId === 'object' ? item.productId : (item as any).product;
+                return {
+                    ...item,
+                    brand: item.brand || productObj?.brand || 'Unknown',
+                    modelName: item.modelName || productObj?.modelName || productObj?.name || 'Unknown Product',
+                    image: item.image || productObj?.image?.url || productObj?.image || '',
+                    priceAtPurchase: item.priceAtPurchase || item.price || productObj?.price || 0
+                };
+            }) || []
+        };
+    }, [data]);
 
     useEffect(() => {
         if (id) {

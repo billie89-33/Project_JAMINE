@@ -33,21 +33,21 @@ const ProductForm = () => {
     } = useAddProduct();
 
     return (
-        <form onSubmit={handleSubmit} className="w-full bg-white p-6 md:p-10 rounded-[40px] shadow-2xl shadow-purple-100/50 border border-purple-50">
+        <form onSubmit={handleSubmit} className="w-full bg-white p-6 md:p-10 rounded-4xl shadow-2xl shadow-purple-100/50 border border-purple-50">
             <div className="flex flex-col lg:flex-row gap-10">
                 
                 {/* ⬅️ Left Column: Media & Specifications */}
-                <div className="flex-1 space-y-8">
+                <div className="w-full lg:w-5/12 space-y-8">
                     <div>
                         <label className="text-xs font-black text-purple-600 uppercase tracking-widest mb-3 block ml-1">Product Media</label>
-                        <div className="bg-slate-50 p-6 rounded-[32px] border-2 border-dashed border-purple-200 hover:border-purple-400 transition-colors group">
+                        <div className="bg-slate-50 p-6 rounded-4xl border-2 border-dashed border-purple-200 hover:border-purple-400 transition-colors group">
                             <ImageUploadBox imagePreview={imagePreview} onFileSelect={handleFileSelect} />
                         </div>
                     </div>
 
                     <div>
                         <label className="text-xs font-black text-purple-600 uppercase tracking-widest mb-3 block ml-1">Specifications</label>
-                        <div className="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm">
+                        <div className="bg-white p-6 rounded-4xl border border-slate-100 shadow-sm">
                             <SpecFields 
                                 category={category} 
                                 specifications={specifications} 
@@ -60,11 +60,11 @@ const ProductForm = () => {
                 </div>
 
                 {/* ➡️ Right Column: General Information */}
-                <div className="flex-[1.2] space-y-6">
-                    <div className="bg-slate-50/50 p-8 rounded-[32px] border border-slate-100 space-y-6">
+                <div className="w-full lg:w-7/12 space-y-6">
+                    <div className="bg-slate-50/50 p-8 rounded-4xl border border-slate-100 space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Brand</label>
+                                <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Brand</label>
                                 <input 
                                     type="text" 
                                     list="brands-list"
@@ -81,7 +81,7 @@ const ProductForm = () => {
                                 </datalist>
                             </div>
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Model Name</label>
+                                <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Model Name</label>
                                 <input 
                                     type="text" 
                                     placeholder="เช่น K70 RGB PRO..." 
@@ -94,7 +94,7 @@ const ProductForm = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Description</label>
+                            <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Description</label>
                             <textarea 
                                 placeholder="ระบุรายละเอียดสินค้าเบื้องต้นให้น่าสนใจ..." 
                                 value={description} 
@@ -107,7 +107,7 @@ const ProductForm = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">SKU / Code</label>
+                                <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">SKU / Code</label>
                                 <input 
                                     type="text" 
                                     placeholder="JMN-12345" 
@@ -118,7 +118,7 @@ const ProductForm = () => {
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Tags (Comma separated)</label>
+                                <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Tags (Comma separated)</label>
                                 <input 
                                     type="text" 
                                     placeholder="New, Sale, Gaming" 
@@ -131,7 +131,7 @@ const ProductForm = () => {
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Stock Quantity</label>
+                                <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Stock Quantity</label>
                                 <input 
                                     type="number" 
                                     value={stock} 
@@ -143,7 +143,7 @@ const ProductForm = () => {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Price (฿)</label>
+                                <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Price (฿)</label>
                                 <input 
                                     type="number" 
                                     placeholder="0.00" 
@@ -157,7 +157,7 @@ const ProductForm = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Category</label>
+                                <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Category</label>
                                 <input 
                                     type="text"
                                     list="categories-list"
@@ -175,7 +175,7 @@ const ProductForm = () => {
                                 </datalist>
                             </div>
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Status</label>
+                                <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Status</label>
                                 <select 
                                     value={status} 
                                     onChange={e => setStatus(e.target.value)} 
@@ -200,7 +200,7 @@ const ProductForm = () => {
                                     <div className={`w-12 h-6 rounded-full transition-colors ${isFeatured ? 'bg-purple-600' : 'bg-slate-200'}`}></div>
                                     <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${isFeatured ? 'translate-x-6' : 'translate-x-0'}`}></div>
                                 </div>
-                                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-purple-600 transition-colors">สินค้าแนะนำ (Featured)</span>
+                                <span className="text-xs font-black text-slate-500 uppercase tracking-widest group-hover:text-purple-600 transition-colors">สินค้าแนะนำ (Featured)</span>
                             </label>
                         </div>
                     </div>
@@ -208,7 +208,7 @@ const ProductForm = () => {
                     <button 
                         type="submit" 
                         disabled={isSubmitting} 
-                        className={`w-full py-5 rounded-[24px] text-white font-black text-sm uppercase tracking-[0.2em] shadow-xl transition-all active:scale-95 flex items-center justify-center gap-3 ${
+                        className={`w-full py-5 rounded-3xl text-white font-black text-sm uppercase tracking-widest shadow-xl transition-all active:scale-95 flex items-center justify-center gap-3 ${
                             isSubmitting 
                             ? 'bg-slate-300 cursor-not-allowed' 
                             : 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:shadow-purple-200 hover:-translate-y-1'

@@ -50,7 +50,20 @@ export const useOrders = () => {
     // 📦 5. Prepare Final Data (Ultra-Defensive Mapping as per doc/20)
     // 🛡️ ต้องประกาศข้อมูลก่อน Handlers เพื่อป้องกัน ReferenceError (Temporal Dead Zone)
     const orders = useMemo(() => {
-        return orderData?.orders || [];
+        const rawOrders = orderData?.orders || [];
+        return rawOrders.map((order: Order) => ({
+            ...order,
+            items: order.items?.map(item => {
+                const productObj = typeof item.productId === 'object' ? item.productId : (item as any).product;
+                return {
+                    ...item,
+                    brand: item.brand || productObj?.brand || 'Unknown',
+                    modelName: item.modelName || productObj?.modelName || productObj?.name || 'Unknown Product',
+                    image: item.image || productObj?.image?.url || productObj?.image || '',
+                    priceAtPurchase: item.priceAtPurchase || item.price || productObj?.price || 0
+                };
+            }) || []
+        }));
     }, [orderData]);
 
     const totalPages = useMemo(() => orderData?.totalPages || 1, [orderData]);

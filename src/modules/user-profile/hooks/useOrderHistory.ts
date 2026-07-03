@@ -32,13 +32,27 @@ export const useOrderHistory = () => {
   const orders = useMemo(() => {
     if (!apiResponse) return [];
     const res = apiResponse as { data?: Order[]; orders?: Order[] } | Order[];
-    // ถ้าเป็น Array โดยตรง
-    if (Array.isArray(res)) return res;
-    // ถ้าห่อมาใน .data (ตามมาตรฐาน useApi/Axios)
-    if (res.data && Array.isArray(res.data)) return res.data;
-    // ถ้าห่อมาใน .orders (Fallback)
-    if (res.orders && Array.isArray(res.orders)) return res.orders;
-    return [];
+    
+    let rawOrders: Order[] = [];
+    if (Array.isArray(res)) rawOrders = res;
+    else if (res.data && Array.isArray(res.data)) rawOrders = res.data;
+    else if (res.orders && Array.isArray(res.orders)) rawOrders = res.orders;
+    
+    // 🛡️ Map items to handle nested product data (similar to Cart)
+    return rawOrders.map(order => ({
+      ...order,
+      items: order.items?.map(item => {
+        // บางที backend ส่งข้อมูลสินค้ามาใน productId หรือ product (populated)
+        const productObj = typeof item.productId === 'object' ? item.productId : (item as any).product;
+        return {
+          ...item,
+          brand: item.brand || productObj?.brand || 'Unknown',
+          modelName: item.modelName || productObj?.modelName || productObj?.name || 'Unknown Product',
+          image: item.image || productObj?.image?.url || productObj?.image || '',
+          priceAtPurchase: item.priceAtPurchase || item.price || productObj?.price || 0
+        };
+      }) || []
+    }));
   }, [apiResponse]);
 
   // 2. อัปเดตเวลาปัจจุบันทุกวินาที (สำหรับตัวนับถอยหลัง)
