@@ -179,7 +179,7 @@ const OrderDetailContainer = () => {
                             <div>
                                 <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Customer Details</h4>
                                 <p className="text-sm font-bold text-slate-800">
-                                    {order.shippingAddress?.fullName || (order.userId as { name?: string; email?: string; phone?: string })?.name || 'Guest User'}
+                                    {order.shippingAddress?.fullName || (order.userId as { name?: string; username?: string })?.name || (order.userId as { name?: string; username?: string })?.username || 'Guest'}
                                 </p>
                                 <p className="text-xs text-slate-500">{(order.userId as { name?: string; email?: string; phone?: string })?.email || '-'}</p>
                                 <p className="text-xs text-slate-500 mt-1">{order.shippingAddress?.phone || (order.userId as { name?: string; email?: string; phone?: string })?.phone || '-'}</p>

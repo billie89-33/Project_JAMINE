@@ -68,7 +68,7 @@ const ShippingTable = ({ orders, loading, onUpdateTracking }: ShippingTableProps
                                     <td className="px-6 py-4">
                                         {/* 🧼 Clean Mode: แสดงเฉพาะชื่อผู้รับ (Recipient Name) */}
                                         <div className="text-sm font-black text-slate-800 uppercase tracking-tight">
-                                            {order.shippingAddress?.fullName || (order.userId as User)?.name || 'Unknown'}
+                                            {order.shippingAddress?.fullName || (order.userId as { name?: string; username?: string })?.name || (order.userId as { name?: string; username?: string })?.username || 'Guest'}
                                         </div>
                                         <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">
                                             {(order.userId as User)?.email || 'Guest Customer'}

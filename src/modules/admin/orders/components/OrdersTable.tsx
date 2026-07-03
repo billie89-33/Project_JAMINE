@@ -99,7 +99,7 @@ const OrdersTable = ({ orders, onUpdateStatus, onDelete, isLoading, isUpdating }
                       </div>
                       <div className="flex flex-col">
                         <span className="text-sm font-black text-slate-700">
-                          {order.shippingAddress?.fullName || (order.userId as { name?: string })?.name || 'Guest User'}
+                          {order.shippingAddress?.fullName || (order.userId as { name?: string, username?: string })?.name || (order.userId as { name?: string, username?: string })?.username || 'Guest'}
                         </span>
                         <span className="text-[10px] text-slate-400 font-bold">{(order.userId as { email?: string })?.email || '-'}</span>
                       </div>

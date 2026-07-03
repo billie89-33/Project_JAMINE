@@ -168,7 +168,7 @@ const DashboardContainer = () => {
                 <div className="lg:col-span-2">
                     <RecentOrders orders={recentOrders.map(o => ({
                         _id: o._id,
-                        customerName: o.shippingAddress?.fullName || (o.userId as { name?: string })?.name || 'Unknown',
+                        customerName: o.shippingAddress?.fullName || (o.userId as { name?: string, username?: string })?.name || (o.userId as { name?: string, username?: string })?.username || 'Guest',
                         date: o.createdAt || new Date().toISOString(),
                         amount: o.total || o.totalAmount || 0,
                         status: o.status
