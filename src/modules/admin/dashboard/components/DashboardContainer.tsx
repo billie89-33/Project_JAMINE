@@ -166,13 +166,16 @@ const DashboardContainer = () => {
             {/* 6. Detail Lists Row (Recent Orders, Low Stock) */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2">
-                    <RecentOrders orders={recentOrders.map(o => ({
-                        _id: o._id,
-                        customerName: o.shippingAddress?.fullName || (o.userId as { name?: string, username?: string })?.name || (o.userId as { name?: string, username?: string })?.username || 'Guest',
-                        date: o.createdAt || new Date().toISOString(),
-                        amount: o.total || o.totalAmount || 0,
-                        status: o.status
-                    }))} />
+                    <RecentOrders orders={recentOrders.map(o => {
+                        const order = o as Order & { user?: { name?: string; username?: string }; total_amount?: number };
+                        return {
+                            _id: order._id,
+                            customerName: order.shippingAddress?.fullName || order.user?.name || order.user?.username || (order.userId as { name?: string, username?: string })?.name || (order.userId as { name?: string, username?: string })?.username || 'Guest',
+                            date: order.createdAt || new Date().toISOString(),
+                            amount: order.total || order.totalAmount || order.total_amount || 0,
+                            status: order.status
+                        };
+                    })} />
                 </div>
                 <div className="lg:col-span-1">
                     {lowStock.length > 0 ? (
