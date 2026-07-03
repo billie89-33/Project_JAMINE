@@ -4,7 +4,7 @@ import { useApi } from '@/shared/hooks/useApi';
 import { getOrderByIdApi, updateOrderStatus } from '@/modules/admin/services';
 import { toast } from 'react-hot-toast';
 import { ORDER_STATUS, ORDER_TRANSITIONS } from '@/shared/constants';
-import { Order } from '@/types';
+import { Order, ApiResponse } from '@/types';
 
 /**
  * 🎣 useOrderDetail Hook (Admin)
@@ -23,7 +23,7 @@ export const useOrderDetail = () => {
         loading: isLoading, 
         data, 
         execute: fetchOrderDetails 
-    } = useApi(getOrderByIdApi, {
+    } = useApi<Order, [orderId: string]>(getOrderByIdApi, {
         onError: () => {
             toast.error('ไม่พบข้อมูลคำสั่งซื้อ หรือเกิดข้อผิดพลาด');
             navigate('/admin/order'); // กลับไปหน้าตารางถ้าหาไม่เจอ
