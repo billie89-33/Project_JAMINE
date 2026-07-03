@@ -50,8 +50,10 @@ apiClient.interceptors.response.use(
             sessionStorage.clear();
 
             // 🚀 Safe Redirect: Only redirect if not already on the login page
-            // This prevents infinite redirection loops
-            if (!window.location.pathname.includes('/login')) {
+            // AND if the request was NOT for /users/me (which is checked on initial load for guest users)
+            const isGetMeRequest = config.url?.includes('/users/me');
+            
+            if (!isGetMeRequest && !window.location.pathname.includes('/login')) {
                 window.location.href = '/login';
             }
         }
