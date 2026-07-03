@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useDashboard } from '../hooks/useDashboard';
+import { Order } from '@/types';
 
 // 🛡️ Fix: Import siblings directly to avoid circular dependency via components/index.js
 import StatCard from './StatCard';
