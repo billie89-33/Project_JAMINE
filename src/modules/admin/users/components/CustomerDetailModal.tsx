@@ -33,13 +33,13 @@ interface CustomerDetailModalProps {
     summary: Record<string, number | string> | null;
     onToggleStatus: (id: string, status: string) => void;
     onDelete: (id: string) => void;
-    onUpdate: (e?: unknown) => void;
+    onUpdate: (e?: React.FormEvent) => void;
     onViewOrders: (id: string) => void;
     isActionLoading: boolean;
     isEditMode: boolean;
     setIsEditMode: (v: boolean) => void;
     editForm: CustomerEditForm;
-    setEditForm: (v: CustomerEditForm) => void;
+    setEditForm: React.Dispatch<React.SetStateAction<CustomerEditForm>>;
     activeTab: string;
     setActiveTab: (v: string) => void;
 }

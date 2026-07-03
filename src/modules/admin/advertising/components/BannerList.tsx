@@ -27,7 +27,7 @@ export const BannerList = ({ banners, onEdit, onDelete }: BannerListProps) => {
           </thead>
           <tbody className="divide-y divide-slate-50">
             {banners.map((banner) => (
-              <tr key={banner._id || banner.id} className="group hover:bg-purple-50/30 transition-colors">
+              <tr key={banner._id} className="group hover:bg-purple-50/30 transition-colors">
                 {/* 1. Preview Image */}
                 <td className="px-8 py-6">
                   <div className="relative w-40 h-16 bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 group-hover:border-purple-200 transition-all flex items-center justify-center">

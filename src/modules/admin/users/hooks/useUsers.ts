@@ -10,6 +10,7 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { User } from '@/types';
 import React from 'react';
+import { CustomerEditForm } from '../components/CustomerDetailModal';
 
 export type UserStats = Record<string, number | string>;
 
@@ -39,11 +40,11 @@ export const useUsers = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [activeTab, setActiveTab] = useState('summary'); // 'summary' | 'addresses' | 'orders'
-    const [editForm, setEditForm] = useState({
+    const [editForm, setEditForm] = useState<CustomerEditForm>({
         name: '',
         email: '',
         phone: '',
-        status: 'active' as User['status']
+        status: 'active'
     });
 
     // 1. Fetch Users List
@@ -121,7 +122,7 @@ export const useUsers = () => {
         
         setIsActionLoading(true);
         try {
-            const updatePayload = { ...editForm };
+            const updatePayload = { ...editForm, status: editForm.status as User['status'] };
             const res = await updateUserByAdminApi(selectedUser._id, updatePayload);
             if (res.success) {
                 toast.success('User updated successfully');
