@@ -43,7 +43,7 @@ export const useUsers = () => {
         name: '',
         email: '',
         phone: '',
-        status: 'active'
+        status: 'active' as User['status']
     });
 
     // 1. Fetch Users List

@@ -101,7 +101,7 @@ const AdvertisingPage = () => {
         {isAdding ? (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             <BannerForm 
-              initialData={editingBanner}
+              initialData={editingBanner || undefined}
               onSubmit={handleFormSubmit}
               onCancel={handleBackToList}
               isSubmitting={isSubmitting}

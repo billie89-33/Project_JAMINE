@@ -27,7 +27,7 @@ export const useDashboard = () => {
         loading: isLoading, 
         data, 
         execute 
-    } = useApi<DashboardAllData>(fetchDashboardData, apiOptions);
+    } = useApi(fetchDashboardData, apiOptions);
 
     const dashboardData = data as DashboardAllData | null | undefined;
 

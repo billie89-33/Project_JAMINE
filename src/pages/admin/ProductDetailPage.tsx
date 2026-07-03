@@ -108,7 +108,7 @@ const ProductDetailPage = () => {
           <EditableMainInfo 
             formData={formData}
             setFormData={setFormData}
-            imagePreview={imagePreview}
+            imagePreview={typeof imagePreview === 'string' ? imagePreview : null}
             onFileSelect={handleFileSelect}
             categoriesList={categoriesList}
           />

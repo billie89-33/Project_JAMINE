@@ -110,7 +110,7 @@ export const useAdminProducts = () => {
     searchTerm, // 🆕 ส่งออกเพื่อให้ UI ผูกค่า
     setSearchTerm, // 🆕 ส่งออกเพื่อให้ UI พิมพ์ค่า
     isLoading,
-    categoriesList, // 🌐 ส่งออกหมวดหมู่
+    categoriesList: (categoriesList || []) as (string | { name: string })[], // 🌐 ส่งออกหมวดหมู่
     handleCategoryChange,
     handleClearFilters, // 🆕 ส่งออกปุ่มล้างข้อมูล
     handleDeleteProduct,

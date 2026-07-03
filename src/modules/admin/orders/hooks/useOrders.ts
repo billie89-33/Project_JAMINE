@@ -24,7 +24,7 @@ export const useOrders = () => {
         loading: isLoading, 
         data, 
         execute: fetchOrders 
-    } = useApi<PaginatedOrders>(getAllOrders);
+    } = useApi(getAllOrders);
 
     const orderData = data as PaginatedOrders | null | undefined;
 
@@ -50,7 +50,15 @@ export const useOrders = () => {
     // 📦 5. Prepare Final Data (Ultra-Defensive Mapping as per doc/20)
     // 🛡️ ต้องประกาศข้อมูลก่อน Handlers เพื่อป้องกัน ReferenceError (Temporal Dead Zone)
     const orders = useMemo(() => {
-        const rawOrders = orderData?.orders || [];
+        let rawOrders: Order[] = [];
+        if (Array.isArray(orderData)) {
+            rawOrders = orderData;
+        } else if (orderData && Array.isArray(orderData.orders)) {
+            rawOrders = orderData.orders;
+        } else if (orderData && Array.isArray((orderData as any).data)) {
+            rawOrders = (orderData as any).data;
+        }
+
         return rawOrders.map((order: Order) => ({
             ...order,
             items: order.items?.map(item => {

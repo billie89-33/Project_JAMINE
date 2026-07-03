@@ -28,8 +28,23 @@ export const usePayment = () => {
 
       try {
         const res = await getOrderDetailsApi(orderId as string);
-        if (res.success) {
-          setOrder(res.data);
+        if (res.success && res.data) {
+          const rawOrder = res.data;
+          // 🛡️ Map items to handle nested product data (similar to Order History)
+          const mappedOrder = {
+            ...rawOrder,
+            items: rawOrder.items?.map(item => {
+              const productObj = typeof item.productId === 'object' ? item.productId : (item as any).product;
+              return {
+                ...item,
+                brand: item.brand || productObj?.brand || 'Unknown',
+                modelName: item.modelName || productObj?.modelName || productObj?.name || 'Unknown Product',
+                image: item.image || productObj?.image?.url || productObj?.image || '',
+                priceAtPurchase: item.priceAtPurchase || item.price || productObj?.price || 0
+              };
+            }) || []
+          };
+          setOrder(mappedOrder as Order);
         }
       } catch (error) {
         console.error("Fetch Order Details Error:", error);

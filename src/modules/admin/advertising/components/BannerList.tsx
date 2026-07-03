@@ -1,14 +1,5 @@
 import { Edit3, Trash2, ExternalLink, Image as ImageIcon, CheckCircle2, XCircle } from 'lucide-react';
-
-export interface Banner {
-  _id?: string;
-  id?: string;
-  image?: { url: string };
-  title?: string;
-  linkUrl?: string;
-  placement?: string;
-  isActive?: boolean;
-}
+import { Banner } from '@/types';
 
 interface BannerListProps {
   banners: Banner[];

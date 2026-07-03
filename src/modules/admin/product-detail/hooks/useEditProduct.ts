@@ -257,7 +257,7 @@ export const useEditProduct = () => {
     imagePreview,
     isLoading,
     isSubmitting,
-    categoriesList,
+    categoriesList: (categoriesList || []) as (string | { name: string })[],
     handleFileSelect,
     handleSpecChange,
     handleAddSpecRow,

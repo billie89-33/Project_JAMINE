@@ -7,7 +7,7 @@ interface EditableMainInfoProps {
   formData: ProductFormData;
   setFormData: React.Dispatch<React.SetStateAction<ProductFormData>>;
   imagePreview: string | null;
-  onFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onFileSelect: (file: File) => void;
   categoriesList: (string | { name: string })[];
 }
 

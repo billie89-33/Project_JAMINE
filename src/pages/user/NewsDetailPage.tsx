@@ -106,7 +106,7 @@ const NewsDetailPage = () => {
                         prose-img:rounded-[2rem] prose-img:shadow-xl
                         prose-strong:text-slate-900 prose-strong:font-black
                         prose-a:text-purple-600 prose-a:font-bold prose-a:no-underline hover:prose-a:underline"
-                        dangerouslySetInnerHTML={{ __html: news.content }}
+                        dangerouslySetInnerHTML={{ __html: news.content ?? '' }}
                     />
 
                     {/* Footer Actions */}

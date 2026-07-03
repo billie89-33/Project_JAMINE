@@ -4,9 +4,9 @@ import { SpecRow } from '../hooks/useEditProduct';
 interface EditableSpecsProps {
   category: string;
   specifications: SpecRow[];
-  onSpecChange: (index: number, key: keyof SpecRow, value: string) => void;
+  onSpecChange: (id: string, key: keyof SpecRow, value: string) => void;
   onAddRow: () => void;
-  onRemoveSpec: (index: number) => void;
+  onRemoveSpec: (id: string) => void;
 }
 
 /**

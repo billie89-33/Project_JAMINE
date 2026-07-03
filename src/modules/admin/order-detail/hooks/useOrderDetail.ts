@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useApi } from '@/shared/hooks/useApi';
 import { getOrderByIdApi, updateOrderStatus } from '@/modules/admin/services';
@@ -23,16 +23,21 @@ export const useOrderDetail = () => {
         loading: isLoading, 
         data, 
         execute: fetchOrderDetails 
-    } = useApi<Order>(getOrderByIdApi, {
+    } = useApi(getOrderByIdApi, {
         onError: () => {
             toast.error('ไม่พบข้อมูลคำสั่งซื้อ หรือเกิดข้อผิดพลาด');
             navigate('/admin/order'); // กลับไปหน้าตารางถ้าหาไม่เจอ
         }
     });
 
-    const orderData = useMemo(() => {
+    const orderData = useMemo<Order | null>(() => {
         if (!data) return null;
-        const o = data as Order;
+        
+        // Defensive unwrap if API returns { order: {...} } or { data: {...} }
+        let o = data as Order;
+        if ((data as any).order) o = (data as any).order;
+        else if ((data as any).data && !Array.isArray((data as any).data)) o = (data as any).data;
+
         return {
             ...o,
             items: o.items?.map(item => {

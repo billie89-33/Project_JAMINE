@@ -37,8 +37,21 @@ export const useNews = () => {
                 isPublished: isPublished === 'all' ? undefined : isPublished === 'true'
             };
             const res = await getNewsApi(params);
-            if (res.success) {
-                setNewsList(res.data.news || []);
+            if (res.success && res.data) {
+                const data = res.data;
+                let finalNews: News[] = [];
+                
+                if (Array.isArray(data)) {
+                    finalNews = data;
+                } else if (data && Array.isArray((data as any).news)) {
+                    finalNews = (data as any).news;
+                } else if (data && Array.isArray((data as any).data)) {
+                    finalNews = (data as any).data;
+                }
+                
+                setNewsList(finalNews);
+            } else {
+                setNewsList([]);
             }
         } catch (error) {
             const err = error as { response?: { data?: { message?: string } } };

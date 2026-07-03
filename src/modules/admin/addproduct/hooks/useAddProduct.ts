@@ -35,8 +35,8 @@ export const useAddProduct = () => {
     const { handleAddProduct, isSubmitting } = useProductActions();
 
     // 🌐 5. ดึงข้อมูล Master Data สำหรับ Auto-suggest (Datalist)
-    const { data: categoriesList, execute: fetchCategories } = useApi<Array<{ name: string } | string>>(getCategoriesApi);
-    const { data: brandsList, execute: fetchBrands } = useApi<string[]>(getBrandsApi);
+    const { data: categoriesList, execute: fetchCategories } = useApi(getCategoriesApi);
+    const { data: brandsList, execute: fetchBrands } = useApi(getBrandsApi);
 
     // ดึงหมวดหมู่ทั้งหมดครั้งแรกที่โหลดหน้า
     useEffect(() => {
