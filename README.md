@@ -22,7 +22,7 @@ This project follows an **Enterprise Modular Architecture** to ensure high scala
 ### 🛡️ Admin Dashboard (CMS)
 - **Dynamic Data Visualization:** Real-time revenue charts, user growth metrics, and top product rankings.
 - **Resilient Data Mapping:** Smart fallback logic in TypeScript ensures the UI never crashes even when backend data is incomplete or inconsistent (e.g., missing user names or mismatched `total` fields).
-- **Product & Content Management:** Complete CRUD capabilities for managing products, categories, stock, and news/banners.
+ - **Product & Content Management:** Complete CRUD capabilities for managing products, categories, stock, and news/banners.
 - **Role-Based Access Control (RBAC):** Secure admin routes protected by React Context, with authentication tokens stored safely in HttpOnly Cookies.
 
 ---

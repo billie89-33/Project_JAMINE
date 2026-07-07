@@ -32,8 +32,8 @@ export const useNews = () => {
             const params: Record<string, string | number | boolean | undefined> = {
                 page,
                 limit: 10,
-                keyword: keyword.trim() || undefined,
-                categoryId: categoryId || undefined,
+                search: keyword.trim() || undefined,
+                category: categoryId || undefined,
                 isPublished: isPublished === 'all' ? undefined : isPublished === 'true'
             };
             const res = await getNewsApi(params);

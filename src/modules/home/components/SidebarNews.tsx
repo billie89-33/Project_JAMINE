@@ -15,7 +15,15 @@ const SidebarNews: React.FC = () => {
       try {
         const res = await getPublicNewsApi({ limit: 4, isPublished: true });
         if (res.success && res.data) {
-          setNewsList(res.data.news || []);
+          let fetchedNews: News[] = [];
+          if (Array.isArray(res.data)) {
+            fetchedNews = res.data;
+          } else if (res.data.news && Array.isArray(res.data.news)) {
+            fetchedNews = res.data.news;
+          } else if ((res.data as any).data && Array.isArray((res.data as any).data)) {
+            fetchedNews = (res.data as any).data;
+          }
+          setNewsList(fetchedNews);
         }
       } catch (error) {
         console.error('Failed to fetch news', error);
