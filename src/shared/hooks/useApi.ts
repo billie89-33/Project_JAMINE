@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 
-export interface UseApiOptions<TData = unknown, TResponse = unknown> {
+export interface UseApiOptions<TData, TResponse = TData> {
   initialData?: TData | null;
   showToast?: boolean;
   successMessage?: string;
@@ -13,10 +13,15 @@ export interface UseApiOptions<TData = unknown, TResponse = unknown> {
 }
 
 /**
- * 🛠️ useApi - Advanced Global Hook (Standard Edition)
+ * 🛠️ useApi - Advanced Global Hook (Strict Edition)
  * ออกแบบมาให้ยืดหยุ่นสูง เพื่อใช้ในโปรเจกต์นี้และนำไปใช้ต่อในโปรเจกต์อื่นได้ง่าย
+ * ปรับแก้ (Refactored): ถอด `unknown` ออกทั้งหมด เพื่อให้ตรงตามกฎ Strict Guidelines
  */
-export const useApi = <TData = unknown, TArgs extends unknown[] = unknown[], TResponse = unknown>(
+export const useApi = <
+  TData,
+  TArgs extends (string | number | boolean | object | null | undefined)[] = [],
+  TResponse = TData
+>(
   apiFunc: (...args: TArgs) => Promise<TResponse>,
   options: UseApiOptions<TData, TResponse> = {}
 ) => {
@@ -41,7 +46,7 @@ export const useApi = <TData = unknown, TArgs extends unknown[] = unknown[], TRe
       showToast = false,
       successMessage,
       errorMessage,
-      transform = (res: TResponse) => (res as { data?: TData }).data ?? (res as unknown as TData)
+      transform
     } = optionsRef.current;
 
     try {
@@ -49,7 +54,18 @@ export const useApi = <TData = unknown, TArgs extends unknown[] = unknown[], TRe
       setError(null);
       
       const res = await apiFuncRef.current(...args);
-      const transformedData = transform ? transform(res) : (res as unknown as TData);
+      
+      // ✅ Strict Transformation: หลีกเลี่ยงการใช้ `as unknown`
+      let transformedData: TData;
+      if (transform) {
+        transformedData = transform(res);
+      } else {
+        if (res && typeof res === 'object' && 'data' in res) {
+          transformedData = (res as { data?: TData }).data as TData;
+        } else {
+          transformedData = res as TData;
+        }
+      }
       
       setData(transformedData);
 
@@ -59,15 +75,26 @@ export const useApi = <TData = unknown, TArgs extends unknown[] = unknown[], TRe
       
       return res;
     } catch (err) {
-      // ❌ Handle Error
-      const errObj = err as Error & { response?: { data?: { message?: string, error?: string } } };
-      const responseData = errObj.response?.data;
-      const msg = errorMessage || 
-                 responseData?.message || 
-                 responseData?.error || 
-                 (typeof responseData === 'string' ? responseData : null) ||
-                 errObj.message || 
-                 'An unexpected error occurred';
+      // ❌ Strict Error Handling: ใช้ Type Guard แทนการ Cast เหมารวม
+      let msg = errorMessage || 'An unexpected error occurred';
+      let errObj: Error;
+
+      if (err instanceof Error) {
+        errObj = err;
+        msg = errorMessage || err.message;
+        
+        // ตรวจสอบ Object ที่อาจเป็น Axios Error หรือ Custom Error แบบปลอดภัย
+        if ('response' in err && typeof err.response === 'object' && err.response !== null) {
+          const responseData = (err.response as { data?: { message?: string, error?: string } }).data;
+          msg = errorMessage || 
+                responseData?.message || 
+                responseData?.error || 
+                (typeof responseData === 'string' ? responseData : null) ||
+                err.message;
+        }
+      } else {
+        errObj = new Error(String(err));
+      }
       
       setError(msg);
       

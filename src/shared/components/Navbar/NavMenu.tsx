@@ -21,7 +21,7 @@ const NavMenu: React.FC<NavMenuProps> = ({ isMobile = false, onClose }) => {
   const isCategoryActive = location.pathname.startsWith('/category');
 
   // 🎣 ดึงข้อมูลหมวดหมู่จาก API
-  const { data: categories, loading, execute: fetchCategories } = useApi<Array<CategoryData | string>>(getCategoriesApi);
+  const { data: categories, loading, execute: fetchCategories } = useApi<Array<CategoryData | string>, [], Awaited<ReturnType<typeof getCategoriesApi>>>(getCategoriesApi);
 
   useEffect(() => {
     fetchCategories();

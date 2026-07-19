@@ -23,7 +23,7 @@ export const useOrderDetail = () => {
         loading: isLoading, 
         data, 
         execute: fetchOrderDetails 
-    } = useApi<Order, [orderId: string]>(getOrderByIdApi, {
+    } = useApi<Order, [orderId: string], ApiResponse<Order>>(getOrderByIdApi, {
         onError: () => {
             toast.error('ไม่พบข้อมูลคำสั่งซื้อ หรือเกิดข้อผิดพลาด');
             navigate('/admin/order'); // กลับไปหน้าตารางถ้าหาไม่เจอ
